@@ -287,11 +287,11 @@ export default function PartiesPage() {
                 {/* Host Info */}
                 <div className="flex items-center gap-3 p-3 bg-brand-navy/5 rounded-2xl border border-transparent group-hover:border-brand-navy/5 transition-colors">
                   <div className="w-8 h-8 bg-brand-navy text-white rounded-full flex items-center justify-center font-bold text-xs shadow-sm">
-                    {party.host?.username?.charAt(0).toUpperCase() || "?"}
+                    {(party.host?.name || party.host?.username)?.charAt(0).toUpperCase() || "?"}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-brand-navy font-bold text-sm truncate">
-                      {party.host?.username || "Unknown Host"}
+                      {party.host?.name || party.host?.username || "Unknown Host"}
                     </div>
                     <div className="text-brand-navy/50 text-xs font-medium truncate">
                       {party.scheduled_start 

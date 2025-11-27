@@ -59,12 +59,21 @@ export interface User {
   updated_at: string
 }
 
+// Host info as returned by the party serializer (simplified user)
+export interface PartyHost {
+  id: string
+  name?: string
+  username?: string
+  avatar?: string | null
+  is_premium?: boolean
+}
+
 export interface WatchParty {
   id: string
   title: string
   name?: string // Alias for title for backward compatibility
   description?: string
-  host: User
+  host: PartyHost
   room_code?: string // Unique room code for sharing
   status: 'scheduled' | 'live' | 'paused' | 'ended' | 'cancelled'
   visibility: 'public' | 'friends' | 'private'
