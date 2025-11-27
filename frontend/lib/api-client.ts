@@ -394,7 +394,8 @@ async function apiFetch<T>(
         message: `HTTP ${response.status}: ${response.statusText}`,
       }))
 
-      const errorMessage = errorData.message || `API request failed: ${response.statusText}`
+      // Backend can return error in 'message', 'error', or 'detail' fields
+      const errorMessage = errorData.message || (errorData as any).error || (errorData as any).detail || `API request failed: ${response.statusText}`
       const apiError = new Error(errorMessage) as ApiClientError
       apiError.status = response.status
       if (errorData.error) {

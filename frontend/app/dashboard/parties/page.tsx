@@ -66,9 +66,12 @@ export default function PartiesPage() {
       window.location.href = `/party/${roomCode || partyId}`
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to join party"
-      // If already joined, just redirect to the party
-      if (errorMessage.toLowerCase().includes("already joined") || 
-          errorMessage.toLowerCase().includes("already a participant")) {
+      const lowerMessage = errorMessage.toLowerCase()
+      // If already joined or is host, just redirect to the party
+      if (lowerMessage.includes("already joined") || 
+          lowerMessage.includes("already a participant") ||
+          lowerMessage.includes("already") ||
+          lowerMessage.includes("host")) {
         window.location.href = `/party/${roomCode || partyId}`
         return
       }
