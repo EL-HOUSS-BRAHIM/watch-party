@@ -12,8 +12,6 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    username: "",
-    email: "",
   })
 
   useEffect(() => {
@@ -27,8 +25,6 @@ export default function ProfilePage() {
       setFormData({
         first_name: profile.first_name || "",
         last_name: profile.last_name || "",
-        username: profile.username || "",
-        email: profile.email || "",
       })
     } catch (_error) {
       setError("Failed to load profile")
@@ -132,12 +128,12 @@ export default function ProfilePage() {
                     {user.avatar ? (
                       <img
                         src={user.avatar}
-                        alt={user.username}
+                        alt={user.first_name || user.email}
                         className="w-full h-full object-cover"
                       />
                     ) : (
                       <span className="text-5xl text-brand-navy/40 font-bold">
-                        {user.username?.charAt(0).toUpperCase() || "?"}
+                        {(user.first_name || user.email)?.charAt(0).toUpperCase() || "?"}
                       </span>
                     )}
                   </div>
@@ -159,10 +155,10 @@ export default function ProfilePage() {
                 <h2 className="text-2xl font-bold text-brand-navy">
                   {user.first_name && user.last_name 
                     ? `${user.first_name} ${user.last_name}`
-                    : user.username
+                    : user.first_name || user.email?.split('@')[0] || 'User'
                   }
                 </h2>
-                <p className="text-brand-navy/60 font-medium text-lg">@{user.username}</p>
+                <p className="text-brand-navy/60 font-medium text-lg">{user.email}</p>
                 <div className="flex flex-wrap justify-center gap-2 pt-2">
                   {user.is_verified && (
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-brand-cyan/10 text-brand-cyan-dark text-xs font-bold border border-brand-cyan/20">
@@ -226,30 +222,12 @@ export default function ProfilePage() {
 
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-brand-navy/80 ml-1">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white/50 border border-brand-navy/10 rounded-xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all"
-                    placeholder="Enter username"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-bold text-brand-navy/80 ml-1">
                     Email Address
                   </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white/50 border border-brand-navy/10 rounded-xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all"
-                    placeholder="Enter email address"
-                    required
-                  />
+                  <div className="w-full px-4 py-3 bg-brand-navy/5 border border-brand-navy/10 rounded-xl text-brand-navy/60 cursor-not-allowed">
+                    {user.email}
+                  </div>
+                  <p className="text-xs text-brand-navy/40 ml-1">Email cannot be changed</p>
                 </div>
 
                 <div className="flex gap-4 pt-6 border-t border-brand-navy/5">
@@ -267,8 +245,6 @@ export default function ProfilePage() {
                       setFormData({
                         first_name: user.first_name || "",
                         last_name: user.last_name || "",
-                        username: user.username || "",
-                        email: user.email || "",
                       })
                     }}
                     className="bg-white hover:bg-brand-neutral text-brand-navy px-8 py-3 rounded-xl font-bold transition-colors border border-brand-navy/10"
@@ -289,11 +265,6 @@ export default function ProfilePage() {
                     <label className="block text-xs font-bold text-brand-navy/40 uppercase tracking-wider">Last Name</label>
                     <p className="text-brand-navy text-lg font-medium border-b border-brand-navy/5 pb-2">{user.last_name || "Not set"}</p>
                   </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-brand-navy/40 uppercase tracking-wider">Username</label>
-                  <p className="text-brand-navy text-lg font-medium border-b border-brand-navy/5 pb-2">@{user.username}</p>
                 </div>
 
                 <div className="space-y-1">
