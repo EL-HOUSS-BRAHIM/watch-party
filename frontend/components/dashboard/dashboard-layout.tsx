@@ -2,13 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
 import MobileNavigation from "@/components/mobile/MobileNavigation"
-import { NAVIGATION_SECTIONS } from "@/components/dashboard/navigation"
-import { userApi, analyticsApi, User, NormalizedRealTimeAnalytics } from "@/lib/api-client"
+import { NAVIGATION_SECTIONS, getBadgeValue, DynamicBadges } from "@/components/dashboard/navigation"
+import { userApi, analyticsApi, notificationsApi, User, NormalizedRealTimeAnalytics } from "@/lib/api-client"
 
 // Use centralized navigation list (keeps mobile, sidebar and other menus in sync)
 const navigationSections = NAVIGATION_SECTIONS
@@ -40,12 +40,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       networkTraffic: 0
     }
   })
+  const [dynamicBadges, setDynamicBadges] = useState<DynamicBadges>({})
   const [_loading, setLoading] = useState(true)
 
   // Load user data and real-time stats
   useEffect(() => {
     loadUserData()
     loadRealTimeStats()
+    loadDynamicBadges()
 
     // Detect client-side page-provided sidebars (pages can mark their sidebar with .page-sidebar)
     const detectPageSidebar = () => {
@@ -65,12 +67,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     }
 
     // Fetch real-time stats every 30 seconds
-    const interval = setInterval(() => {
+    const statsInterval = setInterval(() => {
       loadRealTimeStats()
     }, 30000)
 
+    // Fetch dynamic badges every 60 seconds
+    const badgesInterval = setInterval(() => {
+      loadDynamicBadges()
+    }, 60000)
+
     return () => {
-      clearInterval(interval)
+      clearInterval(statsInterval)
+      clearInterval(badgesInterval)
       if (observer) observer.disconnect()
     }
   }, [])
@@ -90,10 +98,41 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     try {
       const realTimeData = await analyticsApi.getRealTime()
       setLiveStats(realTimeData)
+      // Update active parties badge from real-time data
+      setDynamicBadges(prev => ({
+        ...prev,
+        activeParties: realTimeData.activeParties
+      }))
     } catch (error) {
       console.error("Failed to load real-time stats:", error)
     }
   }
+
+  const loadDynamicBadges = useCallback(async () => {
+    try {
+      // Fetch all badge counts in parallel
+      const [notificationCount, friendRequests] = await Promise.allSettled([
+        notificationsApi.getUnreadCount(),
+        userApi.getFriendRequests()
+      ])
+
+      setDynamicBadges(prev => ({
+        ...prev,
+        unreadNotifications: notificationCount.status === 'fulfilled' 
+          ? notificationCount.value?.count ?? 0 
+          : prev.unreadNotifications,
+        friendRequests: friendRequests.status === 'fulfilled' 
+          ? friendRequests.value?.count ?? friendRequests.value?.results?.length ?? 0 
+          : prev.friendRequests,
+        // TODO: Add these when APIs are available
+        // unreadMessages: messagesCount.status === 'fulfilled' ? messagesCount.value?.count ?? 0 : prev.unreadMessages,
+        // upcomingEvents: eventsCount.status === 'fulfilled' ? eventsCount.value?.count ?? 0 : prev.upcomingEvents,
+        hasNewStoreItems: true, // Can be fetched from store API if available
+      }))
+    } catch (error) {
+      console.error("Failed to load dynamic badges:", error)
+    }
+  }, [])
 
   const getBadgeColor = (badge: string | null) => {
     if (!badge) return ""
@@ -128,6 +167,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     if (user?.is_active) return "online"
     return "offline"
   }
+
+  // Get system health status based on metrics
+  const getSystemStatus = (): { status: "healthy" | "warning" | "critical"; label: string; color: string } => {
+    const { cpuUsage, memoryUsage } = liveStats.systemHealth
+    const avgLoad = (cpuUsage + memoryUsage) / 2
+
+    if (avgLoad >= 90) {
+      return { status: "critical", label: "System under heavy load", color: "bg-red-500" }
+    }
+    if (avgLoad >= 70) {
+      return { status: "warning", label: "System busy", color: "bg-yellow-500" }
+    }
+    return { status: "healthy", label: "System online", color: "bg-brand-cyan" }
+  }
+
+  const systemStatus = getSystemStatus()
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-brand-neutral-bg text-brand-navy">
@@ -203,6 +258,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <nav className="space-y-1.5">
                   {section.items.map((item) => {
                     const isActive = pathname === item.href
+                    const badge = getBadgeValue(item, dynamicBadges)
                     return (
                       <Link
                         key={item.href}
@@ -233,18 +289,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                               {item.description && <div className="truncate text-xs text-brand-navy/40 mt-0.5">{item.description}</div>}
                             </div>
 
-                            {item.badge && (
-                              <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm", getBadgeColor(item.badge))}>
-                                {item.badge}
+                            {badge && (
+                              <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm", getBadgeColor(badge))}>
+                                {badge}
                               </span>
                             )}
                           </>
                         )}
 
-                        {isCollapsed && item.badge && (
+                        {isCollapsed && badge && (
                           <div className={cn(
                             "absolute top-2 right-2 h-2.5 w-2.5 rounded-full ring-2 ring-white",
-                            getBadgeColor(item.badge).split(' ')[0] // Extract bg color only
+                            getBadgeColor(badge).split(' ')[0] // Extract bg color only
                           )} />
                         )}
                       </Link>
@@ -259,6 +315,27 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="border-t border-brand-navy/5 p-5 bg-white/30 backdrop-blur-md">
             {!isCollapsed ? (
               <div className="space-y-3">
+                {/* Live Stats Display */}
+                <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 px-4 py-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-cyan"></span>
+                    </div>
+                    <span className="text-xs font-medium text-brand-navy/70">Live</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-1">
+                      <span className="text-brand-navy/50">👥</span>
+                      <span className="font-bold text-brand-navy">{liveStats.onlineUsers}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-brand-navy/50">🎬</span>
+                      <span className="font-bold text-brand-navy">{liveStats.activeParties}</span>
+                    </div>
+                  </div>
+                </div>
+
                 <button className="btn-gradient w-full rounded-xl px-4 py-3.5 font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-brand-magenta/30">
                   <span className="flex items-center justify-center gap-2">
                     <span>✨</span>
@@ -276,6 +353,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             ) : (
               <div className="space-y-3">
+                {/* Compact Live Stats */}
+                <div className="rounded-xl bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 p-2 text-center">
+                  <div className="text-xs font-bold text-brand-navy">{liveStats.onlineUsers}</div>
+                  <div className="text-[10px] text-brand-navy/50">online</div>
+                </div>
+
                 <button className="btn-gradient w-full rounded-xl p-3 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-brand-magenta/30 flex justify-center">
                   ✨
                 </button>
@@ -317,10 +400,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Live Status Indicator */}
       <div className="fixed bottom-8 left-8 hidden items-center gap-3 rounded-full border border-white/50 bg-white/80 backdrop-blur-md px-5 py-2.5 text-sm font-bold text-brand-navy shadow-lg shadow-brand-navy/5 md:flex z-50">
         <div className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-cyan"></span>
+          <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", systemStatus.color)}></span>
+          <span className={cn("relative inline-flex rounded-full h-3 w-3", systemStatus.color)}></span>
         </div>
-        <span>System online</span>
+        <span>{systemStatus.label}</span>
+        {liveStats.onlineUsers > 0 && (
+          <span className="text-brand-navy/50 text-xs ml-1">
+            • {liveStats.onlineUsers} online
+          </span>
+        )}
       </div>
     </div>
   )
