@@ -164,13 +164,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Enhanced Sidebar */}
         <aside
           className={cn(
-            "hidden border-r border-brand-navy/5 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-16 md:block md:h-[calc(100vh-4rem)] shadow-[2px_0_20px_rgba(0,0,0,0.03)] z-20",
+            "hidden border-r border-brand-navy/5 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-16 md:flex md:flex-col md:h-[calc(100vh-4rem)] shadow-[2px_0_20px_rgba(0,0,0,0.03)] z-20",
             hasPageSidebar ? "hidden md:hidden" : (isCollapsed ? "w-20" : "w-64")
           )}
           aria-hidden={hasPageSidebar}
         >
           {/* Collapse Toggle */}
-          <div className="flex items-center justify-end p-3 border-b border-brand-navy/5">
+          <div className="flex-shrink-0 flex items-center justify-end p-3 border-b border-brand-navy/5">
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-navy/40 transition-all hover:bg-brand-navy/5 hover:text-brand-navy"
@@ -180,8 +180,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
           </div>
 
-          {/* Navigation */}
-          <div className="flex-1 overflow-y-auto py-4 px-3">
+          {/* Navigation - Scrollable */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 scrollbar-thin scrollbar-thumb-brand-navy/10 scrollbar-track-transparent hover:scrollbar-thumb-brand-navy/20">
             <nav className="space-y-6">
               {navigationSections.map((section) => (
                 <div key={section.title}>
@@ -256,8 +256,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </nav>
           </div>
 
-          {/* Footer */}
-          <div className="border-t border-brand-navy/5 p-3 bg-gradient-to-t from-brand-navy/[0.02] to-transparent">
+          {/* Footer - Fixed at bottom */}
+          <div className="flex-shrink-0 border-t border-brand-navy/5 p-3 bg-gradient-to-t from-brand-navy/[0.02] to-transparent">
             {!isCollapsed ? (
               <div className="space-y-3">
                 {/* Live Stats - Compact */}
