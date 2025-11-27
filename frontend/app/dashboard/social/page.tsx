@@ -39,7 +39,7 @@ interface Friend {
 
 export default function SocialPage() {
   const router = useRouter()
-  const { formatNumber } = useDesignSystem()
+  const { formatNumber, liveStats } = useDesignSystem()
   const [groups, setGroups] = useState<SocialGroup[]>([])
   const [friends, setFriends] = useState<Friend[]>([])
   const [loading, setLoading] = useState(true)
@@ -160,11 +160,11 @@ export default function SocialPage() {
                 </h1>
                 <LiveIndicator 
                   isLive={true} 
-                  count={1247}
+                  count={liveStats.onlineUsers}
                   label="Online Users" 
                 />
               </div>
-              <p className="text-brand-navy/70 text-base sm:text-lg font-medium">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
+              <p className="text-brand-navy/70 text-base sm:text-lg font-medium">Connect with {formatNumber(liveStats.totalWatchTime)} movie enthusiasts worldwide</p>
               <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-brand-navy/50 font-medium">
                 <span>🌍 Global Community</span>
                 <span>•</span>
