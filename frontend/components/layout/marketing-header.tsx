@@ -3,7 +3,16 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { authApi } from "@/lib/api-client"
+
+interface UserInfo {
+  id: string
+  username: string
+  full_name?: string
+  email?: string
+  avatar?: string
+}
 
 const _navigation = [
   { href: "/#features", label: "Features" },
@@ -14,6 +23,24 @@ const _navigation = [
 
 export function MarketingHeader() {
   const [isOpen, setIsOpen] = useState(false)
+  const [user, setUser] = useState<UserInfo | null>(null)
+  const [authChecked, setAuthChecked] = useState(false)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const profile = await authApi.getProfile()
+        if (profile && profile.id) {
+          setUser(profile as UserInfo)
+        }
+      } catch {
+        // User is not authenticated
+      } finally {
+        setAuthChecked(true)
+      }
+    }
+    void checkAuth()
+  }, [])
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-white/20 bg-white/70 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60 shadow-sm">
@@ -76,17 +103,47 @@ export function MarketingHeader() {
 
             {/* Desktop actions */}
             <div className="hidden md:flex items-center gap-3">
-              <Button asChild variant="ghost" size="sm" className="hover:bg-brand-navy/5 text-brand-navy/80 hover:text-brand-navy">
-                <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-4 py-2">
-                  Sign in
-                </Link>
-              </Button>
+              {authChecked && user ? (
+                <>
+                  <Button asChild size="default" className="shadow-lg shadow-brand-purple/20 bg-gradient-to-r from-brand-purple to-brand-blue hover:shadow-brand-purple/40 border-0 transition-all hover:-translate-y-0.5">
+                    <Link href="/dashboard" aria-label="Go to Dashboard">
+                      Dashboard
+                    </Link>
+                  </Button>
+                  <Link 
+                    href="/dashboard/profile" 
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-brand-navy/5 transition-all group"
+                    aria-label="View profile"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-purple to-brand-magenta flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:scale-105 transition-transform">
+                      {user.full_name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <span className="text-sm font-medium text-brand-navy/80 group-hover:text-brand-navy max-w-[100px] truncate">
+                      {user.full_name || user.username}
+                    </span>
+                  </Link>
+                </>
+              ) : authChecked ? (
+                <>
+                  <Button asChild variant="ghost" size="sm" className="hover:bg-brand-navy/5 text-brand-navy/80 hover:text-brand-navy">
+                    <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-4 py-2">
+                      Sign in
+                    </Link>
+                  </Button>
 
-              <Button asChild size="default" className="shadow-lg shadow-brand-magenta/20 bg-gradient-to-r from-brand-magenta to-brand-orange hover:shadow-brand-magenta/40 border-0 transition-all hover:-translate-y-0.5">
-                <Link href="/auth/register" aria-label="Start hosting on WatchParty">
-                  Start hosting
-                </Link>
-              </Button>
+                  <Button asChild size="default" className="shadow-lg shadow-brand-magenta/20 bg-gradient-to-r from-brand-magenta to-brand-orange hover:shadow-brand-magenta/40 border-0 transition-all hover:-translate-y-0.5">
+                    <Link href="/auth/register" aria-label="Start hosting on WatchParty">
+                      Start hosting
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                // Loading state - show placeholder
+                <div className="flex items-center gap-3">
+                  <div className="w-20 h-9 bg-brand-navy/5 rounded-lg animate-pulse" />
+                  <div className="w-28 h-10 bg-brand-navy/10 rounded-lg animate-pulse" />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -131,20 +188,44 @@ export function MarketingHeader() {
             </nav>
 
             <div className="flex flex-col gap-3 border-t border-brand-navy/10 p-4 mt-auto">
-              <Link 
-                href="/auth/login" 
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg px-4 py-3 text-center text-base font-medium text-brand-navy/80 hover:bg-brand-neutral/30 border border-brand-navy/20 transition-all active:scale-98"
-              >
-                Sign in
-              </Link>
-              <Link 
-                href="/auth/register" 
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange px-4 py-3 text-center text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all active:scale-98"
-              >
-                Start hosting
-              </Link>
+              {user ? (
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-lg bg-gradient-to-r from-brand-purple to-brand-blue px-4 py-3 text-center text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all active:scale-98"
+                  >
+                    Go to Dashboard
+                  </Link>
+                  <Link 
+                    href="/dashboard/profile" 
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-brand-navy/80 hover:bg-brand-neutral/30 border border-brand-navy/20 transition-all active:scale-98"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-purple to-brand-magenta flex items-center justify-center text-white font-bold text-sm">
+                      {user.full_name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <span className="truncate">{user.full_name || user.username}</span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    href="/auth/login" 
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-lg px-4 py-3 text-center text-base font-medium text-brand-navy/80 hover:bg-brand-neutral/30 border border-brand-navy/20 transition-all active:scale-98"
+                  >
+                    Sign in
+                  </Link>
+                  <Link 
+                    href="/auth/register" 
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange px-4 py-3 text-center text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all active:scale-98"
+                  >
+                    Start hosting
+                  </Link>
+                </>
+              )}
             </div>
           </aside>
         </div>
