@@ -41,6 +41,7 @@ interface Message {
 interface PublicPartyLayoutProps {
   party: PublicPartyViewModel
   guestName: string
+  isAuthenticated?: boolean
   onLeave: () => void
 }
 
@@ -49,7 +50,7 @@ interface PublicPartyLayoutProps {
  * Features: Video sync + basic text chat ONLY
  * No: Voice, emoji reactions, polls, games, advanced controls
  */
-export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayoutProps) {
+export function PublicPartyLayout({ party, guestName, isAuthenticated, onLeave }: PublicPartyLayoutProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [showLeaveDialog, setShowLeaveDialog] = useState(false)

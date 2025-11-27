@@ -2,12 +2,20 @@
 
 import { useState, useEffect, use } from "react"
 import { PublicPartyLayout, type PublicPartyViewModel } from "@/components/party/public-party-layout"
-import { partiesApi } from "@/lib/api-client"
+import { partiesApi, authApi } from "@/lib/api-client"
 
 interface PublicPartyPageProps {
   params: Promise<{
     code: string
   }>
+}
+
+interface UserInfo {
+  id: string
+  username: string
+  full_name?: string
+  email?: string
+  is_staff?: boolean
 }
 
 interface PublicPartyApiResponse {
@@ -39,6 +47,7 @@ interface PublicPartyApiResponse {
   current_timestamp_formatted?: string | null
   is_playing: boolean
   last_sync_at?: string | null
+  can_edit?: boolean
 }
 
 interface ApiErrorPayload {
@@ -110,6 +119,39 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
   const [guestName, setGuestName] = useState("")
   const [hasJoined, setHasJoined] = useState(false)
   const [joinError, setJoinError] = useState<string | null>(null)
+  const [authUser, setAuthUser] = useState<UserInfo | null>(null)
+  const [authChecked, setAuthChecked] = useState(false)
+
+  // Check if user is authenticated
+  useEffect(() => {
+    let isActive = true
+
+    const checkAuth = async () => {
+      try {
+        const profile = await authApi.getProfile()
+        if (!isActive) return
+        if (profile && profile.id) {
+          setAuthUser(profile as UserInfo)
+          // Auto-join for authenticated users - skip guest name input
+          setHasJoined(true)
+          setGuestName(profile.full_name || profile.username || "User")
+        }
+      } catch (err) {
+        // User is not authenticated, that's fine - they'll use guest mode
+        console.log("Not authenticated, using guest mode")
+      } finally {
+        if (isActive) {
+          setAuthChecked(true)
+        }
+      }
+    }
+
+    void checkAuth()
+
+    return () => {
+      isActive = false
+    }
+  }, [])
 
   useEffect(() => {
     let isActive = true
@@ -118,8 +160,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
       setLoading(true)
       setError(null)
       setParty(null)
-      setHasJoined(false)
-      setGuestName("")
+      // Don't reset hasJoined or guestName - keep auth state
       setJoinError(null)
 
       try {
@@ -197,7 +238,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
     setHasJoined(true)
   }
 
-  if (loading) {
+  if (loading || !authChecked) {
     return (
       <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -332,6 +373,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
     <PublicPartyLayout
       party={party}
       guestName={guestName}
+      isAuthenticated={!!authUser}
       onLeave={() => setHasJoined(false)}
     />
   )
