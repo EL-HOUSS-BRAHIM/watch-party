@@ -3,33 +3,38 @@ import { Button } from "@/components/ui/button"
 
 export function CallToAction() {
   return (
-    <section className="relative overflow-hidden rounded-[40px] border border-brand-purple/15 bg-gradient-to-br from-white via-white to-brand-purple/5 px-8 py-16 text-brand-navy shadow-[0_36px_100px_rgba(28,28,46,0.15)] backdrop-blur-sm sm:px-12 sm:py-20 lg:px-20 lg:py-24">
+    <section className="relative rounded-xl sm:rounded-2xl border border-brand-purple/10 bg-gradient-to-br from-white via-white to-brand-purple/5 px-4 py-10 text-brand-navy backdrop-blur-sm sm:px-8 sm:py-14 md:px-10 md:py-16 lg:px-14 lg:py-20">
+      {/* Subtle background */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(233,64,138,0.16),transparent_60%),radial-gradient(circle_at_bottom_left,rgba(59,198,232,0.18),transparent_60%)] opacity-70"
+        className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl bg-[radial-gradient(ellipse_at_top_right,rgba(233,64,138,0.06),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(59,198,232,0.06),transparent_55%)]"
       />
-      <div className="relative flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-        <div className="max-w-2xl space-y-6">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/25 bg-brand-magenta/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.5em] text-brand-magenta-dark shadow-sm">
+
+      <div className="relative flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        {/* Content */}
+        <div className="max-w-lg space-y-3 sm:space-y-4 text-center lg:text-left">
+          <span className="inline-flex items-center rounded-full border border-brand-magenta/20 bg-brand-magenta/5 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-brand-magenta-dark">
             🚀 Ready to host
           </span>
-          <h2 className="text-3xl font-bold tracking-tight leading-[1.2] sm:text-4xl lg:text-5xl">
+          <h2 className="text-xl font-bold tracking-tight sm:text-2xl md:text-3xl lg:text-4xl">
             Create cinematic watch parties that bring people
-            <span className="bg-gradient-to-r from-brand-magenta via-brand-orange to-brand-cyan bg-clip-text text-transparent"> together</span>
+            <span className="bg-gradient-to-r from-brand-magenta to-brand-cyan bg-clip-text text-transparent"> together</span>
           </h2>
-          <p className="text-base leading-relaxed text-brand-navy/65 sm:text-lg">
-            Choose a template, invite your crew, and let WatchParty handle the rest. Perfect sync, immersive features, and unforgettable moments—all in one platform.
+          <p className="text-sm text-brand-navy/60 sm:text-base">
+            Choose a template, invite your crew, and let WatchParty handle the rest. Perfect sync and unforgettable moments.
           </p>
         </div>
-        <div className="flex shrink-0 flex-col items-center gap-4 lg:items-start">
-          <Button size="lg" asChild className="w-full sm:min-w-[240px] lg:w-auto">
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:flex-col lg:items-start">
+          <Button size="lg" asChild className="w-full sm:w-auto min-h-[48px]">
             <Link href="/dashboard">Launch Your Party 🎉</Link>
           </Button>
-          <Button variant="secondary" size="lg" asChild className="w-full sm:min-w-[240px] lg:w-auto">
+          <Button variant="secondary" size="lg" asChild className="w-full sm:w-auto min-h-[48px]">
             <Link href="/pricing">View Pricing</Link>
           </Button>
-          <p className="mt-1 text-center text-xs text-brand-navy/55 lg:text-sm">
-            ✨ Includes real-time sync, live reactions, and unlimited watch parties
+          <p className="text-[11px] sm:text-xs text-brand-navy/50 text-center lg:text-left mt-1">
+            ✨ Real-time sync, live reactions, unlimited parties
           </p>
         </div>
       </div>

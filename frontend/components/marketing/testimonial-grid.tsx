@@ -3,61 +3,72 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export function TestimonialGrid() {
   return (
-    <section id="testimonials" className="space-y-12">
-      <div className="mx-auto max-w-3xl space-y-5 text-center text-brand-navy">
-        <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-[11px] uppercase tracking-[0.45em] text-brand-magenta-dark">
+    <section id="testimonials" className="space-y-8 sm:space-y-10">
+      {/* Section Header */}
+      <div className="text-center max-w-2xl mx-auto space-y-3 sm:space-y-4 px-1">
+        <span className="inline-flex items-center rounded-full border border-brand-magenta/20 bg-brand-magenta/5 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-brand-magenta-dark">
           Community glow
         </span>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          From festival premieres to campus marathons, crews feel the theatre energy return
+        <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl md:text-3xl">
+          Crews feel the theatre energy return
         </h2>
-        <p className="text-base text-brand-navy/70">
-          Hosts swap screen shares for rituals that respect the story. These testimonials cover the sunrise lobby greetings and midnight encore cheers that WatchParty now automates.
+        <p className="text-sm text-brand-navy/60 sm:text-base">
+          Hosts swap screen shares for rituals that respect the story. From festival premieres to campus marathons.
         </p>
       </div>
-      <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr]">
-        <Card className="relative overflow-hidden border-brand-purple/20 bg-white text-brand-navy shadow-[0_36px_110px_rgba(28,28,46,0.14)]">
-          <div className="absolute inset-0 opacity-80 [mask-image:linear-gradient(to_bottom,white,transparent)]">
-            <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(233,64,138,0.14),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(243,156,18,0.16),transparent_60%)]" />
-          </div>
-          <CardHeader>
-            <CardTitle className="text-2xl">“We stopped troubleshooting and started hosting”</CardTitle>
-            <CardDescription className="text-base text-brand-navy/70">
-              WatchParty keeps lighting, sync, and chat rituals aligned. Clubs now focus on conversation while the ambience engine glides from daybreak intros to midnight finales.
+
+      {/* Testimonials Grid */}
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1.1fr,1fr]">
+        {/* Featured Testimonial */}
+        <Card className="border-brand-purple/10 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-lg font-bold text-brand-navy sm:text-xl">&ldquo;We stopped troubleshooting and started hosting&rdquo;</CardTitle>
+            <CardDescription className="text-sm text-brand-navy/60 sm:text-base">
+              WatchParty keeps lighting, sync, and chat rituals aligned. Clubs now focus on conversation while the ambience engine works.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 text-brand-navy/80">
-            <blockquote className="rounded-3xl border border-brand-purple/20 bg-white/85 p-6 text-base leading-relaxed text-brand-navy">
-              “Guests swear they can feel the lighting change rooms with them. The lobby music fades, captions stay sharp, and the encore glow arrives right on time.”
+          <CardContent className="space-y-4 sm:space-y-5 p-4 pt-0 sm:p-6 sm:pt-0">
+            <blockquote className="rounded-lg sm:rounded-xl border border-brand-purple/10 bg-brand-purple/3 p-3 sm:p-4 text-[13px] sm:text-sm text-brand-navy/75 italic">
+              &ldquo;Guests swear they can feel the lighting change rooms with them. The lobby music fades, captions stay sharp, and the encore glow arrives right on time.&rdquo;
             </blockquote>
-            <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.42em] text-brand-navy/60">
-              <span className="rounded-full border border-brand-magenta/25 bg-brand-magenta/10 px-3 py-1">Festival hosts</span>
-              <span className="rounded-full border border-brand-blue/25 bg-brand-blue/10 px-3 py-1">Campus clubs</span>
-              <span className="rounded-full border border-brand-orange/25 bg-brand-orange/10 px-3 py-1">Creator premieres</span>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
+              <span className="rounded-full border border-brand-magenta/15 bg-brand-magenta/5 px-2 py-0.5 sm:px-2.5 sm:py-1 text-brand-magenta-dark">Festival hosts</span>
+              <span className="rounded-full border border-brand-blue/15 bg-brand-blue/5 px-2 py-0.5 sm:px-2.5 sm:py-1 text-brand-blue-dark">Campus clubs</span>
+              <span className="rounded-full border border-brand-orange/15 bg-brand-orange/5 px-2 py-0.5 sm:px-2.5 sm:py-1 text-brand-orange-dark">Creator premieres</span>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-brand-blue/20 bg-white/90 p-5 text-sm text-brand-navy/70">
-                <p className="text-xs uppercase tracking-[0.32em] text-brand-blue-dark">Saved per event</p>
-                <p className="mt-2 text-2xl font-semibold text-brand-navy">3 hrs</p>
-                <p className="mt-2">No more last-minute overlays or audio troubleshooting.</p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="rounded-lg sm:rounded-xl border border-brand-blue/10 bg-white/60 p-3 sm:p-4">
+                <p className="text-[10px] uppercase tracking-wider text-brand-blue-dark font-medium">Saved per event</p>
+                <p className="mt-0.5 sm:mt-1 text-xl sm:text-2xl font-bold text-brand-navy">3 hrs</p>
+                <p className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-brand-navy/55">No more last-minute troubleshooting.</p>
               </div>
-              <div className="rounded-3xl border border-brand-magenta/20 bg-brand-magenta/10 p-5 text-sm text-brand-navy/75">
-                <p className="text-xs uppercase tracking-[0.32em] text-brand-magenta-dark">Audience return</p>
-                <p className="mt-2 text-2xl font-semibold text-brand-navy">92%</p>
-                <p className="mt-2">Crews come back weekly for the ritual and community.</p>
+              <div className="rounded-lg sm:rounded-xl border border-brand-magenta/10 bg-brand-magenta/3 p-3 sm:p-4">
+                <p className="text-[10px] uppercase tracking-wider text-brand-magenta-dark font-medium">Audience return</p>
+                <p className="mt-0.5 sm:mt-1 text-xl sm:text-2xl font-bold text-brand-navy">92%</p>
+                <p className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-brand-navy/55">Crews come back weekly.</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <div className="grid gap-6">
-          {testimonials.map((testimonial) => (
-            <Card key={testimonial.author} className="border-brand-purple/15 bg-white/85 text-brand-navy shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
-              <CardHeader className="text-center sm:text-left">
-                <CardTitle className="text-lg">{testimonial.author}</CardTitle>
-                <p className="text-xs uppercase tracking-[0.42em] text-brand-navy/50">{testimonial.role}</p>
+
+        {/* Individual Testimonials */}
+        <div className="grid gap-3 sm:gap-4">
+          {testimonials.map((testimonial, index) => (
+            <Card
+              key={testimonial.author}
+              className="border-brand-purple/8 bg-white/70 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/15 hover:shadow-sm"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <CardHeader className="pb-1.5 sm:pb-2 p-4 sm:p-6">
+                <CardTitle className="text-sm font-semibold text-brand-navy sm:text-base">{testimonial.author}</CardTitle>
+                <p className="text-[11px] sm:text-xs text-brand-navy/50">{testimonial.role}</p>
               </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base text-brand-navy/70 text-center sm:text-left">{testimonial.message}</CardDescription>
+              <CardContent className="pt-0 p-4 sm:p-6 sm:pt-0">
+                <CardDescription className="text-[13px] sm:text-sm text-brand-navy/65">{testimonial.message}</CardDescription>
               </CardContent>
             </Card>
           ))}

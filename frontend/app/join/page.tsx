@@ -28,24 +28,21 @@ export default function JoinPartyPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent blur-3xl" />
-      </div>
-      <div className="glass-panel w-full max-w-xl rounded-[40px] p-8 text-brand-navy sm:p-12 relative z-10">
+    <div className="flex min-h-[80vh] items-center justify-center px-4 py-10 sm:py-16">
+      <div className="w-full max-w-md rounded-xl sm:rounded-2xl border border-brand-purple/10 bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-sm">
         <div className="text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/20 bg-brand-magenta/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.4em] text-brand-magenta-dark shadow-sm">
+          <span className="inline-flex items-center rounded-full border border-brand-magenta/20 bg-brand-magenta/5 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-brand-magenta-dark">
             Join a party
           </span>
-          <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-br from-brand-navy to-brand-purple bg-clip-text text-transparent">Enter your party code</h1>
-          <p className="mt-4 text-base text-brand-navy/70 leading-relaxed">
-            Watch together in seconds—no downloads or setup required.
+          <h1 className="mt-3 sm:mt-4 text-xl font-bold tracking-tight text-brand-navy sm:text-2xl md:text-3xl">Enter your party code</h1>
+          <p className="mt-2 sm:mt-3 text-[13px] sm:text-sm text-brand-navy/60">
+            Watch together in seconds—no downloads required.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-10 space-y-8">
-          <div className="space-y-2">
-            <label htmlFor="partyCode" className="block text-xs font-bold uppercase tracking-[0.25em] text-brand-navy/50 ml-1">
+        <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 space-y-5 sm:space-y-6">
+          <div className="space-y-1.5 sm:space-y-2">
+            <label htmlFor="partyCode" className="block text-[11px] sm:text-xs font-medium text-brand-navy/50 uppercase tracking-wider">
               Party Code
             </label>
             <input
@@ -55,7 +52,7 @@ export default function JoinPartyPage() {
               required
               value={partyCode}
               onChange={(e) => setPartyCode(e.target.value.toUpperCase())}
-              className="w-full rounded-2xl border border-brand-navy/10 bg-white/50 px-5 py-5 text-center text-3xl font-bold tracking-[0.3em] text-brand-blue-dark placeholder:text-brand-navy/10 focus:border-brand-blue/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-blue/10 transition-all"
+              className="w-full rounded-lg sm:rounded-xl border border-brand-navy/10 bg-white/60 px-4 py-3.5 sm:py-4 text-center text-xl sm:text-2xl font-bold tracking-widest text-brand-blue-dark placeholder:text-brand-navy/20 focus:border-brand-blue/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/10 transition-all"
               placeholder="ABC123"
               maxLength={10}
             />
@@ -64,15 +61,15 @@ export default function JoinPartyPage() {
           <button
             type="submit"
             disabled={loading || !partyCode.trim()}
-            className="w-full rounded-2xl bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-bold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:shadow-brand-magenta/40 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg sm:rounded-xl bg-gradient-to-r from-brand-magenta to-brand-purple px-5 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-white shadow-sm transition-all hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 min-h-[48px]"
           >
             {loading ? "Joining..." : "Join WatchParty"}
           </button>
         </form>
 
-        <div className="mt-12 space-y-3 text-center text-sm text-brand-navy/60">
+        <div className="mt-6 sm:mt-8 text-center text-[13px] sm:text-sm text-brand-navy/55">
           <p>Need to host your own movie night?</p>
-          <Link href="/auth/login" className="font-bold text-brand-blue hover:text-brand-blue-dark hover:underline decoration-brand-blue/30 underline-offset-4 transition-all">
+          <Link href="/auth/login" className="mt-1 inline-block font-medium text-brand-blue hover:text-brand-blue-dark transition-colors min-h-[44px] py-2">
             Sign in to create a party
           </Link>
         </div>
