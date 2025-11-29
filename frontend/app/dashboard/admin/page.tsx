@@ -48,33 +48,33 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="glass-panel rounded-3xl p-8 border-brand-navy/10 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-        <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-4">
+      <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border-brand-navy/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={() => router.push("/dashboard")}
-              className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue transition-colors hover:text-brand-blue-dark group"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-brand-blue transition-colors hover:text-brand-blue-dark group min-h-[44px]"
             >
               <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
             </button>
             <div>
-              <h1 className="text-3xl font-bold text-brand-navy">Admin Dashboard</h1>
-              <p className="text-brand-navy/70 text-sm font-medium">System administration and monitoring</p>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-navy">Admin Dashboard</h1>
+              <p className="text-brand-navy/70 text-xs sm:text-sm font-medium">System administration and monitoring</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <span className="px-4 py-2 bg-brand-coral/10 text-brand-coral border border-brand-coral/30 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-coral/10 text-brand-coral border border-brand-coral/30 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm">
               🛡️ Admin Access
             </span>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-4 sm:mt-6 lg:mt-8 flex flex-wrap gap-2 sm:gap-3 overflow-x-auto">
           {[
             { id: "overview", label: "Overview", icon: "📊" },
             { id: "users", label: "Users", icon: "👥" },
@@ -85,9 +85,9 @@ export default function AdminDashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-bold transition-all duration-300 ${
+              className={`flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold transition-all duration-300 min-h-[40px] sm:min-h-[44px] whitespace-nowrap ${
                 activeTab === tab.id
-                  ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple shadow-lg shadow-brand-purple/5 scale-105"
+                  ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple shadow-lg shadow-brand-purple/5"
                   : "border-brand-navy/10 bg-white/40 text-brand-navy/60 hover:border-brand-navy/20 hover:text-brand-navy hover:bg-white/60"
               }`}
             >
@@ -99,66 +99,66 @@ export default function AdminDashboard() {
       </div>
 
       {/* Content */}
-      <div className="space-y-8">
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {activeTab === "overview" && (
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-6 lg:space-y-8">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-brand-navy/60 text-xs font-bold uppercase tracking-wider">Total Users</p>
-                    <p className="text-3xl font-bold text-brand-navy mt-2">{stats?.total_users?.toLocaleString() || "0"}</p>
+                    <p className="text-brand-navy/60 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Total Users</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-navy mt-1 sm:mt-2">{stats?.total_users?.toLocaleString() || "0"}</p>
                   </div>
-                  <div className="text-4xl opacity-80">👥</div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl opacity-80">👥</div>
                 </div>
-                <div className="mt-4">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-cyan/10 px-2 py-1 text-[10px] font-bold text-brand-cyan">
+                <div className="mt-3 sm:mt-4">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-cyan/10 px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-bold text-brand-cyan">
                     +{stats?.new_users_today || 0} today
                   </span>
                 </div>
               </div>
 
-              <div className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-brand-navy/60 text-xs font-bold uppercase tracking-wider">Active Parties</p>
-                    <p className="text-3xl font-bold text-brand-navy mt-2">{stats?.active_parties?.toLocaleString() || "0"}</p>
+                    <p className="text-brand-navy/60 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Active Parties</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-navy mt-1 sm:mt-2">{stats?.active_parties?.toLocaleString() || "0"}</p>
                   </div>
-                  <div className="text-4xl opacity-80">🎬</div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl opacity-80">🎬</div>
                 </div>
-                <div className="mt-4">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-blue/10 px-2 py-1 text-[10px] font-bold text-brand-blue">
+                <div className="mt-3 sm:mt-4">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-blue/10 px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-bold text-brand-blue">
                     {stats?.parties_today || 0} created today
                   </span>
                 </div>
               </div>
 
-              <div className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-brand-navy/60 text-xs font-bold uppercase tracking-wider">Videos Uploaded</p>
-                    <p className="text-3xl font-bold text-brand-navy mt-2">{stats?.total_videos?.toLocaleString() || "0"}</p>
+                    <p className="text-brand-navy/60 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Videos Uploaded</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-navy mt-1 sm:mt-2">{stats?.total_videos?.toLocaleString() || "0"}</p>
                   </div>
-                  <div className="text-4xl opacity-80">📹</div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl opacity-80">📹</div>
                 </div>
-                <div className="mt-4">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-purple/10 px-2 py-1 text-[10px] font-bold text-brand-purple">
+                <div className="mt-3 sm:mt-4">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-purple/10 px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-bold text-brand-purple">
                     {stats?.videos_today || 0} uploaded today
                   </span>
                 </div>
               </div>
 
-              <div className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-brand-navy/60 text-xs font-bold uppercase tracking-wider">System Health</p>
-                    <p className="text-3xl font-bold text-brand-cyan mt-2">Healthy</p>
+                    <p className="text-brand-navy/60 text-[10px] sm:text-xs font-bold uppercase tracking-wider">System Health</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-cyan mt-1 sm:mt-2">Healthy</p>
                   </div>
-                  <div className="text-4xl opacity-80">💚</div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl opacity-80">💚</div>
                 </div>
-                <div className="mt-4">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-navy/5 px-2 py-1 text-[10px] font-bold text-brand-navy/60">
+                <div className="mt-3 sm:mt-4">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-navy/5 px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-bold text-brand-navy/60">
                     {stats?.uptime || "99.9%"} uptime
                   </span>
                 </div>
@@ -166,23 +166,23 @@ export default function AdminDashboard() {
             </div>
 
             {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
               {/* Recent Users */}
-              <div className="glass-card rounded-3xl p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-brand-navy">Recent Users</h3>
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-brand-navy">Recent Users</h3>
                   <button
                     onClick={() => setActiveTab("users")}
-                    className="text-brand-blue hover:text-brand-blue-dark text-sm font-bold transition-colors hover:underline"
+                    className="text-brand-blue hover:text-brand-blue-dark text-xs sm:text-sm font-bold transition-colors hover:underline min-h-[32px] sm:min-h-[36px]"
                   >
                     View All →
                   </button>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-3 lg:space-y-4">
                   {recentUsers.slice(0, 5).map((user) => (
-                    <div key={user.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/40 transition-colors border border-transparent hover:border-white/50">
-                      <div className="w-12 h-12 rounded-2xl bg-white/50 flex items-center justify-center overflow-hidden shadow-sm border border-white/50">
+                    <div key={user.id} className="flex items-center gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl sm:rounded-2xl hover:bg-white/40 transition-colors border border-transparent hover:border-white/50">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/50 flex items-center justify-center overflow-hidden shadow-sm border border-white/50 shrink-0">
                         {user.avatar ? (
                           <img
                             src={user.avatar}
@@ -190,24 +190,24 @@ export default function AdminDashboard() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <span className="text-brand-navy/60 font-bold text-lg">
+                          <span className="text-brand-navy/60 font-bold text-base sm:text-lg">
                             {user.username?.charAt(0).toUpperCase() || "?"}
                           </span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="font-bold text-brand-navy truncate">{user.username}</p>
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                          <p className="font-bold text-brand-navy truncate text-sm sm:text-base">{user.username}</p>
                           {user.is_verified && (
-                            <span className="text-brand-cyan text-xs" title="Verified">✓</span>
+                            <span className="text-brand-cyan text-[10px] sm:text-xs" title="Verified">✓</span>
                           )}
                           {user.is_premium && (
-                            <span className="text-brand-orange text-xs" title="Premium">⭐</span>
+                            <span className="text-brand-orange text-[10px] sm:text-xs" title="Premium">⭐</span>
                           )}
                         </div>
-                        <p className="text-brand-navy/60 text-xs font-medium truncate">{user.email}</p>
+                        <p className="text-brand-navy/60 text-[10px] sm:text-xs font-medium truncate">{user.email}</p>
                       </div>
-                      <div className="text-brand-navy/40 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
+                      <div className="text-brand-navy/40 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap hidden xs:block">
                         {new Date(user.date_joined || "").toLocaleDateString()}
                       </div>
                     </div>
@@ -216,16 +216,16 @@ export default function AdminDashboard() {
               </div>
 
               {/* System Metrics */}
-              <div className="glass-card rounded-3xl p-8">
-                <h3 className="text-xl font-bold text-brand-navy mb-6">System Metrics</h3>
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+                <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6">System Metrics</h3>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
-                    <div className="flex justify-between text-sm mb-2 font-bold">
+                    <div className="flex justify-between text-xs sm:text-sm mb-1.5 sm:mb-2 font-bold">
                       <span className="text-brand-navy/60">CPU Usage</span>
                       <span className="text-brand-navy">{stats?.cpu_usage || 45}%</span>
                     </div>
-                    <div className="w-full bg-brand-navy/5 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-brand-navy/5 rounded-full h-2 sm:h-3 overflow-hidden">
                       <div 
                         className="bg-gradient-to-r from-brand-blue to-brand-cyan h-full rounded-full transition-all duration-500" 
                         style={{ width: `${stats?.cpu_usage || 45}%` }}
@@ -234,11 +234,11 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-sm mb-2 font-bold">
+                    <div className="flex justify-between text-xs sm:text-sm mb-1.5 sm:mb-2 font-bold">
                       <span className="text-brand-navy/60">Memory Usage</span>
                       <span className="text-brand-navy">{stats?.memory_usage || 62}%</span>
                     </div>
-                    <div className="w-full bg-brand-navy/5 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-brand-navy/5 rounded-full h-2 sm:h-3 overflow-hidden">
                       <div 
                         className="bg-gradient-to-r from-brand-cyan to-brand-purple h-full rounded-full transition-all duration-500" 
                         style={{ width: `${stats?.memory_usage || 62}%` }}
@@ -247,11 +247,11 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-sm mb-2 font-bold">
+                    <div className="flex justify-between text-xs sm:text-sm mb-1.5 sm:mb-2 font-bold">
                       <span className="text-brand-navy/60">Storage Usage</span>
                       <span className="text-brand-navy">{stats?.storage_usage || 78}%</span>
                     </div>
-                    <div className="w-full bg-brand-navy/5 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-brand-navy/5 rounded-full h-2 sm:h-3 overflow-hidden">
                       <div 
                         className="bg-gradient-to-r from-brand-orange to-brand-coral h-full rounded-full transition-all duration-500" 
                         style={{ width: `${stats?.storage_usage || 78}%` }}
@@ -259,8 +259,8 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-brand-navy/5">
-                    <div className="flex justify-between text-sm font-bold">
+                  <div className="pt-3 sm:pt-4 border-t border-brand-navy/5">
+                    <div className="flex justify-between text-xs sm:text-sm font-bold">
                       <span className="text-brand-navy/60">Active Connections</span>
                       <span className="text-brand-navy">{stats?.active_connections || 0}</span>
                     </div>
@@ -270,35 +270,35 @@ export default function AdminDashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="glass-card rounded-3xl p-8">
-              <h3 className="text-xl font-bold text-brand-navy mb-6">Quick Actions</h3>
+            <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+              <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6">Quick Actions</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <button
                   onClick={() => setActiveTab("users")}
-                  className="group p-6 border border-brand-blue/20 bg-brand-blue/5 hover:bg-brand-blue/10 text-brand-blue rounded-3xl transition-all text-left hover:shadow-lg hover:-translate-y-1"
+                  className="group p-4 sm:p-5 lg:p-6 border border-brand-blue/20 bg-brand-blue/5 hover:bg-brand-blue/10 text-brand-blue rounded-2xl sm:rounded-3xl transition-all text-left hover:shadow-lg hover:-translate-y-1 min-h-[120px]"
                 >
-                  <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">👥</div>
-                  <h4 className="font-bold mb-1 text-lg">Manage Users</h4>
-                  <p className="text-sm text-brand-navy/70 font-medium">View, edit, and moderate users</p>
+                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">👥</div>
+                  <h4 className="font-bold mb-1 text-base sm:text-lg">Manage Users</h4>
+                  <p className="text-xs sm:text-sm text-brand-navy/70 font-medium">View, edit, and moderate users</p>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("content")}
-                  className="group p-6 border border-brand-purple/20 bg-brand-purple/5 hover:bg-brand-purple/10 text-brand-purple rounded-3xl transition-all text-left hover:shadow-lg hover:-translate-y-1"
+                  className="group p-4 sm:p-5 lg:p-6 border border-brand-purple/20 bg-brand-purple/5 hover:bg-brand-purple/10 text-brand-purple rounded-2xl sm:rounded-3xl transition-all text-left hover:shadow-lg hover:-translate-y-1 min-h-[120px]"
                 >
-                  <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">📹</div>
-                  <h4 className="font-bold mb-1 text-lg">Content Review</h4>
-                  <p className="text-sm text-brand-navy/70 font-medium">Moderate videos and content</p>
+                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">📹</div>
+                  <h4 className="font-bold mb-1 text-base sm:text-lg">Content Review</h4>
+                  <p className="text-xs sm:text-sm text-brand-navy/70 font-medium">Moderate videos and content</p>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("system")}
-                  className="group p-6 border border-brand-cyan/20 bg-brand-cyan/5 hover:bg-brand-cyan/10 text-brand-cyan rounded-3xl transition-all text-left hover:shadow-lg hover:-translate-y-1"
+                  className="group p-4 sm:p-5 lg:p-6 border border-brand-cyan/20 bg-brand-cyan/5 hover:bg-brand-cyan/10 text-brand-cyan rounded-2xl sm:rounded-3xl transition-all text-left hover:shadow-lg hover:-translate-y-1 min-h-[120px]"
                 >
-                  <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">⚙️</div>
-                  <h4 className="font-bold mb-1 text-lg">System Settings</h4>
-                  <p className="text-sm text-brand-navy/70 font-medium">Configure system parameters</p>
+                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">⚙️</div>
+                  <h4 className="font-bold mb-1 text-base sm:text-lg">System Settings</h4>
+                  <p className="text-xs sm:text-sm text-brand-navy/70 font-medium">Configure system parameters</p>
                 </button>
               </div>
             </div>
@@ -318,17 +318,17 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === "parties" && (
-          <div className="glass-card rounded-3xl p-12 text-center border-dashed border-2 border-brand-navy/10">
-            <div className="text-7xl mb-6 opacity-50 animate-pulse">🚧</div>
-            <h3 className="text-2xl font-bold text-brand-navy mb-3">
+          <div className="glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-center border-dashed border-2 border-brand-navy/10">
+            <div className="text-4xl sm:text-5xl lg:text-7xl mb-4 sm:mb-6 opacity-50 animate-pulse">🚧</div>
+            <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2 sm:mb-3">
               Party Management
             </h3>
-            <p className="text-brand-navy/60 font-medium mb-8 max-w-md mx-auto">
+            <p className="text-brand-navy/60 font-medium mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
               This section is under development. Advanced party management tools will be available here.
             </p>
             <button
               onClick={() => setActiveTab("overview")}
-              className="btn-gradient px-8 py-3 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5"
+              className="btn-gradient px-6 sm:px-8 py-2.5 sm:py-3 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5 text-sm sm:text-base min-h-[44px]"
             >
               Back to Overview
             </button>

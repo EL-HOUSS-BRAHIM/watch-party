@@ -91,24 +91,24 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan/20 via-brand-blue/20 to-brand-purple/20 rounded-3xl blur-3xl opacity-60"></div>
-        <div className="glass-panel relative rounded-3xl p-8 border-brand-cyan/20">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-4">
-                <h1 className="text-3xl sm:text-4xl font-bold text-brand-navy">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan/20 via-brand-blue/20 to-brand-purple/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border-brand-cyan/20">
+          <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center">
+            <div className="space-y-1 sm:space-y-2">
+              <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-4">
+                <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-brand-navy">
                   <span className="gradient-text">Support Center</span>
                 </h1>
                 <LiveIndicator count={tickets.filter(t => t.status === "open").length} label="Open Tickets" />
               </div>
-              <p className="text-brand-navy/70 text-lg">Get help with your account, billing, or technical issues</p>
+              <p className="text-brand-navy/70 text-sm sm:text-base lg:text-lg">Get help with your account, billing, or technical issues</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`px-6 py-3 rounded-xl font-bold transition-all shadow-lg ${
+              className={`px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-bold transition-all shadow-lg min-h-[44px] text-sm sm:text-base ${
                 showForm 
                   ? "bg-white text-brand-navy hover:bg-brand-neutral border border-brand-navy/10" 
                   : "btn-gradient text-white hover:shadow-brand-cyan/25 hover:-translate-y-0.5"
@@ -121,31 +121,31 @@ export default function SupportPage() {
       </div>
 
       {showForm && (
-        <div className="glass-card rounded-3xl p-8 animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="text-2xl font-bold text-brand-navy flex items-center gap-2">
+        <div className="glass-card rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-brand-navy flex items-center gap-2">
               <span>🎫</span> Create Support Ticket
             </h2>
             
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-brand-navy/70 ml-1">Title</label>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-1 sm:space-y-2">
+                <label className="text-xs sm:text-sm font-bold text-brand-navy/70 ml-1">Title</label>
                 <input
                   type="text"
                   placeholder="Brief summary of the issue"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/50 border border-brand-navy/10 rounded-xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all"
+                  className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/50 border border-brand-navy/10 rounded-lg sm:rounded-xl text-sm sm:text-base text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all"
                 />
               </div>
               
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-brand-navy/70 ml-1">Category</label>
+              <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
+                <div className="space-y-1 sm:space-y-2">
+                  <label className="text-xs sm:text-sm font-bold text-brand-navy/70 ml-1">Category</label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/50 border border-brand-navy/10 rounded-xl text-brand-navy focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all cursor-pointer"
+                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/50 border border-brand-navy/10 rounded-lg sm:rounded-xl text-sm sm:text-base text-brand-navy focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all cursor-pointer min-h-[44px]"
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (

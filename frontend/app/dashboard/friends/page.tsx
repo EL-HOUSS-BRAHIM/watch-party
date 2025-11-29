@@ -145,31 +145,31 @@ export default function FriendsPage() {
   }
 
   const UserCard = ({ user, actions }: { user: User; actions: React.ReactNode }) => (
-    <div className="glass-card rounded-2xl p-4 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-navy/5">
-      <div className="flex items-center gap-4">
+    <div className="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-navy/5">
+      <div className="flex items-center gap-3 sm:gap-4">
         <div className="relative">
           {user.avatar ? (
-            <img src={user.avatar} alt={user.username} className="w-14 h-14 rounded-full object-cover border-2 border-white/20 shadow-sm" />
+            <img src={user.avatar} alt={user.username} className="w-11 h-11 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white/20 shadow-sm" />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 flex items-center justify-center border-2 border-white/20 shadow-sm">
-              <span className="text-xl font-bold text-brand-navy/60">{user.username?.charAt(0).toUpperCase() || "?"}</span>
+            <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 flex items-center justify-center border-2 border-white/20 shadow-sm">
+              <span className="text-base sm:text-xl font-bold text-brand-navy/60">{user.username?.charAt(0).toUpperCase() || "?"}</span>
             </div>
           )}
-          <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white ${user.is_online ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+          <div className={`absolute bottom-0 right-0 w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border-2 border-white ${user.is_online ? 'bg-green-500' : 'bg-gray-300'}`}></div>
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="font-bold text-brand-navy truncate text-lg">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <h3 className="font-bold text-brand-navy truncate text-sm sm:text-lg">
               {user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username}
             </h3>
-            {user.is_verified && <span className="text-brand-cyan text-sm" title="Verified">✓</span>}
-            {user.is_premium && <span className="text-brand-orange text-sm" title="Premium">⭐</span>}
+            {user.is_verified && <span className="text-brand-cyan text-xs sm:text-sm" title="Verified">✓</span>}
+            {user.is_premium && <span className="text-brand-orange text-xs sm:text-sm" title="Premium">⭐</span>}
           </div>
-          <p className="text-brand-navy/60 text-sm font-medium">@{user.username}</p>
+          <p className="text-brand-navy/60 text-xs sm:text-sm font-medium">@{user.username}</p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
           {actions}
         </div>
       </div>
@@ -177,35 +177,35 @@ export default function FriendsPage() {
   )
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-3xl blur-3xl opacity-60"></div>
-        <div className="glass-panel relative rounded-3xl p-8 border-brand-purple/20">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-bold text-brand-navy">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border-brand-purple/20">
+          <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center">
+            <div className="space-y-1 sm:space-y-2">
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-brand-navy">
                 <span className="gradient-text">Friends & Community</span>
               </h1>
-              <p className="text-brand-navy/70 text-lg">Connect with friends and discover new people to watch with</p>
+              <p className="text-brand-navy/70 text-sm sm:text-base lg:text-lg">Connect with friends and discover new people to watch with</p>
             </div>
             
             <div className="w-full md:w-auto relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-brand-navy/40 text-lg">🔍</span>
+                <span className="text-brand-navy/40 text-base sm:text-lg">🔍</span>
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Find users..."
-                className="w-full md:w-64 pl-10 pr-4 py-3 bg-white/50 border border-brand-navy/10 rounded-xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all shadow-sm"
+                className="w-full md:w-64 pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 bg-white/50 border border-brand-navy/10 rounded-lg sm:rounded-xl text-sm sm:text-base text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all shadow-sm"
               />
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div className="mt-4 sm:mt-6 lg:mt-8 flex flex-wrap gap-1.5 sm:gap-2">
             {[
               { key: "friends", label: "Friends", count: friends.length, icon: "👥" },
               { key: "requests", label: "Requests", count: friendRequests.length, icon: "📬" },
@@ -215,15 +215,15 @@ export default function FriendsPage() {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as any)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all duration-300 ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 min-h-[36px] sm:min-h-[40px] ${
                   activeTab === key
                     ? "bg-brand-navy text-white shadow-lg shadow-brand-navy/20 scale-105"
                     : "bg-white/40 text-brand-navy/70 hover:bg-white hover:text-brand-navy border border-transparent hover:border-white/60"
                 }`}
               >
                 <span>{icon}</span>
-                {label}
-                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${activeTab === key ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/60"}`}>
+                <span className="hidden xs:inline">{label}</span>
+                <span className={`ml-0.5 sm:ml-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs ${activeTab === key ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/60"}`}>
                   {count}
                 </span>
               </button>
@@ -234,14 +234,14 @@ export default function FriendsPage() {
 
       {/* Loading State */}
       {loading && (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="glass-card rounded-2xl p-4 animate-pulse">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-brand-navy/5"></div>
+            <div key={i} className="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 animate-pulse">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-brand-navy/5"></div>
                 <div className="flex-1 space-y-2">
-                  <div className="h-5 bg-brand-navy/5 rounded w-3/4"></div>
-                  <div className="h-4 bg-brand-navy/5 rounded w-1/2"></div>
+                  <div className="h-4 sm:h-5 bg-brand-navy/5 rounded w-3/4"></div>
+                  <div className="h-3 sm:h-4 bg-brand-navy/5 rounded w-1/2"></div>
                 </div>
               </div>
             </div>
@@ -251,28 +251,28 @@ export default function FriendsPage() {
 
       {/* Content */}
       {!loading && (
-        <div className="min-h-[400px]">
+        <div className="min-h-[300px] sm:min-h-[400px]">
           {/* Friends Tab */}
           {activeTab === "friends" && (
             <>
               {friends.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
                   {friends.map((friend) => (
                     <UserCard
                       key={friend.id}
                       user={friend}
                       actions={
-                        <div className="flex gap-2">
+                        <div className="flex gap-1.5 sm:gap-2">
                           <Link
                             href={`/dashboard/users/${friend.id}`}
-                            className="p-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue-dark rounded-lg transition-colors"
+                            className="p-1.5 sm:p-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue-dark rounded-md sm:rounded-lg transition-colors min-h-[36px] sm:min-h-[40px] min-w-[36px] sm:min-w-[40px] flex items-center justify-center"
                             title="View Profile"
                           >
                             👤
                           </Link>
                           <button
                             onClick={() => friend.username && removeFriend(friend.username)}
-                            className="p-2 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral-dark rounded-lg transition-colors"
+                            className="p-1.5 sm:p-2 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral-dark rounded-md sm:rounded-lg transition-colors min-h-[36px] sm:min-h-[40px] min-w-[36px] sm:min-w-[40px] flex items-center justify-center"
                             title="Remove Friend"
                           >
                             ✕
@@ -283,15 +283,15 @@ export default function FriendsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="glass-card rounded-3xl p-12 text-center">
-                  <div className="text-6xl mb-6 opacity-80">👥</div>
-                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No friends yet</h3>
-                  <p className="text-brand-navy/60 mb-8 max-w-md mx-auto text-lg">
+                <div className="glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center">
+                  <div className="text-4xl sm:text-6xl mb-4 sm:mb-6 opacity-80">👥</div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2 sm:mb-3">No friends yet</h3>
+                  <p className="text-brand-navy/60 mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-lg">
                     Add friends to start watching together and sharing experiences!
                   </p>
                   <button
                     onClick={() => setActiveTab("suggestions")}
-                    className="btn-gradient px-8 py-3 rounded-xl font-bold text-white shadow-lg hover:shadow-brand-purple/25 transition-all hover:-translate-y-0.5"
+                    className="btn-gradient px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white shadow-lg hover:shadow-brand-purple/25 transition-all hover:-translate-y-0.5 min-h-[44px] text-sm sm:text-base"
                   >
                     Find Friends
                   </button>
@@ -304,22 +304,22 @@ export default function FriendsPage() {
           {activeTab === "requests" && (
             <>
               {friendRequests.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
                   {friendRequests.map((request) => (
                     <UserCard
                       key={request.id}
                       user={request.from_user}
                       actions={
-                        <div className="flex gap-2">
+                        <div className="flex flex-col xs:flex-row gap-1.5 sm:gap-2">
                           <button
                             onClick={() => acceptFriendRequest(request.id)}
-                            className="px-4 py-2 bg-brand-cyan hover:bg-brand-cyan-dark text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
+                            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-cyan hover:bg-brand-cyan-dark text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-bold transition-colors shadow-sm min-h-[32px] sm:min-h-[36px]"
                           >
                             Accept
                           </button>
                           <button
                             onClick={() => declineFriendRequest(request.id)}
-                            className="px-4 py-2 bg-white border border-brand-navy/10 hover:bg-brand-coral/10 text-brand-coral-dark rounded-lg text-sm font-bold transition-colors"
+                            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white border border-brand-navy/10 hover:bg-brand-coral/10 text-brand-coral-dark rounded-md sm:rounded-lg text-xs sm:text-sm font-bold transition-colors min-h-[32px] sm:min-h-[36px]"
                           >
                             Decline
                           </button>
@@ -329,10 +329,10 @@ export default function FriendsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="glass-card rounded-3xl p-12 text-center">
-                  <div className="text-6xl mb-6 opacity-80">📬</div>
-                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No friend requests</h3>
-                  <p className="text-brand-navy/60 text-lg">
+                <div className="glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center">
+                  <div className="text-4xl sm:text-6xl mb-4 sm:mb-6 opacity-80">📬</div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2 sm:mb-3">No friend requests</h3>
+                  <p className="text-brand-navy/60 text-sm sm:text-lg">
                     When someone sends you a friend request, it will appear here.
                   </p>
                 </div>
@@ -344,22 +344,22 @@ export default function FriendsPage() {
           {activeTab === "suggestions" && (
             <>
               {suggestions.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
                   {suggestions.map((suggestion) => (
                     <UserCard
                       key={suggestion.id}
                       user={suggestion}
                       actions={
-                        <div className="flex gap-2">
+                        <div className="flex gap-1.5 sm:gap-2">
                           <button
                             onClick={() => sendFriendRequest(suggestion.id)}
-                            className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
+                            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-bold transition-colors shadow-sm min-h-[32px] sm:min-h-[36px]"
                           >
-                            Add Friend
+                            <span className="hidden xs:inline">Add </span>Friend
                           </button>
                           <button
                             onClick={() => blockUser(suggestion.id)}
-                            className="p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy/40 hover:text-brand-navy/70 rounded-lg transition-colors"
+                            className="p-1.5 sm:p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy/40 hover:text-brand-navy/70 rounded-md sm:rounded-lg transition-colors min-h-[32px] sm:min-h-[36px] min-w-[32px] sm:min-w-[36px] flex items-center justify-center"
                             title="Hide"
                           >
                             ✕
@@ -370,10 +370,10 @@ export default function FriendsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="glass-card rounded-3xl p-12 text-center">
-                  <div className="text-6xl mb-6 opacity-80">✨</div>
-                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No suggestions</h3>
-                  <p className="text-brand-navy/60 text-lg">
+                <div className="glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center">
+                  <div className="text-4xl sm:text-6xl mb-4 sm:mb-6 opacity-80">✨</div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2 sm:mb-3">No suggestions</h3>
+                  <p className="text-brand-navy/60 text-sm sm:text-lg">
                     We'll suggest friends based on your activity and mutual connections.
                   </p>
                 </div>
@@ -385,22 +385,22 @@ export default function FriendsPage() {
           {activeTab === "search" && searchQuery.trim() && (
             <>
               {searchResults.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
                   {searchResults.map((user) => (
                     <UserCard
                       key={user.id}
                       user={user}
                       actions={
-                        <div className="flex gap-2">
+                        <div className="flex gap-1.5 sm:gap-2">
                           <button
                             onClick={() => sendFriendRequest(user.id)}
-                            className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
+                            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-bold transition-colors shadow-sm min-h-[32px] sm:min-h-[36px]"
                           >
-                            Add Friend
+                            <span className="hidden xs:inline">Add </span>Friend
                           </button>
                           <Link
                             href={`/dashboard/users/${user.id}`}
-                            className="p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-lg transition-colors"
+                            className="p-1.5 sm:p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-md sm:rounded-lg transition-colors min-h-[32px] sm:min-h-[36px] min-w-[32px] sm:min-w-[36px] flex items-center justify-center"
                             title="View Profile"
                           >
                             👤
@@ -411,10 +411,10 @@ export default function FriendsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="glass-card rounded-3xl p-12 text-center">
-                  <div className="text-6xl mb-6 opacity-80">🔍</div>
-                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No users found</h3>
-                  <p className="text-brand-navy/60 text-lg">
+                <div className="glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center">
+                  <div className="text-4xl sm:text-6xl mb-4 sm:mb-6 opacity-80">🔍</div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2 sm:mb-3">No users found</h3>
+                  <p className="text-brand-navy/60 text-sm sm:text-lg">
                     No users match "{searchQuery}". Try a different search term.
                   </p>
                 </div>

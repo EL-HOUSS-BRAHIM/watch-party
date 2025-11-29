@@ -153,26 +153,26 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="glass-panel rounded-3xl p-8 border-brand-navy/10 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-cyan/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border-brand-navy/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-brand-cyan/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col xs:flex-row xs:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={() => router.push("/dashboard")}
-              className="text-brand-navy/60 hover:text-brand-navy transition-colors p-2 hover:bg-white/20 rounded-full"
+              className="text-brand-navy/60 hover:text-brand-navy transition-colors p-2 hover:bg-white/20 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center"
             >
               ←
             </button>
             <div>
-              <h1 className="text-3xl font-bold text-brand-navy">Billing & Subscription</h1>
-              <p className="text-brand-navy/60 text-sm font-medium mt-1">Manage your subscription and billing information</p>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-navy">Billing & Subscription</h1>
+              <p className="text-brand-navy/60 text-xs sm:text-sm font-medium mt-1">Manage your subscription and billing info</p>
             </div>
           </div>
           
           {currentSubscription && (
-            <div className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border ${
+            <div className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider border self-start xs:self-auto ${
               currentSubscription.status === "active" 
                 ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30"
                 : "bg-brand-coral/10 text-brand-coral border-brand-coral/30"
@@ -183,35 +183,35 @@ export default function BillingPage() {
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Current Subscription */}
         {currentSubscription && (
-          <div className="glass-card rounded-3xl p-8">
-            <h2 className="text-xl font-bold text-brand-navy mb-6 flex items-center gap-2">
-              <span className="text-2xl">💳</span> Current Subscription
+          <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+            <h2 className="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6 flex items-center gap-2">
+              <span className="text-xl sm:text-2xl">💳</span> Current Subscription
             </h2>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               <div>
-                <h3 className="text-2xl font-bold text-brand-navy mb-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2">
                   {currentSubscription.plan.name}
                 </h3>
-                <p className="text-brand-navy/60 mb-6 font-medium">{currentSubscription.plan.description}</p>
+                <p className="text-brand-navy/60 mb-4 sm:mb-6 font-medium text-sm sm:text-base">{currentSubscription.plan.description}</p>
                 
-                <div className="space-y-4 text-sm">
-                  <div className="flex justify-between p-3 rounded-xl bg-white/40 border border-white/50">
+                <div className="space-y-2 sm:space-y-3 lg:space-y-4 text-xs sm:text-sm">
+                  <div className="flex justify-between p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/40 border border-white/50">
                     <span className="text-brand-navy/60 font-medium">Price</span>
                     <span className="text-brand-navy font-bold">
                       {formatPrice(currentSubscription.plan.price)}/{currentSubscription.plan.interval}
                     </span>
                   </div>
-                  <div className="flex justify-between p-3 rounded-xl bg-white/40 border border-white/50">
+                  <div className="flex flex-col xs:flex-row xs:justify-between gap-1 xs:gap-0 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/40 border border-white/50">
                     <span className="text-brand-navy/60 font-medium">Current Period</span>
-                    <span className="text-brand-navy font-bold">
+                    <span className="text-brand-navy font-bold text-xs sm:text-sm">
                       {formatDate(currentSubscription.current_period_start)} - {formatDate(currentSubscription.current_period_end)}
                     </span>
                   </div>
-                  <div className="flex justify-between p-3 rounded-xl bg-white/40 border border-white/50">
+                  <div className="flex justify-between p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/40 border border-white/50">
                     <span className="text-brand-navy/60 font-medium">Next Billing</span>
                     <span className="text-brand-navy font-bold">
                       {currentSubscription.cancel_at_period_end 
@@ -223,10 +223,10 @@ export default function BillingPage() {
                 </div>
               </div>
               
-              <div className="space-y-4 flex flex-col justify-center">
+              <div className="space-y-3 sm:space-y-4 flex flex-col justify-center">
                 <button
                   onClick={updatePaymentMethod}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5"
+                  className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5 min-h-[44px]"
                 >
                   Update Payment Method
                 </button>
@@ -234,14 +234,14 @@ export default function BillingPage() {
                 {currentSubscription.cancel_at_period_end ? (
                   <button
                     onClick={reactivateSubscription}
-                    className="w-full px-6 py-4 bg-brand-cyan hover:bg-brand-cyan-dark text-white rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-brand-cyan/25 hover:-translate-y-0.5"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-brand-cyan hover:bg-brand-cyan-dark text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all shadow-lg hover:shadow-brand-cyan/25 hover:-translate-y-0.5 min-h-[44px]"
                   >
                     Reactivate Subscription
                   </button>
                 ) : (
                   <button
                     onClick={cancelSubscription}
-                    className="w-full px-6 py-4 border border-brand-coral/30 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral rounded-xl text-sm font-bold transition-all"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 border border-brand-coral/30 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[44px]"
                   >
                     Cancel Subscription
                   </button>
@@ -252,16 +252,16 @@ export default function BillingPage() {
         )}
 
         {/* Pricing Plans */}
-        <div className="glass-card rounded-3xl p-8">
-          <h2 className="text-xl font-bold text-brand-navy mb-8 flex items-center gap-2">
-            <span className="text-2xl">💎</span> {currentSubscription ? "Change Plan" : "Choose Your Plan"}
+        <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-navy mb-6 sm:mb-8 flex items-center gap-2">
+            <span className="text-xl sm:text-2xl">💎</span> {currentSubscription ? "Change Plan" : "Choose Your Plan"}
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={`relative glass-panel rounded-2xl p-6 transition-all hover:shadow-xl hover:-translate-y-1 ${
+                className={`relative glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-6 transition-all hover:shadow-xl hover:-translate-y-1 ${
                   plan.is_popular 
                     ? "border-brand-magenta/30 ring-2 ring-brand-magenta/10 bg-brand-magenta/5" 
                     : "border-brand-navy/10"
@@ -272,33 +272,33 @@ export default function BillingPage() {
                 }`}
               >
                 {plan.is_popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-brand-magenta to-brand-orange text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide">
+                  <div className="absolute -top-2 sm:-top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-gradient-to-r from-brand-magenta to-brand-orange text-white px-2 sm:px-4 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg uppercase tracking-wide whitespace-nowrap">
                       Most Popular
                     </span>
                   </div>
                 )}
                 
                 {currentSubscription?.plan.id === plan.id && (
-                  <div className="absolute -top-3 right-4">
-                    <span className="bg-brand-cyan text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide">
-                      Current Plan
+                  <div className="absolute -top-2 sm:-top-3 right-2 sm:right-4">
+                    <span className="bg-brand-cyan text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg uppercase tracking-wide">
+                      Current
                     </span>
                   </div>
                 )}
 
-                <div className="text-center mb-8 mt-2">
-                  <h3 className="text-xl font-bold text-brand-navy mb-2">{plan.name}</h3>
-                  <p className="text-brand-navy/60 text-sm mb-6 font-medium min-h-[40px]">{plan.description}</p>
-                  <div className="text-4xl font-bold text-brand-navy">
+                <div className="text-center mb-6 sm:mb-8 mt-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-2">{plan.name}</h3>
+                  <p className="text-brand-navy/60 text-xs sm:text-sm mb-4 sm:mb-6 font-medium min-h-[40px]">{plan.description}</p>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-navy">
                     {formatPrice(plan.price)}
-                    <span className="text-lg text-brand-navy/40 font-medium">/{plan.interval}</span>
+                    <span className="text-sm sm:text-lg text-brand-navy/40 font-medium">/{plan.interval}</span>
                   </div>
                 </div>
 
-                <ul className="space-y-4 mb-8">
+                <ul className="space-y-2 sm:space-y-3 lg:space-y-4 mb-6 sm:mb-8">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-3 text-brand-navy/80 text-sm font-medium">
+                    <li key={index} className="flex items-start gap-2 sm:gap-3 text-brand-navy/80 text-xs sm:text-sm font-medium">
                       <span className="text-brand-cyan font-bold mt-0.5">✓</span>
                       {feature}
                     </li>
@@ -308,7 +308,7 @@ export default function BillingPage() {
                 <button
                   onClick={() => subscribeToPlan(plan.id)}
                   disabled={processing === plan.id || currentSubscription?.plan.id === plan.id}
-                  className={`w-full px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg ${
+                  className={`w-full px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all shadow-lg min-h-[44px] ${
                     currentSubscription?.plan.id === plan.id
                       ? "bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/30 cursor-not-allowed"
                       : plan.is_popular
@@ -321,7 +321,7 @@ export default function BillingPage() {
                     : currentSubscription?.plan.id === plan.id
                     ? "Current Plan"
                     : currentSubscription
-                    ? "Change to this Plan"
+                    ? "Change Plan"
                     : "Get Started"
                   }
                 </button>
@@ -331,88 +331,90 @@ export default function BillingPage() {
         </div>
 
         {/* Billing History */}
-        <div className="glass-card rounded-3xl p-8">
-          <h2 className="text-xl font-bold text-brand-navy mb-6 flex items-center gap-2">
-            <span className="text-2xl">📜</span> Billing History
+        <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6 flex items-center gap-2">
+            <span className="text-xl sm:text-2xl">📜</span> Billing History
           </h2>
           
           {billingHistory.length === 0 ? (
-            <div className="text-center py-12 rounded-2xl border-2 border-dashed border-brand-navy/10 bg-white/20">
-              <p className="text-brand-navy/40 font-bold">No billing history available</p>
+            <div className="text-center py-8 sm:py-12 rounded-xl sm:rounded-2xl border-2 border-dashed border-brand-navy/10 bg-white/20">
+              <p className="text-brand-navy/40 font-bold text-sm sm:text-base">No billing history available</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-brand-navy/10">
-                    <th className="text-left py-4 px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-xs">Date</th>
-                    <th className="text-left py-4 px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-xs">Description</th>
-                    <th className="text-left py-4 px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-xs">Amount</th>
-                    <th className="text-left py-4 px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-xs">Status</th>
-                    <th className="text-left py-4 px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-xs">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {billingHistory.map((invoice) => (
-                    <tr key={invoice.id} className="border-b border-brand-navy/5 hover:bg-white/40 transition-colors">
-                      <td className="py-4 px-4 text-brand-navy/80 text-sm font-medium">
-                        {formatDate(invoice.created_at)}
-                      </td>
-                      <td className="py-4 px-4 text-brand-navy/80 text-sm font-medium">
-                        {invoice.description}
-                      </td>
-                      <td className="py-4 px-4 text-brand-navy text-sm font-bold">
-                        {formatPrice(invoice.amount)}
-                      </td>
-                      <td className="py-4 px-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${
-                          invoice.status === "paid"
-                            ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30"
-                            : invoice.status === "pending"
-                            ? "bg-brand-orange/10 text-brand-orange border-brand-orange/30"
-                            : "bg-brand-coral/10 text-brand-coral border-brand-coral/30"
-                        }`}>
-                          {invoice.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4">
-                        {invoice.status === "paid" && (
-                          <button
-                            onClick={() => downloadInvoice(invoice.id)}
-                            className="text-brand-blue hover:text-brand-blue-dark text-sm font-bold transition-colors hover:underline"
-                          >
-                            Download
-                          </button>
-                        )}
-                      </td>
+            <div className="overflow-x-auto -mx-4 sm:-mx-0">
+              <div className="min-w-[600px] sm:min-w-0">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-brand-navy/10">
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-[10px] sm:text-xs">Date</th>
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-[10px] sm:text-xs">Description</th>
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-[10px] sm:text-xs">Amount</th>
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-[10px] sm:text-xs">Status</th>
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/40 font-bold uppercase tracking-wider text-[10px] sm:text-xs">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {billingHistory.map((invoice) => (
+                      <tr key={invoice.id} className="border-b border-brand-navy/5 hover:bg-white/40 transition-colors">
+                        <td className="py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/80 text-xs sm:text-sm font-medium whitespace-nowrap">
+                          {formatDate(invoice.created_at)}
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4 text-brand-navy/80 text-xs sm:text-sm font-medium">
+                          {invoice.description}
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4 text-brand-navy text-xs sm:text-sm font-bold whitespace-nowrap">
+                          {formatPrice(invoice.amount)}
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4">
+                          <span className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide border ${
+                            invoice.status === "paid"
+                              ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30"
+                              : invoice.status === "pending"
+                              ? "bg-brand-orange/10 text-brand-orange border-brand-orange/30"
+                              : "bg-brand-coral/10 text-brand-coral border-brand-coral/30"
+                          }`}>
+                            {invoice.status}
+                          </span>
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4">
+                          {invoice.status === "paid" && (
+                            <button
+                              onClick={() => downloadInvoice(invoice.id)}
+                              className="text-brand-blue hover:text-brand-blue-dark text-xs sm:text-sm font-bold transition-colors hover:underline min-h-[32px] sm:min-h-[36px]"
+                            >
+                              Download
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
 
         {/* Payment Method */}
-        <div className="glass-card rounded-3xl p-8">
-          <h2 className="text-xl font-bold text-brand-navy mb-6 flex items-center gap-2">
-            <span className="text-2xl">💳</span> Payment Method
+        <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6 flex items-center gap-2">
+            <span className="text-xl sm:text-2xl">💳</span> Payment Method
           </h2>
           
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-white/40 border border-white/50">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-10 bg-brand-navy/5 rounded-lg flex items-center justify-center border border-brand-navy/10">
-                <span className="text-brand-navy/40 text-xs font-bold">****</span>
+          <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white/40 border border-white/50">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-12 sm:w-14 h-8 sm:h-10 bg-brand-navy/5 rounded-lg flex items-center justify-center border border-brand-navy/10">
+                <span className="text-brand-navy/40 text-[10px] sm:text-xs font-bold">****</span>
               </div>
               <div>
-                <p className="text-brand-navy font-bold">•••• •••• •••• 4242</p>
-                <p className="text-brand-navy/60 text-xs font-bold uppercase tracking-wide mt-0.5">Expires 12/25</p>
+                <p className="text-brand-navy font-bold text-sm sm:text-base">•••• •••• •••• 4242</p>
+                <p className="text-brand-navy/60 text-[10px] sm:text-xs font-bold uppercase tracking-wide mt-0.5">Expires 12/25</p>
               </div>
             </div>
             
             <button
               onClick={updatePaymentMethod}
-              className="px-5 py-2.5 bg-white border border-brand-navy/10 hover:bg-brand-navy hover:text-white text-brand-navy rounded-xl text-sm font-bold transition-all shadow-sm"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 bg-white border border-brand-navy/10 hover:bg-brand-navy hover:text-white text-brand-navy rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm min-h-[44px]"
             >
               Update
             </button>

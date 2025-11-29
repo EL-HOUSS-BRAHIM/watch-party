@@ -153,23 +153,23 @@ export default function HelpPage() {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Enhanced Header */}
-      <div className="glass-panel rounded-3xl p-8 border-brand-navy/10 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-        <div className="relative z-10 text-center space-y-4">
-          <div className="text-6xl mb-4 opacity-80 animate-float">🆘</div>
-          <h1 className="text-4xl font-bold text-brand-navy">
+      <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border-brand-navy/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-40 h-40 sm:w-64 sm:h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-8 -mt-8 sm:-mr-16 sm:-mt-16 pointer-events-none"></div>
+        <div className="relative z-10 text-center space-y-3 sm:space-y-4">
+          <div className="text-4xl sm:text-5xl lg:text-6xl mb-2 sm:mb-4 opacity-80 animate-float">🆘</div>
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-brand-navy">
             Help & Support
           </h1>
-          <p className="text-brand-navy/70 text-lg max-w-2xl mx-auto font-medium">
+          <p className="text-brand-navy/70 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto font-medium">
             Find answers to common questions, browse our knowledge base, or get in touch with our support team
           </p>
-          <div className="flex items-center justify-center gap-4 text-sm text-brand-navy/60 font-bold uppercase tracking-wide">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] xs:text-xs sm:text-sm text-brand-navy/60 font-bold uppercase tracking-wide">
             <span>📚 Knowledge Base</span>
-            <span>•</span>
+            <span className="hidden xs:inline">•</span>
             <span>💬 24/7 Support</span>
-            <span>•</span>
+            <span className="hidden xs:inline">•</span>
             <span>🎥 Video Guides</span>
           </div>
         </div>
@@ -177,30 +177,30 @@ export default function HelpPage() {
 
       {/* Search Bar */}
       <div className="relative max-w-2xl mx-auto group">
-        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-          <span className="text-brand-navy/40 text-xl">🔍</span>
+        <div className="absolute inset-y-0 left-0 pl-3 sm:pl-5 flex items-center pointer-events-none">
+          <span className="text-brand-navy/40 text-lg sm:text-xl">🔍</span>
         </div>
         <input
           type="text"
           placeholder="Search for help articles, guides, or FAQs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white/50 border border-brand-navy/10 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-blue/10 focus:border-brand-blue/30 backdrop-blur-sm transition-all shadow-sm"
+          className="w-full pl-10 sm:pl-14 pr-4 sm:pr-6 py-3 sm:py-4 bg-white/50 border border-brand-navy/10 rounded-xl sm:rounded-2xl text-sm sm:text-base text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-blue/10 focus:border-brand-blue/30 backdrop-blur-sm transition-all shadow-sm"
         />
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 lg:grid-cols-4">
         {contactMethods.map((method, index) => (
-          <div key={index} className="glass-card rounded-3xl p-6 text-center hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
-            <div className="space-y-4">
-              <div className="text-4xl group-hover:scale-110 transition-transform duration-300">{method.icon}</div>
+          <div key={index} className="glass-card rounded-2xl sm:rounded-3xl p-3 xs:p-4 sm:p-6 text-center hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
+            <div className="space-y-2 sm:space-y-4">
+              <div className="text-2xl sm:text-3xl lg:text-4xl group-hover:scale-110 transition-transform duration-300">{method.icon}</div>
               <div>
-                <h3 className="text-brand-navy font-bold mb-2 text-lg">{method.title}</h3>
-                <p className="text-brand-navy/60 text-sm mb-4 font-medium">{method.description}</p>
+                <h3 className="text-brand-navy font-bold mb-1 sm:mb-2 text-sm sm:text-base lg:text-lg">{method.title}</h3>
+                <p className="text-brand-navy/60 text-[10px] xs:text-xs sm:text-sm mb-2 sm:mb-4 font-medium hidden xs:block">{method.description}</p>
               </div>
               <IconButton
-                className={`w-full bg-gradient-to-r ${method.gradient} text-white shadow-md hover:shadow-lg border-none`}
+                className={`w-full bg-gradient-to-r ${method.gradient} text-white shadow-md hover:shadow-lg border-none min-h-[36px] sm:min-h-[44px] text-xs sm:text-sm`}
                 disabled={!method.available}
               >
                 {method.action}
@@ -212,54 +212,55 @@ export default function HelpPage() {
 
       {/* Help Categories */}
       <div>
-        <h2 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-brand-navy mb-4 sm:mb-6 flex items-center gap-2">
           <span>📚</span>
           Browse by Category
         </h2>
         
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-1.5 sm:gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2 scrollbar-hide">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap min-h-[36px] sm:min-h-[40px] ${
               selectedCategory === "all"
                 ? "bg-brand-navy text-white shadow-md"
                 : "bg-white/40 text-brand-navy/60 hover:text-brand-navy hover:bg-white/60 border border-brand-navy/5"
             }`}
           >
             <span>🔍</span>
-            All Categories
+            <span className="hidden xs:inline">All Categories</span>
+            <span className="xs:hidden">All</span>
           </button>
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap min-h-[36px] sm:min-h-[40px] ${
                 selectedCategory === category.id
                   ? "bg-brand-navy text-white shadow-md"
                   : "bg-white/40 text-brand-navy/60 hover:text-brand-navy hover:bg-white/60 border border-brand-navy/5"
               }`}
             >
               <span>{category.icon}</span>
-              {category.title}
+              <span className="hidden sm:inline">{category.title}</span>
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
-            <div key={category.id} className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
-              <div className="flex items-start gap-4">
-                <div className={`w-14 h-14 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+            <div key={category.id} className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className={`w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br ${category.color} rounded-xl sm:rounded-2xl flex items-center justify-center text-white text-lg sm:text-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   {category.icon}
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-brand-navy font-bold mb-1 text-lg">{category.title}</h3>
-                  <p className="text-brand-navy/60 text-sm mb-3 font-medium">{category.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-brand-navy/40 text-xs font-bold uppercase tracking-wider">{category.articles} articles</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-brand-navy font-bold mb-0.5 sm:mb-1 text-sm sm:text-lg">{category.title}</h3>
+                  <p className="text-brand-navy/60 text-xs sm:text-sm mb-2 sm:mb-3 font-medium line-clamp-2">{category.description}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-brand-navy/40 text-[10px] sm:text-xs font-bold uppercase tracking-wider">{category.articles} articles</span>
                     <button
                       onClick={() => setSelectedCategory(category.id)}
-                      className="text-brand-blue hover:text-brand-blue-dark text-sm font-bold transition-colors"
+                      className="text-brand-blue hover:text-brand-blue-dark text-xs sm:text-sm font-bold transition-colors min-h-[32px] sm:min-h-[36px]"
                     >
                       Browse →
                     </button>
@@ -273,14 +274,14 @@ export default function HelpPage() {
 
       {/* Frequently Asked Questions */}
       <div>
-        <h2 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-brand-navy mb-4 sm:mb-6 flex items-center gap-2">
           <span>❓</span>
           Frequently Asked Questions
         </h2>
         
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {filteredFAQs.map((faq) => (
-            <div key={faq.id} className="glass-card rounded-2xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:shadow-md">
+            <div key={faq.id} className="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:border-brand-purple/30 transition-all duration-300 hover:shadow-md">
               <div
                 className="cursor-pointer group"
                 onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
