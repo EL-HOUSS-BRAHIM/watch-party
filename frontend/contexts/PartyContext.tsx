@@ -159,7 +159,7 @@ export function PartyProvider({ children, partyId, currentUserId }: PartyProvide
     if (party) {
       // In a real implementation, you'd fetch the full participant list
       // For now, we'll use the host as a participant
-      setParticipants(party.host ? [party.host] : []);
+      setParticipants(party.host ? [party.host as unknown as User] : []);
     }
   }, [party]);
 
