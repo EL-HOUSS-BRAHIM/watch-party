@@ -47,7 +47,7 @@ export function Hero() {
             <Link href="/auth/login" className="text-sm font-medium text-brand-navy/70 hover:text-brand-navy transition-colors px-3 py-2 min-h-[44px] flex items-center">
               Sign in
             </Link>
-            <Button asChild size="sm" variant="outline" className="min-h-[44px]">
+            <Button asChild size="sm" variant="secondary" className="min-h-[44px]">
               <Link href="/auth/register">Start hosting</Link>
             </Button>
           </div>

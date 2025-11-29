@@ -389,11 +389,13 @@ a:hover {
 
 /* Modern card styles */
 .card-modern {
-  @apply rounded-2xl border border-brand-purple/8 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300;
+  @apply rounded-2xl border bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300;
+  border-color: rgba(74, 46, 160, 0.08);
 }
 
 .card-modern:hover {
-  @apply border-brand-purple/15 shadow-md -translate-y-0.5;
+  @apply shadow-md -translate-y-0.5;
+  border-color: rgba(74, 46, 160, 0.15);
 }
 
 /* Smooth transitions for interactive elements */

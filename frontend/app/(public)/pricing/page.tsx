@@ -124,7 +124,7 @@ export default function PricingPage() {
                 ))}
               </ul>
               <Button
-                variant={plan.featured ? "default" : "secondary"}
+                variant={plan.featured ? "primary" : "secondary"}
                 size="lg"
                 className={`w-full min-h-[48px] ${plan.featured ? "bg-gradient-to-r from-brand-magenta to-brand-purple" : ""}`}
                 asChild
