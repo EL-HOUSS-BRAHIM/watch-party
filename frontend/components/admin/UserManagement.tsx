@@ -295,7 +295,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                       <div className="flex items-center gap-2">
                         {!user.is_verified && (
                           <button
-                            onClick={() => verifyUser(user.id, user.username)}
+                            onClick={() => user.username && verifyUser(user.id, user.username)}
                             className="px-2 py-1 bg-brand-cyan hover:bg-green-700 text-white rounded text-xs transition-colors"
                           >
                             Verify
@@ -304,14 +304,14 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                         
                         {(user as any).is_banned ? (
                           <button
-                            onClick={() => unbanUser(user.id, user.username)}
+                            onClick={() => user.username && unbanUser(user.id, user.username)}
                             className="px-2 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-xs transition-colors"
                           >
                             Unban
                           </button>
                         ) : (
                           <button
-                            onClick={() => banUser(user.id, user.username)}
+                            onClick={() => user.username && banUser(user.id, user.username)}
                             className="px-2 py-1 bg-brand-coral hover:bg-red-700 text-white rounded text-xs transition-colors"
                           >
                             Ban

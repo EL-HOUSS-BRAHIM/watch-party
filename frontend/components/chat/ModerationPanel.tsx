@@ -199,13 +199,13 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
 
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => kickUser(user.id, user.username)}
+                            onClick={() => user.username && kickUser(user.id, user.username)}
                             className="px-3 py-1 bg-brand-orange hover:bg-yellow-700 text-white rounded text-sm transition-colors"
                           >
                             Kick
                           </button>
                           <button
-                            onClick={() => banUser(user.id, user.username)}
+                            onClick={() => user.username && banUser(user.id, user.username)}
                             className="px-3 py-1 bg-brand-coral hover:bg-red-700 text-white rounded text-sm transition-colors"
                           >
                             Ban
@@ -259,7 +259,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                         </div>
 
                         <button
-                          onClick={() => unbanUser(user.id, user.username)}
+                          onClick={() => user.username && unbanUser(user.id, user.username)}
                           className="px-3 py-1 bg-brand-cyan hover:bg-green-700 text-white rounded text-sm transition-colors"
                         >
                           Unban

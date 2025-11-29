@@ -271,7 +271,7 @@ export default function FriendsPage() {
                             👤
                           </Link>
                           <button
-                            onClick={() => removeFriend(friend.username)}
+                            onClick={() => friend.username && removeFriend(friend.username)}
                             className="p-2 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral-dark rounded-lg transition-colors"
                             title="Remove Friend"
                           >

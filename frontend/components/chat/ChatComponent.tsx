@@ -345,7 +345,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
 
                   {isHost && user.id !== currentUser?.id && (
                     <button
-                      onClick={() => banUser(user.id, user.username)}
+                      onClick={() => user.username && banUser(user.id, user.username)}
                       className="text-brand-coral-light hover:text-red-300 text-xs"
                       title="Ban user"
                     >
