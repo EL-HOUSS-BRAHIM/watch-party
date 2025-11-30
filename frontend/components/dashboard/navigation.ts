@@ -87,6 +87,7 @@ export const NAVIGATION_SECTIONS: NavSection[] = [
     title: "Account",
     icon: "⚙️",
     items: [
+      { href: "/dashboard/integrations", label: "Integrations", icon: "🔌", badge: null },
       { href: "/dashboard/settings", label: "Settings", icon: "⚙️", badge: null },
       { href: "/dashboard/billing", label: "Billing", icon: "💳", badge: null },
       { href: "/dashboard/support", label: "Help", icon: "❓", badge: null },

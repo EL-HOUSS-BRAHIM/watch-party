@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { videosApi, VideoSummary, integrationsApi } from "@/lib/api-client"
+import { videosApi, VideoSummary } from "@/lib/api-client"
 import { IconButton } from "@/components/ui/icon-button"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
@@ -37,7 +37,6 @@ export default function VideosPage() {
   const [gdriveError, setGdriveError] = useState("")
   const [gdriveLoaded, setGdriveLoaded] = useState(false)
   const [gdriveConnected, setGdriveConnected] = useState<boolean | null>(null)
-  const [gdriveConnecting, setGdriveConnecting] = useState(false)
   const [importingIds, setImportingIds] = useState<string[]>([])
   const [streamingIds, setStreamingIds] = useState<string[]>([])
   const [deletingIds, setDeletingIds] = useState<string[]>([])
@@ -175,52 +174,6 @@ export default function VideosPage() {
       setGdriveLoaded(false)
     } finally {
       setGdriveLoading(false)
-    }
-  }
-
-  const handleConnectGoogleDrive = async () => {
-    console.log("[GDrive] Button clicked!")
-    setGdriveConnecting(true)
-    setGdriveError("")
-    
-    try {
-      console.log("[GDrive] Starting OAuth flow...")
-      const response = await integrationsApi.googleDrive.getAuthUrl()
-      console.log("[GDrive] Auth URL response:", response)
-      
-      // Handle different response structures
-      // Backend returns: { success: true, data: { authorization_url: "...", state: "..." }, message: "..." }
-      const authData = (response as any)?.data ?? response
-      console.log("[GDrive] Auth data extracted:", authData)
-      
-      // Get the authorization URL
-      let authorizationUrl = authData?.authorization_url
-      const state = authData?.state
-      
-      console.log("[GDrive] Authorization URL:", authorizationUrl)
-      console.log("[GDrive] State:", state)
-      
-      if (!authorizationUrl) {
-        console.error("[GDrive] No authorization URL in response:", response)
-        throw new Error("Failed to get authorization URL from server. Please check if Google Drive is configured.")
-      }
-      
-      // Add state to URL if not already included
-      if (state && !authorizationUrl.includes("state=")) {
-        const separator = authorizationUrl.includes("?") ? "&" : "?"
-        authorizationUrl = `${authorizationUrl}${separator}state=${encodeURIComponent(state)}`
-      }
-      
-      console.log("[GDrive] Redirecting to:", authorizationUrl)
-      // Redirect to Google for authorization
-      window.location.href = authorizationUrl
-    } catch (error) {
-      console.error("[GDrive] Failed to connect Google Drive:", error)
-      const errorMsg = error instanceof Error 
-        ? error.message 
-        : "Failed to start Google Drive connection. Please try again."
-      setGdriveError(errorMsg)
-      setGdriveConnecting(false)
     }
   }
 
@@ -668,7 +621,7 @@ export default function VideosPage() {
                     ))}
                   </div>
                 ) : gdriveConnected !== true ? (
-                  /* Not Connected State - Show Connect Button */
+                  /* Not Connected State - Link to Integrations Page */
                   <div className="text-center bg-gradient-to-br from-brand-blue/5 to-brand-purple/5 border border-brand-blue/20 rounded-2xl py-12 px-6">
                     <div className="w-20 h-20 mx-auto bg-gradient-to-br from-brand-blue to-brand-purple rounded-3xl flex items-center justify-center text-4xl shadow-lg shadow-brand-blue/20 mb-6">
                       <img 
@@ -677,29 +630,22 @@ export default function VideosPage() {
                         className="w-12 h-12"
                       />
                     </div>
-                    <h4 className="text-2xl font-bold text-brand-navy mb-3">Connect Google Drive</h4>
+                    <h4 className="text-2xl font-bold text-brand-navy mb-3">Google Drive Not Connected</h4>
                     <p className="text-brand-navy/60 mb-6 max-w-md mx-auto">
-                      Link your Google Drive to import videos directly. Watch movies stored in your cloud without downloading.
+                      Connect your Google Drive to import and stream videos directly from your cloud storage.
                     </p>
                     <div className="space-y-3">
-                      <IconButton
-                        onClick={handleConnectGoogleDrive}
-                        loading={gdriveConnecting}
-                        disabled={gdriveConnecting}
-                        className="btn-gradient shadow-lg hover:shadow-brand-blue/25 px-8 py-3"
+                      <Link
+                        href="/dashboard/integrations"
+                        className="inline-flex items-center justify-center gap-2 btn-gradient shadow-lg hover:shadow-brand-blue/25 px-8 py-3 rounded-xl font-bold text-white"
                       >
-                        <span>🔗</span>
-                        {gdriveConnecting ? "Connecting..." : "Connect Google Drive"}
-                      </IconButton>
+                        <span>🔌</span>
+                        Go to Integrations
+                      </Link>
                       <p className="text-xs text-brand-navy/40">
-                        You&apos;ll be redirected to Google to authorize access
+                        Manage all your connected services in one place
                       </p>
                     </div>
-                    {gdriveError && (
-                      <div className="mt-4 text-sm text-brand-coral-dark bg-brand-coral/10 rounded-lg px-4 py-2 inline-block">
-                        {gdriveError}
-                      </div>
-                    )}
                   </div>
                 ) : gdriveFiles.length === 0 ? (
                   /* Connected but no files */

@@ -1,9 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import api, { type ApiClientError } from "@/lib/api-client"
+import { useRouter, useSearchParams } from "next/navigation"
+import Link from "next/link"
+import api, { integrationsApi, type ApiClientError } from "@/lib/api-client"
 import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
+import { IconButton } from "@/components/ui/icon-button"
 
 interface Integration {
   id: string
@@ -28,24 +30,102 @@ interface IntegrationType {
   name: string
   description: string
   icon: string
+  iconUrl?: string
   features: string[]
   category: 'storage' | 'streaming' | 'social' | 'productivity'
   is_premium?: boolean
+  is_available: boolean
 }
+
+// Hardcoded supported integrations - these are the integrations WatchParty officially supports
+const SUPPORTED_INTEGRATIONS: IntegrationType[] = [
+  {
+    id: 'google-drive',
+    name: 'Google Drive',
+    description: 'Import and stream videos directly from your Google Drive. Watch movies stored in your cloud without downloading.',
+    icon: '☁️',
+    iconUrl: 'https://www.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png',
+    features: ['Import videos', 'Stream directly', 'Auto-sync', 'Folder organization'],
+    category: 'storage',
+    is_available: true,
+  },
+  {
+    id: 'dropbox',
+    name: 'Dropbox',
+    description: 'Connect your Dropbox account to import and stream videos from your cloud storage.',
+    icon: '📦',
+    features: ['Import videos', 'Stream directly', 'Shared folders'],
+    category: 'storage',
+    is_available: false, // Coming soon
+  },
+  {
+    id: 'onedrive',
+    name: 'Microsoft OneDrive',
+    description: 'Access your OneDrive videos and stream them directly in your watch parties.',
+    icon: '☁️',
+    features: ['Import videos', 'Stream directly', 'Office 365 integration'],
+    category: 'storage',
+    is_available: false, // Coming soon
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    description: 'Watch YouTube videos together with synchronized playback for all party members.',
+    icon: '▶️',
+    features: ['Watch together', 'Playlists', 'Live streams'],
+    category: 'streaming',
+    is_available: false, // Coming soon
+  },
+  {
+    id: 'twitch',
+    name: 'Twitch',
+    description: 'Watch Twitch streams together with your friends in synchronized viewing.',
+    icon: '🎮',
+    features: ['Live streams', 'VODs', 'Clips'],
+    category: 'streaming',
+    is_available: false, // Coming soon
+  },
+  {
+    id: 'discord',
+    name: 'Discord',
+    description: 'Connect your Discord account to invite friends and sync your watch parties with Discord servers.',
+    icon: '💬',
+    features: ['Friend invites', 'Server integration', 'Activity status'],
+    category: 'social',
+    is_available: false, // Coming soon
+  },
+]
 
 export default function IntegrationsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [integrations, setIntegrations] = useState<Integration[]>([])
-  const [integrationTypes, setIntegrationTypes] = useState<IntegrationType[]>([])
   const [loading, setLoading] = useState(true)
+  const [connecting, setConnecting] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<"connected" | "available">("connected")
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<"all" | "connected" | "available">("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
 
+  // Check for OAuth callback success/error
+  useEffect(() => {
+    const gdriveConnected = searchParams.get('gdrive_connected')
+    const errorMsg = searchParams.get('error')
+    
+    if (gdriveConnected === 'true') {
+      setSuccessMessage('🎉 Google Drive connected successfully! You can now import videos from your Media Library.')
+      // Clear URL params
+      window.history.replaceState({}, '', '/dashboard/integrations')
+      loadIntegrations()
+    } else if (errorMsg) {
+      setError(decodeURIComponent(errorMsg))
+      window.history.replaceState({}, '', '/dashboard/integrations')
+    }
+  }, [searchParams])
+
   useEffect(() => {
     loadIntegrations()
-    loadIntegrationTypes()
   }, [])
 
   const formatErrorMessage = (err: unknown, fallback: string) => {
@@ -87,120 +167,83 @@ export default function IntegrationsPage() {
     return fallback
   }
 
-  const resolveAuthorizationUrl = (data?: { authorization_url?: string; state?: string }) => {
-    if (!data?.authorization_url) return null
-
-    if (data.state && !data.authorization_url.includes("state=")) {
-      try {
-        const url = new URL(data.authorization_url)
-        url.searchParams.set("state", data.state)
-        return url.toString()
-      } catch {
-        const separator = data.authorization_url.includes("?") ? "&" : "?"
-        return `${data.authorization_url}${separator}state=${encodeURIComponent(data.state)}`
-      }
-    }
-
-    return data.authorization_url
-  }
-
   const loadIntegrations = async () => {
+    setLoading(true)
     try {
+      // Try to load from API, but don't fail if API is unavailable
       const response = await api.get<{ data?: { connections?: Integration[] } }>('/api/integrations/connections/')
       setIntegrations(response.data?.connections || [])
     } catch (err) {
       console.error("Failed to load integrations:", err)
-      setError(formatErrorMessage(err, 'Failed to load integrations from API'))
+      // Don't show error for this - just show empty state
       setIntegrations([])
-    }
-  }
-
-  const loadIntegrationTypes = async () => {
-    try {
-      const response = await api.get<{ data?: { types?: IntegrationType[] } }>('/api/integrations/types/')
-      setIntegrationTypes(response.data?.types || [])
-    } catch (err) {
-      console.error("Failed to load integration types:", err)
-      setError(formatErrorMessage(err, 'Failed to load integration types from API'))
-      setIntegrationTypes([])
     } finally {
       setLoading(false)
     }
   }
 
+  // Check if a specific integration type is connected
+  const isConnected = (integrationTypeId: string): boolean => {
+    return integrations.some(int => int.type === integrationTypeId && int.status === 'connected')
+  }
+
+  // Get connection details for an integration type
+  const getConnection = (integrationTypeId: string): Integration | undefined => {
+    return integrations.find(int => int.type === integrationTypeId && int.status === 'connected')
+  }
+
   const handleConnect = async (integrationType: string) => {
+    setConnecting(integrationType)
+    setError(null)
+    
     try {
-      // Different connection flows for different integrations
       if (integrationType === 'google-drive') {
-        const authResponse = await api.get<{ data?: { authorization_url?: string; state?: string } }>(
-          '/api/integrations/google-drive/auth-url/'
-        )
-        const authorizationUrl = resolveAuthorizationUrl(authResponse.data)
-
-        if (!authorizationUrl) {
-          throw new Error('Authorization URL was not provided by the server. Please try again later.')
+        // Get the Google Drive OAuth URL
+        const response = await integrationsApi.googleDrive.getAuthUrl()
+        const authData = response?.data || response
+        
+        let authUrl = (authData as any)?.authorization_url
+        const state = (authData as any)?.state
+        
+        if (!authUrl) {
+          throw new Error('Could not get authorization URL. Please try again.')
         }
 
-        window.location.href = authorizationUrl
-      } else if (integrationType === 'oauth') {
-        const authResponse = await api.get<{ data?: { authorization_url?: string; state?: string } }>(
-          `/api/integrations/oauth/${integrationType}/auth-url/`
-        )
-        const authorizationUrl = resolveAuthorizationUrl(authResponse.data)
-
-        if (!authorizationUrl) {
-          throw new Error('Authorization URL was not provided by the server. Please try again later.')
+        // Add state parameter if provided
+        if (state && !authUrl.includes('state=')) {
+          const separator = authUrl.includes('?') ? '&' : '?'
+          authUrl = `${authUrl}${separator}state=${encodeURIComponent(state)}`
         }
 
-        window.location.href = authorizationUrl
-      } else {
-        // Generic connection flow
-        await api.post(`/api/integrations/${integrationType}/connect/`)
-        await loadIntegrations()
+        // Redirect to Google OAuth
+        window.location.href = authUrl
+        return
       }
-    } catch (error) {
-      console.error(`Failed to connect ${integrationType}:`, error)
-      setError(formatErrorMessage(error, `Failed to connect ${integrationType}. Please try again later.`))
+      
+      // For other integrations (future)
+      setError(`${integrationType} integration is coming soon!`)
+    } catch (err) {
+      console.error(`Failed to connect ${integrationType}:`, err)
+      setError(formatErrorMessage(err, `Failed to connect ${integrationType}. Please try again.`))
+    } finally {
+      setConnecting(null)
     }
   }
 
-  const handleDisconnect = async (connectionId: string) => {
+  const handleDisconnect = async (integrationTypeId: string) => {
+    const connection = getConnection(integrationTypeId)
+    if (!connection) return
+    
+    setConnecting(integrationTypeId)
     try {
-      await api.post(`/api/integrations/connections/${connectionId}/disconnect/`)
+      await api.post(`/api/integrations/connections/${connection.id}/disconnect/`)
+      setSuccessMessage(`${connection.name} disconnected successfully.`)
       await loadIntegrations()
-    } catch (error) {
-      console.error("Failed to disconnect integration:", error)
-      setError(formatErrorMessage(error, 'Failed to disconnect integration. Please try again later.'))
-    }
-  }
-
-  const handleTestConnection = async (connectionId: string) => {
-    try {
-      await api.post(`/api/integrations/test/`, { connection_id: connectionId })
-      // Could show a success toast here
-    } catch (error) {
-      console.error("Connection test failed:", error)
-      setError(formatErrorMessage(error, 'Connection test failed. Please try again later.'))
-    }
-  }
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "connected": return "bg-brand-cyan/20 text-brand-cyan-light"
-      case "disconnected": return "bg-gray-500/20 text-gray-400"
-      case "pending": return "bg-brand-orange/20 text-brand-orange-light"
-      case "error": return "bg-brand-coral/20 text-brand-coral-light"
-      default: return "bg-gray-500/20 text-gray-400"
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "connected": return "✅"
-      case "disconnected": return "⚫"
-      case "pending": return "⏳"
-      case "error": return "❌"
-      default: return "⚫"
+    } catch (err) {
+      console.error("Failed to disconnect integration:", err)
+      setError(formatErrorMessage(err, 'Failed to disconnect integration. Please try again.'))
+    } finally {
+      setConnecting(null)
     }
   }
 
@@ -222,20 +265,20 @@ export default function IntegrationsPage() {
     { id: "productivity", label: "Productivity", icon: "⚡" }
   ]
 
-  const filteredIntegrationTypes = integrationTypes.filter(type => {
+  // Filter integrations based on search, category, and tab
+  const filteredIntegrations = SUPPORTED_INTEGRATIONS.filter(type => {
     const matchesSearch = type.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          type.description.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === "all" || type.category === selectedCategory
-    const isNotConnected = !integrations.some(int => int.type === type.id && int.status === "connected")
+    const connected = isConnected(type.id)
     
-    return matchesSearch && matchesCategory && (activeTab === "available" ? isNotConnected : true)
+    if (activeTab === "connected") return matchesSearch && matchesCategory && connected
+    if (activeTab === "available") return matchesSearch && matchesCategory && !connected
+    return matchesSearch && matchesCategory // "all" tab
   })
 
-  const connectedIntegrations = integrations.filter(integration =>
-    integration.status === "connected" &&
-    (integration.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-     integration.type.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  const connectedCount = SUPPORTED_INTEGRATIONS.filter(t => isConnected(t.id)).length
+  const availableCount = SUPPORTED_INTEGRATIONS.filter(t => !isConnected(t.id) && t.is_available).length
 
   if (loading) {
     return <LoadingState message="Loading integrations..." />
@@ -243,6 +286,23 @@ export default function IntegrationsPage() {
 
   return (
     <div className="space-y-8">
+      {/* Success Message */}
+      {successMessage && (
+        <div className="bg-brand-cyan/10 border border-brand-cyan/30 rounded-2xl p-4 flex items-center gap-3 animate-in slide-in-from-top-2">
+          <div className="text-2xl">✅</div>
+          <div className="flex-1">
+            <p className="text-brand-cyan-dark font-bold">{successMessage}</p>
+          </div>
+          <button
+            onClick={() => setSuccessMessage(null)}
+            className="text-brand-cyan/60 hover:text-brand-cyan transition-colors p-1"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      
+      {/* Error Message */}
       {error && (
         <ErrorMessage 
           message={error} 
@@ -250,24 +310,31 @@ export default function IntegrationsPage() {
           onDismiss={() => setError(null)}
         />
       )}
+      
       {/* Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan/20 via-brand-blue/20 to-brand-purple/20 rounded-3xl blur-3xl opacity-60"></div>
         <div className="glass-panel relative rounded-3xl p-8 border-brand-cyan/20">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-bold text-brand-navy">
-                <span className="gradient-text">Integrations</span>
-              </h1>
-              <p className="text-brand-navy/70 text-lg">Connect your favorite services and tools</p>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl sm:text-4xl font-bold text-brand-navy">
+                  <span className="gradient-text">Integrations</span>
+                </h1>
+                <div className="flex items-center gap-2 px-3 py-1 bg-brand-cyan/10 rounded-full border border-brand-cyan/20">
+                  <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
+                  <span className="text-brand-cyan-dark text-sm font-bold">{connectedCount} Connected</span>
+                </div>
+              </div>
+              <p className="text-brand-navy/70 text-lg">Connect your favorite services to enhance your watch parties</p>
             </div>
-            <button
-              onClick={() => router.push("/dashboard/integrations/custom")}
-              className="btn-gradient px-6 py-3 rounded-xl font-bold text-white shadow-lg hover:shadow-brand-purple/25 transition-all hover:-translate-y-0.5 flex items-center gap-2"
+            <Link
+              href="/dashboard/videos"
+              className="px-6 py-3 rounded-xl font-bold bg-white border border-brand-navy/10 text-brand-navy hover:bg-brand-navy/5 transition-all flex items-center gap-2"
             >
-              <span>🔧</span>
-              Custom Integration
-            </button>
+              <span>📹</span>
+              Go to Media Library
+            </Link>
           </div>
         </div>
       </div>
@@ -309,8 +376,9 @@ export default function IntegrationsPage() {
       {/* Tabs */}
       <div className="flex gap-1 bg-white/40 p-1.5 rounded-2xl border border-brand-navy/5 backdrop-blur-sm">
         {[
-          { id: "connected", label: "Connected", icon: "✅", count: connectedIntegrations.length },
-          { id: "available", label: "Available", icon: "🌐", count: filteredIntegrationTypes.length }
+          { id: "all", label: "All Services", icon: "🔌", count: SUPPORTED_INTEGRATIONS.length },
+          { id: "connected", label: "Connected", icon: "✅", count: connectedCount },
+          { id: "available", label: "Available", icon: "🌐", count: availableCount }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -322,7 +390,7 @@ export default function IntegrationsPage() {
             }`}
           >
             <span>{tab.icon}</span>
-            <span>{tab.label}</span>
+            <span className="hidden sm:inline">{tab.label}</span>
             <span className={`text-xs px-2 py-0.5 rounded-full ${activeTab === tab.id ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/60"}`}>
               {tab.count}
             </span>
@@ -330,198 +398,175 @@ export default function IntegrationsPage() {
         ))}
       </div>
 
-      {/* Content */}
-      {activeTab === "connected" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {connectedIntegrations.map((integration) => (
-            <div key={integration.id} className="glass-card rounded-2xl p-6 hover:border-brand-cyan/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
+      {/* Integration Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredIntegrations.map((integration) => {
+          const connected = isConnected(integration.id)
+          const connection = getConnection(integration.id)
+          const isLoading = connecting === integration.id
+
+          return (
+            <div 
+              key={integration.id} 
+              className={`glass-card rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group ${
+                connected ? 'border-brand-cyan/30 bg-brand-cyan/5' : 'hover:border-brand-purple/30'
+              } ${!integration.is_available && !connected ? 'opacity-60' : ''}`}
+            >
               {/* Integration Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="text-4xl p-2 bg-brand-navy/5 rounded-xl">{integration.icon || "🔗"}</div>
-                  <div>
-                    <h3 className="font-bold text-brand-navy text-lg group-hover:text-brand-blue transition-colors">{integration.name}</h3>
-                    <div className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide border ${getStatusBadge(integration.status)}`}>
-                      <span>{getStatusIcon(integration.status)}</span>
-                      {integration.status.charAt(0).toUpperCase() + integration.status.slice(1)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Account Info */}
-              {integration.account_info && (
-                <div className="mb-4 p-3 bg-brand-navy/5 rounded-xl border border-brand-navy/5">
-                  <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-1">Connected Account</p>
-                  <p className="text-sm font-medium text-brand-navy truncate">
-                    {integration.account_info.email || integration.account_info.username || "Connected"}
-                  </p>
-                </div>
-              )}
-
-              {/* Last Sync */}
-              {integration.last_sync && (
-                <div className="mb-4 text-xs font-medium text-brand-navy/40 flex items-center gap-1">
-                  <span>🔄</span> Last sync: {new Date(integration.last_sync).toLocaleDateString()}
-                </div>
-              )}
-
-              {/* Features */}
-              {integration.features && integration.features.length > 0 && (
-                <div className="mb-6">
-                  <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-2">Features</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {integration.features.slice(0, 3).map((feature, index) => (
-                      <span key={index} className="px-2.5 py-1 bg-brand-blue/10 text-brand-blue-dark text-xs font-bold rounded-lg border border-brand-blue/20">
-                        {feature}
-                      </span>
-                    ))}
-                    {integration.features.length > 3 && (
-                      <span className="px-2.5 py-1 bg-brand-blue/10 text-brand-blue-dark text-xs font-bold rounded-lg border border-brand-blue/20">
-                        +{integration.features.length - 3}
-                      </span>
+                  <div className={`w-16 h-16 p-2 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+                    connected ? 'bg-brand-cyan/10' : 'bg-brand-navy/5'
+                  }`}>
+                    {integration.iconUrl ? (
+                      <img src={integration.iconUrl} alt={integration.name} className="w-10 h-10" />
+                    ) : (
+                      <span className="text-4xl">{integration.icon}</span>
                     )}
                   </div>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex gap-2 pt-4 border-t border-brand-navy/5">
-                <button
-                  onClick={() => handleTestConnection(integration.id)}
-                  className="flex-1 px-3 py-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue-dark rounded-lg text-sm font-bold transition-colors"
-                >
-                  Test
-                </button>
-                <button
-                  onClick={() => router.push(`/dashboard/integrations/${integration.id}/settings`)}
-                  className="flex-1 px-3 py-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-lg text-sm font-bold transition-colors"
-                >
-                  Settings
-                </button>
-                <button
-                  onClick={() => handleDisconnect(integration.id)}
-                  className="px-3 py-2 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral-dark rounded-lg text-sm font-bold transition-colors"
-                  title="Disconnect"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredIntegrationTypes.map((type) => (
-            <div key={type.id} className="glass-card rounded-2xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
-              {/* Type Header */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <div className="text-4xl p-2 bg-brand-navy/5 rounded-xl group-hover:scale-110 transition-transform duration-300">{type.icon}</div>
                   <div>
-                    <h3 className="font-bold text-brand-navy text-lg group-hover:text-brand-purple transition-colors">{type.name}</h3>
+                    <h3 className={`font-bold text-lg transition-colors ${
+                      connected ? 'text-brand-cyan-dark' : 'text-brand-navy group-hover:text-brand-purple'
+                    }`}>
+                      {integration.name}
+                    </h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className={`px-2 py-0.5 rounded-lg text-xs font-bold bg-brand-navy/5 text-brand-navy/60 border border-brand-navy/5`}>
-                        {getCategoryIcon(type.category)} {type.category.charAt(0).toUpperCase() + type.category.slice(1)}
-                      </span>
-                      {type.is_premium && (
-                        <span className="px-2 py-0.5 bg-brand-orange/10 text-brand-orange-dark rounded-lg text-xs font-bold border border-brand-orange/20">
-                          ⭐ Premium
+                      {connected ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-cyan/20 text-brand-cyan-dark border border-brand-cyan/30">
+                          <span>✅</span> Connected
+                        </span>
+                      ) : integration.is_available ? (
+                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-brand-purple/10 text-brand-purple-dark border border-brand-purple/20">
+                          Available
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-brand-orange/10 text-brand-orange-dark border border-brand-orange/20">
+                          Coming Soon
                         </span>
                       )}
+                      <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-brand-navy/5 text-brand-navy/60 border border-brand-navy/5">
+                        {getCategoryIcon(integration.category)} {integration.category.charAt(0).toUpperCase() + integration.category.slice(1)}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-sm text-brand-navy/70 mb-6 leading-relaxed min-h-[40px]">{type.description}</p>
+              <p className="text-sm text-brand-navy/70 mb-4 leading-relaxed">{integration.description}</p>
+
+              {/* Connected Account Info */}
+              {connected && connection?.account_info && (
+                <div className="mb-4 p-3 bg-white/60 rounded-xl border border-brand-cyan/20">
+                  <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-1">Connected Account</p>
+                  <p className="text-sm font-medium text-brand-navy truncate">
+                    {connection.account_info.email || connection.account_info.username || "Connected"}
+                  </p>
+                </div>
+              )}
 
               {/* Features */}
               <div className="mb-6">
                 <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-2">Features</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {type.features.slice(0, 3).map((feature, index) => (
-                    <span key={index} className="px-2.5 py-1 bg-brand-purple/10 text-brand-purple-dark text-xs font-bold rounded-lg border border-brand-purple/20">
+                  {integration.features.slice(0, 4).map((feature, index) => (
+                    <span 
+                      key={index} 
+                      className={`px-2.5 py-1 text-xs font-bold rounded-lg border ${
+                        connected 
+                          ? 'bg-brand-cyan/10 text-brand-cyan-dark border-brand-cyan/20' 
+                          : 'bg-brand-purple/10 text-brand-purple-dark border-brand-purple/20'
+                      }`}
+                    >
                       {feature}
                     </span>
                   ))}
-                  {type.features.length > 3 && (
-                    <span className="px-2.5 py-1 bg-brand-purple/10 text-brand-purple-dark text-xs font-bold rounded-lg border border-brand-purple/20">
-                      +{type.features.length - 3}
-                    </span>
-                  )}
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 pt-4 border-t border-brand-navy/5">
-                <button
-                  onClick={() => handleConnect(type.id)}
-                  className="flex-1 px-4 py-2.5 btn-gradient text-white rounded-xl font-bold transition-all shadow-md hover:shadow-brand-purple/20 hover:-translate-y-0.5"
-                >
-                  Connect
-                </button>
-                <button
-                  onClick={() => router.push(`/dashboard/integrations/info/${type.id}`)}
-                  className="px-4 py-2.5 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-xl font-bold transition-colors"
-                >
-                  Info
-                </button>
+              <div className="flex gap-2 pt-4 border-t border-brand-navy/5">
+                {connected ? (
+                  <>
+                    {integration.id === 'google-drive' && (
+                      <Link
+                        href="/dashboard/videos"
+                        className="flex-1 px-4 py-2.5 bg-brand-cyan/10 hover:bg-brand-cyan/20 text-brand-cyan-dark rounded-xl text-sm font-bold transition-colors text-center"
+                      >
+                        📹 Open Library
+                      </Link>
+                    )}
+                    <IconButton
+                      onClick={() => handleDisconnect(integration.id)}
+                      loading={isLoading}
+                      variant="danger"
+                      className="px-4 py-2.5"
+                    >
+                      Disconnect
+                    </IconButton>
+                  </>
+                ) : integration.is_available ? (
+                  <IconButton
+                    onClick={() => handleConnect(integration.id)}
+                    loading={isLoading}
+                    className="flex-1 btn-gradient shadow-md hover:shadow-brand-purple/20"
+                  >
+                    <span>🔗</span>
+                    Connect
+                  </IconButton>
+                ) : (
+                  <button
+                    disabled
+                    className="flex-1 px-4 py-2.5 bg-brand-navy/5 text-brand-navy/40 rounded-xl font-bold cursor-not-allowed"
+                  >
+                    Coming Soon
+                  </button>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          )
+        })}
+      </div>
 
-      {/* Empty States */}
-      {activeTab === "connected" && connectedIntegrations.length === 0 && (
+      {/* Empty State */}
+      {filteredIntegrations.length === 0 && (
         <div className="glass-card rounded-3xl p-12 text-center">
-          <div className="text-6xl mb-6 opacity-80">🔗</div>
-          <h3 className="text-2xl font-bold text-brand-navy mb-3">No integrations connected</h3>
-          <p className="text-brand-navy/60 mb-8 max-w-md mx-auto text-lg">
-            {searchQuery
-              ? "No connected integrations match your search"
-              : "Connect your favorite services to enhance your watch party experience"
-            }
-          </p>
-          {!searchQuery && (
-            <button
-              onClick={() => setActiveTab("available")}
-              className="btn-gradient px-8 py-3 rounded-xl font-bold text-white shadow-lg hover:shadow-brand-purple/25 transition-all hover:-translate-y-0.5"
-            >
-              Browse Available Integrations
-            </button>
-          )}
-        </div>
-      )}
-
-      {activeTab === "available" && filteredIntegrationTypes.length === 0 && (
-        <div className="glass-card rounded-3xl p-12 text-center">
-          <div className="text-6xl mb-6 opacity-80">🌐</div>
+          <div className="text-6xl mb-6 opacity-80">🔌</div>
           <h3 className="text-2xl font-bold text-brand-navy mb-3">No integrations found</h3>
           <p className="text-brand-navy/60 mb-8 max-w-md mx-auto text-lg">
             {searchQuery || selectedCategory !== "all"
               ? "Try adjusting your search or filter criteria"
-              : "All available integrations are already connected"
+              : activeTab === "connected" 
+                ? "You haven't connected any integrations yet"
+                : "No integrations available in this category"
             }
           </p>
-          {(searchQuery || selectedCategory !== "all") && (
-            <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-center flex-wrap">
+            {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
                 className="px-6 py-2.5 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-xl font-bold transition-colors"
               >
                 Clear Search
               </button>
+            )}
+            {selectedCategory !== "all" && (
               <button
                 onClick={() => setSelectedCategory("all")}
                 className="px-6 py-2.5 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-xl font-bold transition-colors"
               >
                 Show All Categories
               </button>
-            </div>
-          )}
+            )}
+            {activeTab !== "all" && (
+              <button
+                onClick={() => setActiveTab("all")}
+                className="px-6 py-2.5 btn-gradient text-white rounded-xl font-bold transition-colors"
+              >
+                View All Services
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
