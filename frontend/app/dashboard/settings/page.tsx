@@ -66,7 +66,7 @@ export default function SettingsPage() {
       )}
 
       <section className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60 pointer-events-none"></div>
         <div className="glass-panel relative rounded-2xl p-4 xs:p-6 sm:rounded-3xl sm:p-8 lg:p-10 border-brand-purple/20">
           <div className="space-y-3 sm:space-y-4">
             <p className="text-[10px] xs:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-brand-navy/60 font-bold">Settings</p>
