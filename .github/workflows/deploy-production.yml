@@ -151,9 +151,19 @@ jobs:
             set -e
             cd "$HOME/watch-party"
             
+            # Backup current .env before git reset to preserve production secrets
+            cp backend/.env backend/.env.backup 2>/dev/null || true
+            
             # Pull latest code to get updated docker-compose and scripts
             git fetch origin master
             git reset --hard origin/master
+            
+            # Restore .env from backup (preserves production-specific values like Redis endpoint)
+            if [ -f backend/.env.backup ]; then
+              cp backend/.env.backup backend/.env
+              rm backend/.env.backup
+              echo "✅ Restored production .env from backup"
+            fi
             
             # Update Google Drive credentials in .env if they exist in secrets
             if [ -n "$GOOGLE_DRIVE_CLIENT_ID" ] && [ -n "$GOOGLE_DRIVE_CLIENT_SECRET" ]; then
