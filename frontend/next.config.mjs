@@ -62,7 +62,7 @@ const nextConfig = {
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'self' https://*.vscode-cdn.net vscode-webview://*",
+              "frame-ancestors *",
               "upgrade-insecure-requests"
             ].join('; ')
           },
