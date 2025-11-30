@@ -8,17 +8,17 @@ export function MetricStrip() {
         <div className="space-y-4 sm:space-y-5">
           <div className="space-y-2 sm:space-y-3">
             <span className="inline-flex items-center rounded-full border border-brand-magenta/20 bg-brand-magenta/5 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-brand-magenta-dark">
-              Proof in the glow
+              Built for perfection
             </span>
             <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl md:text-3xl">
-              Thousands of hosts rely on WatchParty for{" "}
+              Everything you need for{" "}
               <span className="bg-gradient-to-r from-brand-magenta to-brand-coral bg-clip-text text-transparent">
-                luminous nights
+                perfect watch parties
               </span>
             </h2>
           </div>
           <p className="text-sm text-brand-navy/60 max-w-lg sm:text-base">
-            Our sync engine and ambience presets power film festivals, esports leagues, and classroom screenings worldwide.
+            Our sync engine and ambience presets are designed for film clubs, esports events, classrooms, and cozy movie nights with friends.
           </p>
 
           {/* Feature Pills */}
