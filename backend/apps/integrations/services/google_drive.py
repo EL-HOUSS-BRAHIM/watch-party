@@ -66,6 +66,10 @@ class GoogleDriveService:
             )
             
             if token_expiry:
+                # Google's Credentials.expired compares against datetime.utcnow() (naive)
+                # So we need to convert timezone-aware datetime to naive UTC
+                if timezone.is_aware(token_expiry):
+                    token_expiry = token_expiry.replace(tzinfo=None)
                 self.credentials.expiry = token_expiry
                 
             self._refresh_credentials_if_needed()
