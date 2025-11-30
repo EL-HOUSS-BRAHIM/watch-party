@@ -174,7 +174,12 @@ class GoogleDriveService:
         if folder_id:
             query_parts.append(f"'{folder_id}' in parents")
         if mime_type:
-            query_parts.append(f"mimeType='{mime_type}'")
+            # Use 'contains' for wildcard mime types like 'video/*', exact match otherwise
+            if mime_type.endswith('/*'):
+                base_type = mime_type[:-2]  # Remove '/*' -> 'video'
+                query_parts.append(f"mimeType contains '{base_type}/'")
+            else:
+                query_parts.append(f"mimeType='{mime_type}'")
             
         query = " and ".join(query_parts)
         
