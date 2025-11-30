@@ -69,57 +69,21 @@ export const features: Feature[] = [
 
 export const metrics: Metric[] = [
   {
-    label: "Communities hosted",
-    value: "52K crews",
-    description: "Film clubs, creator collectives, and classrooms run their rituals nightly across 143 countries.",
-  },
-  {
-    label: "Average sync drift",
+    label: "Sync precision",
     value: "±18 ms",
-    description: "Adaptive playback maintains frame-perfect timing even when guests swap devices mid-show.",
+    description: "Theatre-grade timing keeps everyone watching the same frame, even across continents.",
   },
   {
-    label: "Scenes scheduled",
-    value: "120K/night",
-    description: "Automated cues orchestrate lighting, overlays, and guest permissions without manual juggling.",
+    label: "Supported devices",
+    value: "All screens",
+    description: "Works seamlessly on phones, tablets, laptops, and smart TVs with no extra apps needed.",
+  },
+  {
+    label: "Setup time",
+    value: "< 30 sec",
+    description: "Create a room, share a code, and start watching together in under half a minute.",
   },
 ]
 
-export const testimonials: Testimonial[] = [
-  {
-    author: "Alex Chen",
-    role: "Film Society Curator",
-    message:
-      "Our 300-seat virtual cinema finally feels intentional. Guests rave about the ambience shifts and we end every screening with an encore poll that actually works.",
-  },
-  {
-    author: "María Rodriguez",
-    role: "Creator & Streamer",
-    message:
-      "WatchParty lets me run premieres with zero tech anxiety. I drag scenes into place and the platform handles sync, overlays, and highlight reels for my members.",
-  },
-  {
-    author: "David Kim",
-    role: "Long-distance partner",
-    message:
-      "We live 5,000 miles apart but the lighting cues, synced captions, and shared reactions make it feel like the same couch. It turned movie night into a ritual again.",
-  },
-  {
-    author: "Sarah Johnson",
-    role: "Media Studies Professor",
-    message:
-      "I can orchestrate lectures, screenings, and debates in one flow. Students stay engaged because WatchParty pairs every scene with discussion prompts and polls.",
-  },
-  {
-    author: "Mike Thompson",
-    role: "Esports community lead",
-    message:
-      "We host finals with 800 viewers and never miss a beat. Sync holds, reactions explode, and the encore recap is ready to post minutes after the match.",
-  },
-  {
-    author: "Emily Davis",
-    role: "Family archivist",
-    message:
-      "Grandparents on tablets, cousins on TVs, siblings on phones—WatchParty keeps everyone synced and saves the highlights for our family archive.",
-  },
-]
+// Testimonials will be added once we have real user feedback
+export const testimonials: Testimonial[] = []
