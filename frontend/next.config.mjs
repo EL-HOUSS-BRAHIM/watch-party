@@ -62,6 +62,7 @@ const nextConfig = {
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
+              "frame-ancestors 'self' https://*.vscode-cdn.net vscode-webview://*",
               "upgrade-insecure-requests"
             ].join('; ')
           },
@@ -73,10 +74,8 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload'
           },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
+          // Remove X-Frame-Options to allow VS Code Simple Browser and other legitimate framing
+          // CSP frame-ancestors provides the same protection in a more flexible way
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
