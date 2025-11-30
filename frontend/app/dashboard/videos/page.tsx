@@ -493,6 +493,7 @@ export default function VideosPage() {
                                     <button
                                       onClick={() => handleStream(movie.video_id!)}
                                       disabled={streamingIds.includes(movie.video_id)}
+                                      aria-label="Stream imported video"
                                       className="flex-1 py-2 bg-brand-navy text-white rounded-lg text-sm font-bold hover:bg-brand-purple transition-colors disabled:opacity-50"
                                     >
                                       ▶ Play
@@ -500,6 +501,7 @@ export default function VideosPage() {
                                     <button
                                       onClick={() => handleDeleteGDrive(movie.video_id!, movie)}
                                       disabled={deletingIds.includes(movie.video_id)}
+                                      aria-label="Delete imported video"
                                       className="px-3 py-2 bg-red-500/10 text-red-500 rounded-lg text-sm font-bold hover:bg-red-500/20 transition-colors disabled:opacity-50"
                                     >
                                       🗑
@@ -509,6 +511,7 @@ export default function VideosPage() {
                                   <button
                                     onClick={() => handleImport(movie)}
                                     disabled={importingIds.includes(movie.gdrive_file_id)}
+                                    aria-label="Import Google Drive video"
                                     className="w-full py-2 bg-gradient-to-r from-brand-cyan to-brand-blue text-white rounded-lg text-sm font-bold hover:shadow-lg transition-all disabled:opacity-50"
                                   >
                                     {importingIds.includes(movie.gdrive_file_id) ? "Importing..." : "📥 Import"}
