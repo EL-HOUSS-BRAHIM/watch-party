@@ -238,7 +238,11 @@ body::after {
 
 /* Opacity for staggered elements before animation */
 [class*="animate-"]:not(.animate-float):not(.animate-pulse-soft):not(.animate-shimmer):not(.animate-spin-slow) {
-  opacity: 0;
+  opacity: var(--animate-initial-opacity, 1);
+}
+
+[data-animate-initial="true"] {
+  --animate-initial-opacity: 0;
 }
 
 body {
