@@ -94,7 +94,7 @@ export default function SupportPage() {
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan/20 via-brand-blue/20 to-brand-purple/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan/20 via-brand-blue/20 to-brand-purple/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60 pointer-events-none"></div>
         <div className="glass-panel relative rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border-brand-cyan/20">
           <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center">
             <div className="space-y-1 sm:space-y-2">
