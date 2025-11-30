@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { videosApi, VideoSummary } from "@/lib/api-client"
+import { useSearchParams } from "next/navigation"
+import { videosApi, VideoSummary, integrationsApi } from "@/lib/api-client"
 import { IconButton } from "@/components/ui/icon-button"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
@@ -22,6 +23,7 @@ type GDriveMovie = {
 
 export default function VideosPage() {
   const { formatNumber: _formatNumber } = useDesignSystem()
+  const searchParams = useSearchParams()
   const [videos, setVideos] = useState<VideoSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -34,9 +36,22 @@ export default function VideosPage() {
   const [gdriveLoading, setGdriveLoading] = useState(false)
   const [gdriveError, setGdriveError] = useState("")
   const [gdriveLoaded, setGdriveLoaded] = useState(false)
+  const [gdriveConnected, setGdriveConnected] = useState<boolean | null>(null)
+  const [gdriveConnecting, setGdriveConnecting] = useState(false)
   const [importingIds, setImportingIds] = useState<string[]>([])
   const [streamingIds, setStreamingIds] = useState<string[]>([])
   const [deletingIds, setDeletingIds] = useState<string[]>([])
+  const [connectionNotice, setConnectionNotice] = useState<string | null>(null)
+
+  // Check if we just connected to Google Drive (from OAuth callback)
+  useEffect(() => {
+    if (searchParams.get("gdrive_connected") === "true") {
+      setConnectionNotice("🎉 Google Drive connected successfully! You can now import videos.")
+      setGdriveConnected(true)
+      // Clear the URL parameter
+      window.history.replaceState({}, "", "/dashboard/videos")
+    }
+  }, [searchParams])
 
   useEffect(() => {
     loadVideos()
@@ -90,6 +105,20 @@ export default function VideosPage() {
 
     try {
       const response = await videosApi.getGDriveVideos({ page_size: 50 })
+      
+      // Check if response indicates not connected
+      const notConnectedMessage = (response as any)?.message
+      if (notConnectedMessage === "Google Drive not connected" || 
+          (Array.isArray((response as any)?.movies) && (response as any)?.movies?.length === 0 && notConnectedMessage)) {
+        setGdriveConnected(false)
+        setGdriveFiles([])
+        setGdriveLoaded(true)
+        return
+      }
+      
+      // Mark as connected if we got a valid response
+      setGdriveConnected(true)
+      
       const rawMovies =
         (response as any)?.movies ??
         (response as any)?.results ??
@@ -136,10 +165,51 @@ export default function VideosPage() {
       setGdriveFiles(normalized)
       setGdriveLoaded(true)
     } catch (error) {
-      setGdriveError(error instanceof Error ? error.message : "Failed to load Google Drive videos")
+      // Check if error indicates not connected
+      const errorMessage = error instanceof Error ? error.message : "Failed to load Google Drive videos"
+      if (errorMessage.toLowerCase().includes("not connected") || 
+          errorMessage.toLowerCase().includes("google drive")) {
+        setGdriveConnected(false)
+      }
+      setGdriveError(errorMessage)
       setGdriveLoaded(false)
     } finally {
       setGdriveLoading(false)
+    }
+  }
+
+  const handleConnectGoogleDrive = async () => {
+    setGdriveConnecting(true)
+    setGdriveError("")
+    
+    try {
+      const response = await integrationsApi.googleDrive.getAuthUrl()
+      const authData = response.data ?? response
+      
+      // Get the authorization URL
+      let authorizationUrl = (authData as any)?.authorization_url
+      const state = (authData as any)?.state
+      
+      if (!authorizationUrl) {
+        throw new Error("Failed to get authorization URL from server")
+      }
+      
+      // Add state to URL if not already included
+      if (state && !authorizationUrl.includes("state=")) {
+        const separator = authorizationUrl.includes("?") ? "&" : "?"
+        authorizationUrl = `${authorizationUrl}${separator}state=${encodeURIComponent(state)}`
+      }
+      
+      // Redirect to Google for authorization
+      window.location.href = authorizationUrl
+    } catch (error) {
+      console.error("Failed to connect Google Drive:", error)
+      setGdriveError(
+        error instanceof Error 
+          ? error.message 
+          : "Failed to start Google Drive connection. Please try again."
+      )
+      setGdriveConnecting(false)
     }
   }
 
@@ -517,6 +587,22 @@ export default function VideosPage() {
               </form>
             ) : uploadMode === "gdrive" ? (
               <div className="space-y-6">
+                {/* Connection Success Notice */}
+                {connectionNotice && (
+                  <div className="bg-brand-cyan/10 border border-brand-cyan/20 rounded-2xl p-4 flex items-center gap-3">
+                    <div className="text-xl">✅</div>
+                    <div className="flex-1">
+                      <p className="text-brand-cyan-dark font-bold">{connectionNotice}</p>
+                    </div>
+                    <button
+                      onClick={() => setConnectionNotice(null)}
+                      className="text-brand-cyan/60 hover:text-brand-cyan transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
                     <h3 className="text-xl font-bold text-brand-navy flex items-center gap-2">
@@ -528,18 +614,20 @@ export default function VideosPage() {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <IconButton
-                      onClick={() => loadGdriveVideos(true)}
-                      variant="secondary"
-                      disabled={gdriveLoading}
-                      className="bg-white hover:bg-brand-neutral"
-                    >
-                      🔄 Refresh
-                    </IconButton>
+                    {gdriveConnected !== false && (
+                      <IconButton
+                        onClick={() => loadGdriveVideos(true)}
+                        variant="secondary"
+                        disabled={gdriveLoading}
+                        className="bg-white hover:bg-brand-neutral"
+                      >
+                        🔄 Refresh
+                      </IconButton>
+                    )}
                   </div>
                 </div>
 
-                {gdriveError && (
+                {gdriveError && gdriveConnected !== false && (
                   <div className="bg-brand-coral/5 border border-brand-coral/20 rounded-2xl p-4 flex items-center gap-3">
                     <div className="text-xl">⚠️</div>
                     <div>
@@ -554,6 +642,43 @@ export default function VideosPage() {
                   </div>
                 )}
 
+                {/* Not Connected State - Show Connect Button */}
+                {gdriveConnected === false && !gdriveLoading && (
+                  <div className="text-center bg-gradient-to-br from-brand-blue/5 to-brand-purple/5 border border-brand-blue/20 rounded-2xl py-12 px-6">
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-brand-blue to-brand-purple rounded-3xl flex items-center justify-center text-4xl shadow-lg shadow-brand-blue/20 mb-6">
+                      <img 
+                        src="https://www.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png" 
+                        alt="Google Drive" 
+                        className="w-12 h-12"
+                      />
+                    </div>
+                    <h4 className="text-2xl font-bold text-brand-navy mb-3">Connect Google Drive</h4>
+                    <p className="text-brand-navy/60 mb-6 max-w-md mx-auto">
+                      Link your Google Drive to import videos directly. Watch movies stored in your cloud without downloading.
+                    </p>
+                    <div className="space-y-3">
+                      <IconButton
+                        onClick={handleConnectGoogleDrive}
+                        loading={gdriveConnecting}
+                        disabled={gdriveConnecting}
+                        className="btn-gradient shadow-lg hover:shadow-brand-blue/25 px-8 py-3"
+                      >
+                        <span>🔗</span>
+                        {gdriveConnecting ? "Connecting..." : "Connect Google Drive"}
+                      </IconButton>
+                      <p className="text-xs text-brand-navy/40">
+                        You&apos;ll be redirected to Google to authorize access
+                      </p>
+                    </div>
+                    {gdriveError && (
+                      <div className="mt-4 text-sm text-brand-coral-dark bg-brand-coral/10 rounded-lg px-4 py-2 inline-block">
+                        {gdriveError}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Loading State */}
                 {gdriveLoading ? (
                   <div className="grid gap-4 sm:grid-cols-2">
                     {[1, 2, 3, 4].map((i) => (
@@ -564,13 +689,21 @@ export default function VideosPage() {
                       </div>
                     ))}
                   </div>
-                ) : gdriveFiles.length === 0 ? (
+                ) : gdriveConnected !== false && gdriveFiles.length === 0 ? (
                   <div className="text-center text-brand-navy/60 bg-brand-navy/5 border border-brand-navy/10 rounded-2xl py-12">
                     <div className="text-4xl mb-3">📁</div>
                     <p className="font-bold text-lg">No compatible videos found</p>
-                    <p className="text-sm mt-1">Upload a video to Drive and refresh to see it here.</p>
+                    <p className="text-sm mt-1">Upload a video to your Watch Party folder in Drive and refresh to see it here.</p>
+                    <IconButton
+                      onClick={() => loadGdriveVideos(true)}
+                      variant="secondary"
+                      disabled={gdriveLoading}
+                      className="mt-4 bg-white hover:bg-brand-neutral"
+                    >
+                      🔄 Refresh
+                    </IconButton>
                   </div>
-                ) : (
+                ) : gdriveConnected !== false ? (
                   <div className="grid gap-4 sm:grid-cols-2">
                     {gdriveFiles.map((movie) => (
                       <div
@@ -643,7 +776,7 @@ export default function VideosPage() {
                       </div>
                     ))}
                   </div>
-                )}
+                ) : null}
               </div>
             ) : null}
           </div>
