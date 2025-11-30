@@ -151,9 +151,13 @@ export function MarketingHeader() {
       
       {/* Mobile menu overlay - Outside header for proper positioning */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] md:hidden animate-in fade-in duration-200">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-          <aside className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-0 z-[100] md:hidden">
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm" 
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
+          <aside className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl overflow-y-auto z-10">
             <div className="flex items-center justify-between border-b border-brand-navy/10 bg-brand-neutral/30 p-4">
               <Link href="/" className="flex items-center gap-2" aria-label="WatchParty home" onClick={() => setIsOpen(false)}>
                 <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden">
@@ -161,17 +165,16 @@ export function MarketingHeader() {
                 </span>
                 <span className="font-bold text-brand-navy">WatchParty</span>
               </Link>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <button 
+                type="button"
                 onClick={() => setIsOpen(false)} 
                 aria-label="Close menu" 
-                className="p-2 rounded-lg bg-brand-navy/5 hover:bg-brand-navy/10 border border-brand-navy/10 transition-all active:scale-95"
+                className="relative z-20 flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-lg bg-brand-navy/5 hover:bg-brand-navy/10 border border-brand-navy/10 transition-all active:scale-95 cursor-pointer"
               >
-                <svg className="h-5 w-5 text-brand-navy" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <svg className="h-5 w-5 text-brand-navy" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M6 6l12 12M6 18L18 6" />
                 </svg>
-              </Button>
+              </button>
             </div>
 
             <nav className="flex flex-col gap-2 p-4">
