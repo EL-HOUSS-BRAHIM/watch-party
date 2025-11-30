@@ -654,7 +654,7 @@ export default function VideosPage() {
                 )}
 
                 {/* Not Connected State - Show Connect Button */}
-                {gdriveConnected === false && !gdriveLoading && (
+                {(gdriveConnected === false || (gdriveConnected === null && !gdriveLoading)) && (
                   <div className="text-center bg-gradient-to-br from-brand-blue/5 to-brand-purple/5 border border-brand-blue/20 rounded-2xl py-12 px-6">
                     <div className="w-20 h-20 mx-auto bg-gradient-to-br from-brand-blue to-brand-purple rounded-3xl flex items-center justify-center text-4xl shadow-lg shadow-brand-blue/20 mb-6">
                       <img 
