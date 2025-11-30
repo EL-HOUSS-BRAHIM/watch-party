@@ -29,6 +29,11 @@ jest.mock("@/components/ui/icon-button", () => ({
   ),
 }))
 
+jest.mock("next/navigation", () => ({
+  __esModule: true,
+  useSearchParams: () => new URLSearchParams(),
+}))
+
 jest.mock("@/lib/api-client", () => ({
   __esModule: true,
   videosApi: {
@@ -85,7 +90,7 @@ describe("VideosPage Google Drive integration", () => {
 
     expect(videosApi.getGDriveVideos).toHaveBeenCalledWith({ page_size: 50 })
     expect(await screen.findByText("Drive Sample")).toBeInTheDocument()
-    expect(screen.getByText(/import to library/i)).toBeInTheDocument()
+    expect(await screen.findByRole("button", { name: /import google drive video/i })).toBeInTheDocument()
   })
 
   it("imports a Google Drive video into the library", async () => {
@@ -95,7 +100,7 @@ describe("VideosPage Google Drive integration", () => {
 
     await user.click(screen.getAllByRole("button", { name: /google drive/i })[0])
 
-    const importButton = await screen.findByRole("button", { name: /import to library/i })
+    const importButton = await screen.findByRole("button", { name: /import google drive video/i })
     await user.click(importButton)
 
     await waitFor(() => expect(videosApi.uploadFromGDrive).toHaveBeenCalledWith("drive-file-1"))
@@ -123,7 +128,7 @@ describe("VideosPage Google Drive integration", () => {
 
     await user.click(screen.getAllByRole("button", { name: /google drive/i })[0])
 
-    const streamButton = await screen.findByRole("button", { name: /stream/i })
+    const streamButton = await screen.findByRole("button", { name: /stream imported video/i })
     await user.click(streamButton)
 
     await waitFor(() => expect(videosApi.getGDriveStream).toHaveBeenCalledWith("video-2"))
@@ -151,10 +156,10 @@ describe("VideosPage Google Drive integration", () => {
 
     await user.click(screen.getAllByRole("button", { name: /google drive/i })[0])
 
-    const deleteButton = await screen.findByRole("button", { name: /delete/i })
+    const deleteButton = await screen.findByRole("button", { name: /delete imported video/i })
     await user.click(deleteButton)
 
     await waitFor(() => expect(videosApi.deleteGDriveVideo).toHaveBeenCalledWith("video-3"))
-    expect(await screen.findByRole("button", { name: /import to library/i })).toBeInTheDocument()
+    expect(await screen.findByRole("button", { name: /import google drive video/i })).toBeInTheDocument()
   })
 })
