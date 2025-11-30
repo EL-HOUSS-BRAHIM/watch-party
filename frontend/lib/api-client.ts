@@ -1797,6 +1797,97 @@ export const supportApi = {
     }),
 }
 
+/**
+ * Integrations API - Google Drive and other third-party integrations
+ */
+export interface GoogleDriveStatus {
+  connected: boolean
+  folder_id?: string
+  token_expires_at?: string
+}
+
+export interface GoogleDriveAuthUrl {
+  authorization_url: string
+  state?: string
+  redirect_uri?: string
+  connected?: boolean
+  folder_id?: string
+}
+
+export interface GoogleDriveFile {
+  id: string
+  name: string
+  mime_type: string
+  size: number
+  thumbnail_url?: string
+  created_time?: string
+  modified_time?: string
+  duration?: number
+  resolution?: string
+}
+
+export interface GoogleDriveStreamingUrl {
+  file_id: string
+  streaming_url: string
+  download_url?: string
+}
+
+export const integrationsApi = {
+  // Google Drive Integration
+  googleDrive: {
+    // Get authorization URL to start OAuth flow
+    getAuthUrl: () =>
+      apiFetch<{ data: GoogleDriveAuthUrl }>('/api/integrations/google-drive/auth-url/', {}),
+
+    // Complete OAuth callback (usually called from the callback page)
+    completeOAuthCallback: (code: string, state?: string) => {
+      const params = new URLSearchParams({ code })
+      if (state) params.append('state', state)
+      return apiFetch<{ data: GoogleDriveStatus }>(`/api/integrations/google-drive/oauth-callback/?${params.toString()}`, {})
+    },
+
+    // List files from Google Drive
+    listFiles: (params?: { folder_id?: string; mime_type?: string }) => {
+      const queryString = params ? '?' + new URLSearchParams(
+        Object.entries(params)
+          .filter(([, value]) => value !== undefined && value !== null && value !== '')
+          .map(([key, value]) => [key, String(value)])
+      ).toString() : ''
+      return apiFetch<{ data: { files: GoogleDriveFile[]; total: number; folder_id?: string } }>(
+        `/api/integrations/google-drive/files/${queryString}`, 
+        {}
+      )
+    },
+
+    // Get streaming URL for a file
+    getStreamingUrl: (fileId: string) =>
+      apiFetch<{ data: GoogleDriveStreamingUrl }>(`/api/integrations/google-drive/files/${fileId}/streaming-url/`, {}),
+
+    // Get proxy streaming URL (for CORS-safe streaming)
+    getProxyUrl: (fileId: string) =>
+      `${process.env.NEXT_PUBLIC_API_URL || ''}/api/integrations/google-drive/proxy/${fileId}/`,
+  },
+
+  // User connections management
+  getConnections: () =>
+    apiFetch<{ data: { connections: any[]; total: number } }>('/api/integrations/connections/', {}),
+
+  disconnectService: (connectionId: string) =>
+    apiFetch<{ success: boolean }>(`/api/integrations/connections/${connectionId}/disconnect/`, {
+      method: 'DELETE',
+    }),
+
+  // Integration types and status (admin)
+  getTypes: () =>
+    apiFetch<{ data: { types: any[] } }>('/api/integrations/types/', {}),
+
+  testIntegration: (integrationName: string) =>
+    apiFetch<any>('/api/integrations/test/', {
+      method: 'POST',
+      body: JSON.stringify({ integration_name: integrationName }),
+    }),
+}
+
 // Export all API modules
 const apiClient = {
   auth: authApi,
@@ -1813,6 +1904,7 @@ const apiClient = {
   interactive: interactiveApi,
   search: searchApi,
   support: supportApi,
+  integrations: integrationsApi,
   
   // Generic HTTP methods for backward compatibility
   get: <T = any>(url: string, options?: { params?: any }) => {
@@ -1850,7 +1942,7 @@ export default apiClient
 export const api = apiClient
 
 // Export individual modules for convenience
-export { authApi as auth, partiesApi as parties, videosApi as videos, userApi as users, chatApi as chat, adminApi as admin, billingApi as billing, storeApi as store, notificationsApi as notifications, interactiveApi as interactive, searchApi as search, supportApi as support, analyticsApi as analytics }
+export { authApi as auth, partiesApi as parties, videosApi as videos, userApi as users, chatApi as chat, adminApi as admin, billingApi as billing, storeApi as store, notificationsApi as notifications, interactiveApi as interactive, searchApi as search, supportApi as support, analyticsApi as analytics, integrationsApi as integrations }
 
 // Export types for convenience  
 export type Video = VideoSummary
