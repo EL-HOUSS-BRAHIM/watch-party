@@ -1,9 +1,25 @@
 # Docker Compose configuration for AWS production deployment
-# Uses external AWS RDS PostgreSQL and ElastiCache Valkey
+# Uses external AWS RDS PostgreSQL and local Valkey (Redis-compatible)
 # This assumes you have already created AWS infrastructure using the setup scripts
 
 services:
-  # Django Backend (uses external AWS RDS and ElastiCache)
+  # Valkey Cache (Redis-compatible) - Local instance for sessions/cache
+  valkey:
+    image: valkey/valkey:7.2-alpine
+    container_name: watchparty-valkey
+    command: valkey-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - valkey_data:/data
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Django Backend (uses external AWS RDS and local Valkey)
   backend:
     build:
       context: ./backend
@@ -24,6 +40,12 @@ services:
       - AWS_METADATA_SERVICE_TIMEOUT=1
       - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
       - ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1,backend
+      # Use local Valkey for Redis
+      - REDIS_URL=redis://valkey:6379/0
+      - REDIS_USE_SSL=false
+      - CELERY_BROKER_URL=redis://valkey:6379/2
+      - CELERY_RESULT_BACKEND=redis://valkey:6379/3
+      - CHANNEL_LAYERS_CONFIG_HOSTS=redis://valkey:6379/4
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
@@ -32,6 +54,9 @@ services:
       - "8000:8000"
     networks:
       - watchparty-network
+    depends_on:
+      valkey:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
@@ -40,7 +65,7 @@ services:
       retries: 3
       start_period: 30s
 
-  # Celery Worker (uses external AWS ElastiCache for broker)
+  # Celery Worker (uses local Valkey for broker)
   celery-worker:
     image: watchparty-backend:latest
     command: celery -A config worker --loglevel=info --concurrency=2
@@ -54,6 +79,12 @@ services:
       - AWS_EC2_METADATA_DISABLED=true
       - AWS_METADATA_SERVICE_TIMEOUT=1
       - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
+      # Use local Valkey for Redis
+      - REDIS_URL=redis://valkey:6379/0
+      - REDIS_USE_SSL=false
+      - CELERY_BROKER_URL=redis://valkey:6379/2
+      - CELERY_RESULT_BACKEND=redis://valkey:6379/3
+      - CHANNEL_LAYERS_CONFIG_HOSTS=redis://valkey:6379/4
     volumes:
       - media_volume:/app/media
       - ~/.aws:/home/appuser/.aws:ro
@@ -66,7 +97,7 @@ services:
     healthcheck:
       disable: true
 
-  # Celery Beat (scheduler, uses external AWS ElastiCache)
+  # Celery Beat (scheduler, uses local Valkey)
   celery-beat:
     image: watchparty-backend:latest
     command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
@@ -80,6 +111,12 @@ services:
       - AWS_EC2_METADATA_DISABLED=true
       - AWS_METADATA_SERVICE_TIMEOUT=1
       - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
+      # Use local Valkey for Redis
+      - REDIS_URL=redis://valkey:6379/0
+      - REDIS_USE_SSL=false
+      - CELERY_BROKER_URL=redis://valkey:6379/2
+      - CELERY_RESULT_BACKEND=redis://valkey:6379/3
+      - CHANNEL_LAYERS_CONFIG_HOSTS=redis://valkey:6379/4
     volumes:
       - ~/.aws:/home/appuser/.aws:ro
     depends_on:
@@ -163,6 +200,7 @@ services:
 volumes:
   static_volume:
   media_volume:
+  valkey_data:
 
 networks:
   watchparty-network:
