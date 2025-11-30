@@ -355,13 +355,14 @@ def get_drive_service_for_user(user) -> GoogleDriveService:
     
     def on_credentials_updated(credentials):
         """Update user profile with refreshed credentials."""
+        import datetime as dt
         profile.google_drive_token = credentials.token
         profile.google_drive_refresh_token = credentials.refresh_token
         if credentials.expiry:
             expiry = credentials.expiry
             # Only make aware if the datetime is naive
             if timezone.is_naive(expiry):
-                expiry = timezone.make_aware(expiry, timezone=timezone.utc)
+                expiry = timezone.make_aware(expiry, timezone=dt.timezone.utc)
             profile.google_drive_token_expires_at = expiry
         profile.save()
     

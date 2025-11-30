@@ -264,7 +264,8 @@ def _persist_profile_credentials(profile, credentials, folder_id=None):
 
     expiry = getattr(credentials, 'expiry', None)
     if expiry and timezone.is_naive(expiry):
-        expiry = timezone.make_aware(expiry, timezone=timezone.utc)
+        import datetime as dt
+        expiry = timezone.make_aware(expiry, timezone=dt.timezone.utc)
     profile.google_drive_token_expires_at = expiry
 
     if folder_id is not None:
