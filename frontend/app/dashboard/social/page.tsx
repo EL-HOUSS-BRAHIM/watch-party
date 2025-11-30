@@ -150,7 +150,7 @@ export default function SocialPage() {
       )}
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/20 via-pink-600/20 to-brand-purple/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/20 via-pink-600/20 to-brand-purple/20 rounded-2xl sm:rounded-3xl blur-3xl opacity-60 pointer-events-none"></div>
         <div className="glass-panel relative rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border-brand-orange/20">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 sm:gap-6">
             <div className="space-y-2">
