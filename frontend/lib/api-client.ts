@@ -945,9 +945,9 @@ export const videosApi = {
     apiFetch<PaginatedResponse<any>>('/api/videos/gdrive/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}),
 
   uploadFromGDrive: (fileId: string) =>
-    apiFetch<VideoSummary>('/api/videos/gdrive/upload/', {
+    apiFetch<VideoSummary>('/api/videos/gdrive/', {
       method: 'POST',
-      body: JSON.stringify({ file_id: fileId }),
+      body: JSON.stringify({ gdrive_file_id: fileId }),
     }),
 
   getGDriveStream: (id: string) =>
