@@ -239,14 +239,18 @@ GOOGLE_DRIVE_SCOPES = [
 
 
 def _build_drive_flow(request):
-    """Create an OAuth flow configured for the integrations callback."""
+    """Create an OAuth flow configured for the frontend callback."""
     from google_auth_oauthlib.flow import Flow  # Imported lazily for easier testing
+    from django.conf import settings
 
     client_config = GoogleDriveAuthView._build_client_config()
     flow = Flow.from_client_config(client_config, scopes=GOOGLE_DRIVE_SCOPES)
-    redirect_uri = request.build_absolute_uri(
-        reverse('integrations:google_drive_oauth_callback')
-    )
+    
+    # Use frontend callback URL so the user stays authenticated
+    # The frontend will then send the code to the backend API
+    frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000').rstrip('/')
+    redirect_uri = f"{frontend_url}/dashboard/integrations/callback/google-drive"
+    
     flow.redirect_uri = redirect_uri
     return flow, redirect_uri
 
