@@ -160,10 +160,12 @@ jobs:
               # Remove old Google Drive entries if they exist
               sed -i '/^GOOGLE_DRIVE_CLIENT_ID=/d' backend/.env 2>/dev/null || true
               sed -i '/^GOOGLE_DRIVE_CLIENT_SECRET=/d' backend/.env 2>/dev/null || true
+              sed -i '/^FRONTEND_URL=/d' backend/.env 2>/dev/null || true
               # Add new entries
               echo "GOOGLE_DRIVE_CLIENT_ID=$GOOGLE_DRIVE_CLIENT_ID" >> backend/.env
               echo "GOOGLE_DRIVE_CLIENT_SECRET=$GOOGLE_DRIVE_CLIENT_SECRET" >> backend/.env
-              echo "✅ Google Drive credentials updated in .env"
+              echo "FRONTEND_URL=https://watch-party.brahim-elhouss.me" >> backend/.env
+              echo "✅ Google Drive credentials and frontend URL updated in .env"
             fi
             
             # Login to GHCR
