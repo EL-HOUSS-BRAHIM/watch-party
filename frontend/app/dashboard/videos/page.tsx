@@ -618,14 +618,16 @@ export default function VideosPage() {
                   <div>
                     <h3 className="text-xl font-bold text-brand-navy flex items-center gap-2">
                       <span>☁️</span>
-                      Browse Google Drive Library
+                      {gdriveConnected === true ? "Browse Google Drive Library" : "Google Drive Integration"}
                     </h3>
                     <p className="text-brand-navy/60 text-sm font-medium">
-                      Import videos stored in your connected Google Drive account directly into Watch Party.
+                      {gdriveConnected === true 
+                        ? "Import videos stored in your connected Google Drive account directly into Watch Party."
+                        : "Connect your Google Drive to import and stream videos directly."}
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    {gdriveConnected !== false && (
+                    {gdriveConnected === true && (
                       <IconButton
                         onClick={() => loadGdriveVideos(true)}
                         variant="secondary"
@@ -638,7 +640,7 @@ export default function VideosPage() {
                   </div>
                 </div>
 
-                {gdriveError && gdriveConnected !== false && (
+                {gdriveError && gdriveConnected === true && (
                   <div className="bg-brand-coral/5 border border-brand-coral/20 rounded-2xl p-4 flex items-center gap-3">
                     <div className="text-xl">⚠️</div>
                     <div>
@@ -653,8 +655,20 @@ export default function VideosPage() {
                   </div>
                 )}
 
-                {/* Not Connected State - Show Connect Button */}
-                {(gdriveConnected === false || (gdriveConnected === null && !gdriveLoading)) && (
+                {/* Content based on connection state */}
+                {gdriveLoading ? (
+                  /* Loading State */
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="bg-white/40 border border-white/50 rounded-2xl p-4 animate-pulse space-y-4">
+                        <div className="aspect-video bg-brand-navy/5 rounded-xl"></div>
+                        <div className="h-4 bg-brand-navy/5 rounded w-3/4"></div>
+                        <div className="h-3 bg-brand-navy/5 rounded w-1/2"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : gdriveConnected !== true ? (
+                  /* Not Connected State - Show Connect Button */
                   <div className="text-center bg-gradient-to-br from-brand-blue/5 to-brand-purple/5 border border-brand-blue/20 rounded-2xl py-12 px-6">
                     <div className="w-20 h-20 mx-auto bg-gradient-to-br from-brand-blue to-brand-purple rounded-3xl flex items-center justify-center text-4xl shadow-lg shadow-brand-blue/20 mb-6">
                       <img 
@@ -687,20 +701,8 @@ export default function VideosPage() {
                       </div>
                     )}
                   </div>
-                )}
-
-                {/* Loading State */}
-                {gdriveLoading ? (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="bg-white/40 border border-white/50 rounded-2xl p-4 animate-pulse space-y-4">
-                        <div className="aspect-video bg-brand-navy/5 rounded-xl"></div>
-                        <div className="h-4 bg-brand-navy/5 rounded w-3/4"></div>
-                        <div className="h-3 bg-brand-navy/5 rounded w-1/2"></div>
-                      </div>
-                    ))}
-                  </div>
-                ) : gdriveConnected !== false && gdriveFiles.length === 0 ? (
+                ) : gdriveFiles.length === 0 ? (
+                  /* Connected but no files */
                   <div className="text-center text-brand-navy/60 bg-brand-navy/5 border border-brand-navy/10 rounded-2xl py-12">
                     <div className="text-4xl mb-3">📁</div>
                     <p className="font-bold text-lg">No compatible videos found</p>
@@ -714,7 +716,8 @@ export default function VideosPage() {
                       🔄 Refresh
                     </IconButton>
                   </div>
-                ) : gdriveConnected !== false ? (
+                ) : (
+                  /* Connected with files */
                   <div className="grid gap-4 sm:grid-cols-2">
                     {gdriveFiles.map((movie) => (
                       <div
@@ -787,7 +790,7 @@ export default function VideosPage() {
                       </div>
                     ))}
                   </div>
-                ) : null}
+                )}
               </div>
             ) : null}
           </div>
