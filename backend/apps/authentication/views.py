@@ -582,7 +582,7 @@ class GoogleDriveAuthView(APIView):
                 profile.google_drive_refresh_token = refresh_token
             expiry = getattr(credentials, 'expiry', None)
             if expiry and timezone.is_naive(expiry):
-                expiry = timezone.make_aware(expiry)
+                expiry = timezone.make_aware(expiry, timezone=timezone.utc)
             profile.google_drive_token_expires_at = expiry
             profile.google_drive_connected = True
             profile.google_drive_folder_id = folder_id or ''
