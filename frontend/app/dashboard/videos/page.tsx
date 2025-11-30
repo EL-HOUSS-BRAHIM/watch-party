@@ -179,19 +179,30 @@ export default function VideosPage() {
   }
 
   const handleConnectGoogleDrive = async () => {
+    console.log("[GDrive] Button clicked!")
     setGdriveConnecting(true)
     setGdriveError("")
     
     try {
+      console.log("[GDrive] Starting OAuth flow...")
       const response = await integrationsApi.googleDrive.getAuthUrl()
-      const authData = response.data ?? response
+      console.log("[GDrive] Auth URL response:", response)
+      
+      // Handle different response structures
+      // Backend returns: { success: true, data: { authorization_url: "...", state: "..." }, message: "..." }
+      const authData = (response as any)?.data ?? response
+      console.log("[GDrive] Auth data extracted:", authData)
       
       // Get the authorization URL
-      let authorizationUrl = (authData as any)?.authorization_url
-      const state = (authData as any)?.state
+      let authorizationUrl = authData?.authorization_url
+      const state = authData?.state
+      
+      console.log("[GDrive] Authorization URL:", authorizationUrl)
+      console.log("[GDrive] State:", state)
       
       if (!authorizationUrl) {
-        throw new Error("Failed to get authorization URL from server")
+        console.error("[GDrive] No authorization URL in response:", response)
+        throw new Error("Failed to get authorization URL from server. Please check if Google Drive is configured.")
       }
       
       // Add state to URL if not already included
@@ -200,15 +211,15 @@ export default function VideosPage() {
         authorizationUrl = `${authorizationUrl}${separator}state=${encodeURIComponent(state)}`
       }
       
+      console.log("[GDrive] Redirecting to:", authorizationUrl)
       // Redirect to Google for authorization
       window.location.href = authorizationUrl
     } catch (error) {
-      console.error("Failed to connect Google Drive:", error)
-      setGdriveError(
-        error instanceof Error 
-          ? error.message 
-          : "Failed to start Google Drive connection. Please try again."
-      )
+      console.error("[GDrive] Failed to connect Google Drive:", error)
+      const errorMsg = error instanceof Error 
+        ? error.message 
+        : "Failed to start Google Drive connection. Please try again."
+      setGdriveError(errorMsg)
       setGdriveConnecting(false)
     }
   }
