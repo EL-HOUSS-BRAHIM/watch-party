@@ -66,13 +66,15 @@ GOOGLE_SERVICE_ACCOUNT_FILE=/path/to/service-account.json
      http://localhost:3000
      https://your-frontend-domain.com
      ```
-   - **Authorized redirect URIs**:
+   - **Authorized redirect URIs** (IMPORTANT: use frontend URLs):
      ```
-     http://localhost:8000/api/integrations/google-drive/oauth-callback/
-     https://your-backend-domain.com/api/integrations/google-drive/oauth-callback/
+     http://localhost:3000/dashboard/integrations/callback/google-drive
+     https://your-frontend-domain.com/dashboard/integrations/callback/google-drive
      ```
 5. Click **Create**
 6. Copy the **Client ID** and **Client Secret**
+
+> ⚠️ **Important**: The redirect URI must point to the **frontend** callback page, not the backend. Google will redirect the user's browser there, and the frontend will complete the OAuth flow by calling the backend API.
 
 ### 5. Update Environment Variables
 
@@ -81,6 +83,9 @@ Add the credentials to your backend `.env`:
 ```bash
 GOOGLE_DRIVE_CLIENT_ID=123456789-abc123.apps.googleusercontent.com
 GOOGLE_DRIVE_CLIENT_SECRET=GOCSPX-your-secret-here
+
+# Frontend URL for OAuth redirects (must match Google Console)
+FRONTEND_URL=https://your-frontend-domain.com
 ```
 
 ## Frontend Configuration
@@ -145,10 +150,13 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 5. User authorizes Watch Party to access Drive
          │
          ▼
-6. Google redirects to callback URL with authorization code
+6. Google redirects to frontend callback URL with authorization code
          │
          ▼
-7. Backend exchanges code for access/refresh tokens
+7. Frontend sends code to backend: GET /api/integrations/google-drive/oauth-callback/
+         │
+         ▼
+8. Backend exchanges code for access/refresh tokens
          │
          ▼
 8. Backend creates "Watch Party" folder in user's Drive
