@@ -2,7 +2,6 @@ import Link from "next/link"
 import { Hero } from "@/components/marketing/hero"
 import { FeatureGrid } from "@/components/marketing/feature-grid"
 import { MetricStrip } from "@/components/marketing/metric-strip"
-import { TestimonialGrid } from "@/components/marketing/testimonial-grid"
 import { CallToAction } from "@/components/marketing/call-to-action"
 
 export default function HomePage() {
@@ -84,13 +83,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="section-padding">
-        <div className="container-width">
-          <TestimonialGrid />
         </div>
       </section>
 
