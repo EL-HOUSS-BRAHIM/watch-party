@@ -17,7 +17,6 @@ interface UserInfo {
 const _navigation = [
   { href: "/#features", label: "Features" },
   { href: "/#experience", label: "Experience" },
-  { href: "/#testimonials", label: "Stories" },
   { href: "/join", label: "Join" }
 ]
 
