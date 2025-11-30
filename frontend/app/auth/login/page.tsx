@@ -27,6 +27,15 @@ export default function LoginPage() {
       if (data.success) {
         setSuccess(true)
         
+        // Store tokens in localStorage as fallback for embedded browsers
+        // The API also returns tokens which we can use
+        if ((data as any).access_token) {
+          localStorage.setItem('access_token', (data as any).access_token)
+        }
+        if ((data as any).refresh_token) {
+          localStorage.setItem('refresh_token', (data as any).refresh_token)
+        }
+        
         // Show success state briefly before redirecting
         setTimeout(() => {
           const urlParams = new URLSearchParams(window.location.search)

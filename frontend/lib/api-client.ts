@@ -354,15 +354,24 @@ export type UserProfile = User
 
 /**
  * Helper function to get cookie value by name
+ * Also checks localStorage as fallback for embedded browsers
  */
 function getCookie(name: string): string | undefined {
   if (typeof document === 'undefined') return undefined
   
+  // First try to get from cookie
   const value = `; ${document.cookie}`
   const parts = value.split(`; ${name}=`)
   
   if (parts.length === 2) {
-    return parts.pop()?.split(';').shift()
+    const cookieValue = parts.pop()?.split(';').shift()
+    if (cookieValue) return cookieValue
+  }
+  
+  // Fallback to localStorage for embedded browsers (VS Code Simple Browser, etc.)
+  if (typeof localStorage !== 'undefined') {
+    const storedValue = localStorage.getItem(name)
+    if (storedValue) return storedValue
   }
   
   return undefined

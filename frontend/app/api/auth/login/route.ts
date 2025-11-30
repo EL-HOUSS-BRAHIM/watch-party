@@ -48,32 +48,43 @@ export async function POST(request: NextRequest) {
     // Check if backend sent tokens in JSON (direct backend call)
     // or if it set cookies (proper backend configuration)
     
-    // Create response with user data only (no tokens)
-    const nextResponse = NextResponse.json({
+    // Create response with user data and tokens for localStorage fallback
+    const responseData: Record<string, unknown> = {
       success: true,
       user: data.user,
       message: data.message || 'Login successful',
-    })
+    }
+    
+    // Include tokens in response for localStorage fallback (embedded browsers)
+    if (data.access_token) {
+      responseData.access_token = data.access_token
+    }
+    if (data.refresh_token) {
+      responseData.refresh_token = data.refresh_token
+    }
+    
+    const nextResponse = NextResponse.json(responseData)
 
     // If backend sent tokens in JSON, set them as HTTP-only cookies
     if (data.access_token && data.refresh_token) {
       // Backend sent tokens in JSON (fallback for old backend versions)
-      // Set them as HTTP-only cookies with domain for cross-subdomain access
+      // Set them as HTTP-only cookies
+      // Note: Remove domain restriction for better compatibility with embedded browsers
+      const isProduction = process.env.NODE_ENV === 'production'
+      
       nextResponse.cookies.set('access_token', data.access_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false, // Allow JS to read for Authorization header
+        secure: isProduction,
         sameSite: 'lax',
         path: '/',
-        domain: '.brahim-elhouss.me', // Allow cookies across subdomains
         maxAge: 60 * 60, // 1 hour
       })
 
       nextResponse.cookies.set('refresh_token', data.refresh_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true, // Keep refresh token secure
+        secure: isProduction,
         sameSite: 'lax',
         path: '/',
-        domain: '.brahim-elhouss.me', // Allow cookies across subdomains
         maxAge: 60 * 60 * 24 * 7, // 7 days
       })
     }
