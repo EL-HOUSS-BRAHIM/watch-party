@@ -264,6 +264,12 @@ CSRF_TRUSTED_ORIGINS = config(
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
+# Frontend URL for OAuth redirects and CORS
+FRONTEND_URL = config(
+    'FRONTEND_URL',
+    default='http://localhost:3000'
+)
+
 # Cache Configuration (now using optimized configuration from above)
 # Session Configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
