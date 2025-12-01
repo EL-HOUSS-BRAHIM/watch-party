@@ -1,16 +1,5 @@
-import os
 from datetime import timedelta
 from unittest.mock import MagicMock, patch
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.testing")
-
-import django
-
-django.setup()
-
-from django.core.management import call_command
-
-call_command('migrate', run_syncdb=True, verbosity=0)
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
