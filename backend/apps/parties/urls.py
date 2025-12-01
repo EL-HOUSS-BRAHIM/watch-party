@@ -47,6 +47,7 @@ urlpatterns = [
     path('<uuid:pk>/leave/', WatchPartyViewSet.as_view({'post': 'leave'}), name='party-leave'),
     path('<uuid:pk>/start/', WatchPartyViewSet.as_view({'post': 'start'}), name='party-start'),
     path('<uuid:pk>/control/', WatchPartyViewSet.as_view({'post': 'control'}), name='party-control'),
+    path('<uuid:pk>/attach_video/', WatchPartyViewSet.as_view({'post': 'attach_video'}), name='party-attach-video'),
     path('<uuid:pk>/chat/', WatchPartyViewSet.as_view({'get': 'chat', 'post': 'chat'}), name='party-chat'),
     path('<uuid:pk>/react/', WatchPartyViewSet.as_view({'post': 'react'}), name='party-react'),
     path('<uuid:pk>/participants/', WatchPartyViewSet.as_view({'get': 'participants'}), name='party-participants'),
@@ -64,6 +65,7 @@ urlpatterns = [
 # POST   /api/parties/{id}/leave/             - Leave party
 # POST   /api/parties/{id}/start/             - Start party (host only)
 # POST   /api/parties/{id}/control/           - Control video playback
+# POST   /api/parties/{id}/attach_video/      - Attach video from library (host only)
 # GET    /api/parties/{id}/chat/              - Get chat messages
 # POST   /api/parties/{id}/chat/              - Send chat message
 # POST   /api/parties/{id}/react/             - Add reaction
