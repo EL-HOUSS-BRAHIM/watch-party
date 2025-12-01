@@ -42,10 +42,10 @@ const SUPPORTED_INTEGRATIONS: IntegrationType[] = [
   {
     id: 'google-drive',
     name: 'Google Drive',
-    description: 'Import and stream videos directly from your Google Drive. Watch movies stored in your cloud without downloading.',
+    description: 'Import and stream videos from your Google Drive. After connecting, move movies to the "Watch Party" folder in your Drive to import them.',
     icon: '☁️',
     iconUrl: 'https://www.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png',
-    features: ['Import videos', 'Stream directly', 'Auto-sync', 'Folder organization'],
+    features: ['Import videos', 'Stream directly', 'Watch Party folder', 'No downloads needed'],
     category: 'storage',
     is_available: true,
   },
