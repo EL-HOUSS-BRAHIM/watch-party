@@ -7,6 +7,7 @@ django-cors-headers==4.7.0
 django-filter==25.1
 django-redis==6.0.0
 django-environ==0.12.0
+python-decouple==3.8
 dj-database-url==3.0.1
 
 # Database
@@ -31,6 +32,7 @@ boto3==1.39.9
 firebase-admin==6.5.0
 google-api-python-client==2.176.0
 google-auth==2.40.3
+google-auth-oauthlib==1.2.2
 google-cloud-firestore==2.21.0
 google-cloud-storage==3.2.0
 
@@ -44,6 +46,8 @@ python-dateutil==2.9.0.post0
 pytz==2025.2
 qrcode==7.4.2
 stripe==12.3.0
+user-agents==2.2.0
+aiohttp==3.12.15
 
 # Security
 cryptography==45.0.5
@@ -54,7 +58,7 @@ whitenoise==6.9.0
 
 # WSGI/ASGI servers
 gunicorn==23.0.0
-gevent==24.2.1
+gevent==24.10.3
 
 # Monitoring
 sentry-sdk==1.40.6
