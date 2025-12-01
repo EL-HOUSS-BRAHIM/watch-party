@@ -28,6 +28,7 @@ watch-party-monorepo/
 - Python 3.12+ and pip
 - PostgreSQL 13+
 - Redis 6+
+- FFmpeg (for video metadata extraction)
 
 ### Development Setup
 
@@ -37,7 +38,19 @@ watch-party-monorepo/
    cd watch-party
    ```
 
-2. **Setup Backend:**
+2. **Install FFmpeg:**
+   ```bash
+   # macOS
+   brew install ffmpeg
+   
+   # Ubuntu/Debian
+   sudo apt-get update && sudo apt-get install -y ffmpeg
+   
+   # Verify installation
+   ffmpeg -version
+   ```
+
+3. **Setup Backend:**
    ```bash
    cd backend
    python -m venv venv
