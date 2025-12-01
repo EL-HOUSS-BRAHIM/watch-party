@@ -7,21 +7,56 @@ set -e
 ENVIRONMENT=${1:-production}
 MAX_RETRIES=10
 RETRY_DELAY=2
+PROJECT_PREFIX=${PROJECT_PREFIX:-$(basename "$(pwd)")}
 
-echo "🏥 Running health checks for $ENVIRONMENT environment..."
-
-# Determine URLs based on environment
+# Determine compose file and base service names
 if [ "$ENVIRONMENT" = "staging" ]; then
     BACKEND_URL="https://staging-be-watch-party.brahim-elhouss.me"
     FRONTEND_URL="https://staging-watch-party.brahim-elhouss.me"
-    BACKEND_CONTAINER="backend-staging"
-    FRONTEND_CONTAINER="frontend-staging"
+    BACKEND_SERVICE="backend-staging"
+    FRONTEND_SERVICE="frontend-staging"
+    COMPOSE_FILE="docker-compose.staging.yml"
 else
     BACKEND_URL="https://be-watch-party.brahim-elhouss.me"
     FRONTEND_URL="https://watch-party.brahim-elhouss.me"
-    BACKEND_CONTAINER="backend"
-    FRONTEND_CONTAINER="frontend"
+    BACKEND_SERVICE="backend"
+    FRONTEND_SERVICE="frontend"
+    COMPOSE_FILE="docker-compose.yml"
 fi
+
+# Resolve actual container names created by docker compose (e.g. watch-party-backend-1)
+resolve_container_name() {
+    local service=$1
+    local resolved=""
+
+    if [ "${DEBUG_HEALTHCHECK:-0}" = "1" ]; then
+        echo "[debug] Resolving container for ${service} with prefix ${PROJECT_PREFIX}" >&2
+    fi
+
+    resolved=$(docker ps -a --filter "name=${PROJECT_PREFIX}-${service}" --format "{{.Names}}" | head -n1)
+
+    if [ "${DEBUG_HEALTHCHECK:-0}" = "1" ]; then
+        echo "[debug] Primary match: ${resolved}" >&2
+    fi
+
+    if [ -z "$resolved" ]; then
+        resolved=$(docker ps -a --filter "name=${service}" --format "{{.Names}}" | head -n1)
+        if [ "${DEBUG_HEALTHCHECK:-0}" = "1" ]; then
+            echo "[debug] Fallback match: ${resolved}" >&2
+        fi
+    fi
+
+    if [ -n "$resolved" ]; then
+        echo "$resolved"
+    else
+        echo "${PROJECT_PREFIX}-${service}-1"
+    fi
+}
+
+BACKEND_CONTAINER=$(resolve_container_name "$BACKEND_SERVICE")
+FRONTEND_CONTAINER=$(resolve_container_name "$FRONTEND_SERVICE")
+
+echo "🏥 Running health checks for $ENVIRONMENT environment..."
 
 # Function to perform health check with exponential backoff
 check_service() {
@@ -77,7 +112,7 @@ check_container() {
 check_database() {
     echo "Checking database connectivity..."
     
-    if docker exec "$BACKEND_CONTAINER" python -c "
+    if docker exec -T "$BACKEND_CONTAINER" python -c "
 import os
 import sys
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
@@ -104,7 +139,7 @@ except Exception as e:
 check_redis() {
     echo "Checking Redis connectivity..."
     
-    if docker exec "$BACKEND_CONTAINER" python -c "
+    if docker exec -T "$BACKEND_CONTAINER" python -c "
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
 import django
