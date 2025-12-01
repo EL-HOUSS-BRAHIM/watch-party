@@ -629,10 +629,16 @@ export const partiesApi = {
   getById: (id: string) =>
     apiFetch<WatchParty>(`/api/parties/${id}/`, {}),
 
-  update: (id: string, data: Partial<WatchParty>) =>
+  update: (id: string, data: Partial<WatchParty> & { video_id?: string }) =>
     apiFetch<WatchParty>(`/api/parties/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
+    }),
+
+  attachVideo: (id: string, videoId: string) =>
+    apiFetch<WatchParty>(`/api/parties/${id}/attach_video/`, {
+      method: 'POST',
+      body: JSON.stringify({ video_id: videoId }),
     }),
 
   delete: (id: string) =>
