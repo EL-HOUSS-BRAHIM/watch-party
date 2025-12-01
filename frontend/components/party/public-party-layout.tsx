@@ -214,81 +214,129 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Simple Header */}
-      <header className="border-b border-white/10 bg-gray-950/80 backdrop-blur-xl">
-        <div className="flex h-16 items-center justify-between px-6">
-          {/* Party Info */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-blue">
-                <span className="text-xl">🎬</span>
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-white">{party.title}</h1>
-                <p className="text-xs text-white/50">Code: {party.roomCode}</p>
-                <p className="text-[11px] text-white/40">Hosted by {party.host.name}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-1.5">
-              <span className="text-sm">👥</span>
-              <span className="text-sm font-medium text-brand-navy">{party.participantCount}</span>
-            </div>
-            <div className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${statusBadgeStyles}`}>
-              Status: {party.statusLabel}
-            </div>
-          </div>
+    <div className="relative min-h-screen bg-gradient-to-br from-brand-navy via-brand-purple/30 to-brand-navy overflow-hidden">
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 pointer-events-none opacity-40">
+        <div className="absolute top-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-brand-magenta/30 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-brand-cyan/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-64 sm:w-96 h-64 sm:h-96 bg-brand-purple/30 rounded-full blur-3xl" />
+      </div>
 
-          {/* User Badge & Leave */}
-          <div className="flex items-center gap-3">
-            <div className={`rounded-lg px-3 py-1.5 ${isHost ? 'bg-brand-coral/20 border border-brand-coral/30' : isAuthenticated ? 'bg-brand-purple/20 border border-brand-purple/30' : 'bg-brand-blue/20 border border-brand-blue/30'}`}>
-              <span className={`text-sm font-medium ${isHost ? 'text-orange-300' : isAuthenticated ? 'text-purple-300' : 'text-blue-300'}`}>
-                {isHost ? '👑 Host: ' : isAuthenticated ? '👤 ' : '👁️ Guest: '}{guestName}
-              </span>
+      {/* Header with Glass Effect - Responsive */}
+      <header className="relative border-b border-white/10 backdrop-blur-xl bg-white/5">
+        <div className="max-w-[1800px] mx-auto px-3 sm:px-6 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            {/* Party Info Card - Mobile Optimized */}
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <div className="flex items-center gap-2 sm:gap-3 backdrop-blur-xl bg-white/10 border border-white/20 rounded-xl sm:rounded-2xl px-3 sm:px-5 py-2 sm:py-3 shadow-xl flex-1 sm:flex-initial">
+                <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-brand-magenta via-brand-purple to-brand-cyan shadow-lg flex-shrink-0">
+                  <span className="text-xl sm:text-2xl">🎬</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-base sm:text-xl font-bold text-white drop-shadow-lg truncate">{party.title}</h1>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5">
+                    <span className="text-[10px] sm:text-xs font-semibold text-brand-cyan-light">#{party.roomCode}</span>
+                    <span className="text-[10px] sm:text-xs text-white/40">•</span>
+                    <span className="text-[10px] sm:text-xs text-white/60 truncate">{party.host.name}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Pills - Compact on Mobile */}
+              <div className="hidden xs:flex items-center gap-2">
+                <div className="backdrop-blur-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 border border-brand-purple/30 rounded-xl px-2.5 sm:px-3 py-1.5 sm:py-2 flex items-center gap-1.5 sm:gap-2 shadow-lg">
+                  <span className="text-base sm:text-lg">👥</span>
+                  <span className="text-xs sm:text-sm font-bold text-white">{party.participantCount}</span>
+                </div>
+                <div className={`backdrop-blur-xl border rounded-xl px-2.5 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold shadow-lg ${statusBadgeStyles}`}>
+                  {party.statusLabel}
+                </div>
+              </div>
             </div>
-            <button
-              onClick={handleLeaveParty}
-              className="rounded-lg bg-brand-coral/20 border border-brand-coral/30 px-4 py-2 text-sm font-medium text-red-300 hover:bg-brand-coral/30 transition-colors"
-            >
-              Leave Party
-            </button>
+
+            {/* User Badge & Actions - Responsive */}
+            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              {/* Mobile Stats (shown only on small screens) */}
+              <div className="flex xs:hidden items-center gap-2 flex-1">
+                <div className="backdrop-blur-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 border border-brand-purple/30 rounded-xl px-2.5 py-1.5 flex items-center gap-1.5 shadow-lg">
+                  <span className="text-base">👥</span>
+                  <span className="text-xs font-bold text-white">{party.participantCount}</span>
+                </div>
+                <div className={`backdrop-blur-xl border rounded-xl px-2.5 py-1.5 text-[10px] font-bold shadow-lg ${statusBadgeStyles}`}>
+                  {party.statusLabel}
+                </div>
+              </div>
+
+              <div className={`backdrop-blur-xl border rounded-xl px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg ${
+                isHost 
+                  ? 'bg-gradient-to-r from-brand-coral/20 to-brand-coral/10 border-brand-coral/40' 
+                  : isAuthenticated 
+                    ? 'bg-gradient-to-r from-brand-purple/20 to-brand-purple/10 border-brand-purple/40' 
+                    : 'bg-gradient-to-r from-brand-cyan/20 to-brand-blue/10 border-brand-cyan/40'
+              }`}>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="text-base sm:text-lg">{isHost ? '👑' : isAuthenticated ? '👤' : '👁️'}</span>
+                  <span className={`text-xs sm:text-sm font-bold truncate max-w-[80px] sm:max-w-none ${
+                    isHost ? 'text-brand-coral-light' : isAuthenticated ? 'text-purple-300' : 'text-brand-cyan-light'
+                  }`}>
+                    {guestName}
+                  </span>
+                  {isHost && <span className="hidden sm:inline text-xs font-bold text-brand-coral/80 ml-1">HOST</span>}
+                </div>
+              </div>
+              <button
+                onClick={handleLeaveParty}
+                className="backdrop-blur-xl bg-gradient-to-r from-brand-coral/20 to-red-500/20 border border-brand-coral/40 rounded-xl px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-red-200 hover:from-brand-coral/30 hover:to-red-500/30 transition-all shadow-lg hover:shadow-brand-coral/25"
+              >
+                <span className="hidden sm:inline">🚪 Leave</span>
+                <span className="sm:hidden">🚪</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Video Player Section */}
-        <div className="flex flex-1 flex-col p-6">
-          <div className="flex-1 rounded-2xl bg-black/40 border border-white/10 overflow-hidden">
+      {/* Main Content Grid - Responsive */}
+      <div className="relative max-w-[1800px] mx-auto p-3 sm:p-6 grid lg:grid-cols-[1fr_400px] gap-3 sm:gap-6 min-h-[calc(100vh-120px)]">
+      {/* Main Content Grid - Responsive */}
+      <div className="relative max-w-[1800px] mx-auto p-3 sm:p-6 grid lg:grid-cols-[1fr_400px] gap-3 sm:gap-6 min-h-[calc(100vh-120px)]">
+        {/* Video Player Card - Mobile First */}
+        <div className="flex flex-col gap-3 sm:gap-4 order-1">
+          <div className="flex-1 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-black/20 min-h-[300px] sm:min-h-[400px]">
             {party.video && streamUrl && !loadingStream ? (
               <div className="flex h-full flex-col">
-                {/* Video Info Bar */}
-                <div className="border-b border-white/10 bg-gray-900/80 px-4 py-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-purple/20 text-xl">🎬</div>
-                      <div>
-                        <h3 className="font-semibold text-white">{party.video.title}</h3>
+                {/* Video Info Header - Responsive */}
+                <div className="backdrop-blur-xl bg-gradient-to-r from-brand-purple/30 via-brand-magenta/20 to-brand-cyan/20 border-b border-white/10 px-3 sm:px-5 py-3 sm:py-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple shadow-lg flex-shrink-0">
+                        <span className="text-base sm:text-xl">🎥</span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-sm sm:text-base text-white drop-shadow-lg truncate">{party.video.title}</h3>
                         {party.video.durationLabel && (
-                          <p className="text-xs text-white/50">Duration: {party.video.durationLabel}</p>
+                          <p className="text-[10px] sm:text-xs text-white/60 mt-0.5">⏱ {party.video.durationLabel}</p>
                         )}
                       </div>
                     </div>
                     {isHost && (
-                      <div className="flex items-center gap-2">
-                        <a
-                          href={`/dashboard/parties/${party.id}/edit`}
-                          className="rounded-lg bg-brand-purple/20 border border-brand-purple/30 px-3 py-1.5 text-sm font-medium text-purple-300 hover:bg-brand-purple/30 transition-colors"
-                        >
-                          ⚙️ Edit Party
-                        </a>
-                      </div>
+                      <a
+                        href={`/dashboard/parties/${party.id}/edit`}
+                        className="hidden sm:flex backdrop-blur-xl bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-brand-cyan-light hover:bg-white/20 transition-all shadow-lg"
+                      >
+                        ⚙️ Settings
+                      </a>
+                      <a
+                        href={`/dashboard/parties/${party.id}/edit`}
+                        className="sm:hidden backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg px-2.5 py-1.5 text-xs font-bold text-brand-cyan-light hover:bg-white/20 transition-all shadow-lg"
+                      >
+                        ⚙️
+                      </a>
                     )}
                   </div>
                 </div>
 
-                {/* Synced Video Player */}
+                {/* Video Player - Responsive */}
                 <div className="relative flex-1 bg-black">
                   <SyncedVideoPlayer
                     partyId={party.id}
@@ -304,156 +352,192 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                   />
                 </div>
 
-                {/* Simple Controls */}
-                <div className="border-t border-white/10 bg-gray-900/50 p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-white/70">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <span data-testid="playback-status">
-                        Playback: <span className="font-semibold text-white">{party.isPlaying ? "Playing" : "Paused"}</span>
+                {/* Playback Info Bar - Mobile Optimized */}
+                <div className="backdrop-blur-xl bg-gradient-to-r from-brand-navy/80 to-brand-purple/40 border-t border-white/10 px-3 sm:px-5 py-3 sm:py-4">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className={`w-2 h-2 rounded-full ${party.isPlaying ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`} />
+                      <span className="text-white/70" data-testid="playback-status">
+                        <span className="font-bold text-white">{party.isPlaying ? "Playing" : "Paused"}</span>
                       </span>
-                      <span data-testid="playback-position">
-                        Position: <span className="font-semibold text-white">{party.playbackPosition}</span>
-                      </span>
-                      {party.video.durationLabel && (
-                        <span data-testid="playback-duration">
-                          Duration: <span className="font-semibold text-white">{party.video.durationLabel}</span>
-                        </span>
-                      )}
                     </div>
+                    <div className="hidden sm:block h-4 w-px bg-white/20" />
+                    <span className="text-white/70" data-testid="playback-position">
+                      <span className="hidden sm:inline">Position: </span>
+                      <span className="font-bold text-brand-cyan-light">{party.playbackPosition}</span>
+                    </span>
+                    {party.video.durationLabel && (
+                      <>
+                        <div className="hidden sm:block h-4 w-px bg-white/20" />
+                        <span className="text-white/70" data-testid="playback-duration">
+                          <span className="hidden sm:inline">Duration: </span>
+                          <span className="font-bold text-white">{party.video.durationLabel}</span>
+                        </span>
+                      </>
+                    )}
                   </div>
                   {lastSyncLabel && (
-                    <p className="mt-2 text-xs text-white/40">Last synced at {lastSyncLabel}</p>
+                    <p className="mt-2 text-[10px] sm:text-xs text-white/40">🔄 Last synced at {lastSyncLabel}</p>
                   )}
                 </div>
               </div>
             ) : loadingStream ? (
-              <div className="flex h-full items-center justify-center">
+              <div className="flex h-full items-center justify-center p-4">
                 <div className="text-center">
-                  <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-brand-purple/20 border-t-brand-purple"></div>
-                  <p className="text-lg font-semibold text-white">Loading video...</p>
-                  <p className="mt-2 text-sm text-white/50">Preparing stream</p>
+                  <div className="mb-4 inline-block h-12 w-12 sm:h-16 sm:w-16 animate-spin rounded-full border-4 border-brand-purple/20 border-t-brand-magenta"></div>
+                  <p className="text-lg sm:text-xl font-bold text-white drop-shadow-lg">Loading video...</p>
+                  <p className="mt-2 text-xs sm:text-sm text-white/60">Preparing your stream</p>
                 </div>
               </div>
             ) : (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center max-w-md px-4">
-                  <div className="mb-4 text-6xl">🎬</div>
-                  <p className="mb-2 text-xl font-semibold text-white">No video attached</p>
-                  <p className="text-white/50 mb-6">
+              <div className="flex h-full items-center justify-center p-4 sm:p-8">
+                <div className="text-center max-w-md">
+                  <div className="mb-4 sm:mb-6 text-5xl sm:text-7xl drop-shadow-2xl">🎬</div>
+                  <p className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-white drop-shadow-lg">No Video Yet</p>
+                  <p className="text-white/60 mb-6 sm:mb-8 text-xs sm:text-sm leading-relaxed">
                     {isHost 
-                      ? "Attach a video to start watching together!"
-                      : "Waiting for host to attach a video..."}
+                      ? "Attach a video from your library to start the watch party!"
+                      : "The host will attach a video soon. Hang tight!"}
                   </p>
                   {isHost && (
                     <a
                       href={`/dashboard/parties/${party.id}/edit`}
-                      className="inline-block rounded-lg bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-3 font-semibold text-white shadow-lg shadow-brand-purple/25 transition-all hover:-translate-y-0.5 hover:shadow-xl"
+                      className="inline-block rounded-xl bg-gradient-to-r from-brand-magenta via-brand-purple to-brand-cyan px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-white shadow-xl shadow-brand-purple/30 transition-all hover:scale-[1.02] hover:shadow-2xl"
                     >
                       📹 Attach Video
                     </a>
                   )}
-                  <div className="mt-6 flex flex-col items-center gap-1 text-xs text-white/60">
-                    <span>Status: {party.statusLabel}</span>
-                    <span data-testid="playback-status-fallback">Playback: {party.isPlaying ? "Playing" : "Paused"}</span>
-                    <span data-testid="playback-position-fallback">Position: {party.playbackPosition}</span>
+                  <div className="mt-6 sm:mt-8 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 space-y-2 text-[10px] sm:text-xs text-white/50">
+                    <div className="flex items-center justify-center gap-2">
+                      <span>Status:</span>
+                      <span className="font-bold text-white">{party.statusLabel}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2" data-testid="playback-status-fallback">
+                      <span>Playback:</span>
+                      <span className="font-bold text-white">{party.isPlaying ? "Playing" : "Paused"}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2" data-testid="playback-position-fallback">
+                      <span>Position:</span>
+                      <span className="font-bold text-white">{party.playbackPosition}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Mode Notice */}
+          {/* Mode Notice Card - Mobile Optimized */}
           {!isHost && (
-            <div className="mt-4 rounded-lg bg-brand-blue/10 border border-brand-blue/20 p-3">
-              <p className="text-sm text-blue-300">
-                {isAuthenticated ? (
-                  <><strong>Member Mode:</strong> You can watch synced video and participate in chat. Only the host can control playback.</>
-                ) : (
-                  <><strong>Guest Mode Limitations:</strong> You can watch synced video and send text messages only. 
-                  <a href="/auth/register" className="ml-1 underline hover:text-blue-200">Sign up</a> for 
-                  voice chat, emoji reactions, polls, and more!</>
-                )}
-              </p>
+            <div className="backdrop-blur-xl bg-gradient-to-r from-brand-cyan/10 to-brand-blue/10 border border-brand-cyan/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <span className="text-xl sm:text-2xl flex-shrink-0">ℹ️</span>
+                <p className="text-xs sm:text-sm text-white/90 leading-relaxed flex-1">
+                  {isAuthenticated ? (
+                    <><strong className="text-brand-cyan-light">Member Mode:</strong> Watch synced video and chat with everyone. Only the host controls playback.</>
+                  ) : (
+                    <>
+                      <strong className="text-brand-cyan-light">Guest Mode:</strong> Limited to watching and text chat. 
+                      <a href="/auth/register" className="ml-1 underline text-brand-magenta-light hover:text-brand-magenta font-bold">Sign up free</a> for 
+                      reactions, voice chat, polls, and host your own parties!
+                    </>
+                  )}
+                </p>
+              </div>
             </div>
           )}
           {isHost && (
-            <div className="mt-4 rounded-lg bg-brand-coral/10 border border-brand-coral/20 p-3">
-              <p className="text-sm text-orange-300">
-                <strong>Host Controls:</strong> You have full control over video playback. Use the video player controls to play, pause, and seek.
-              </p>
+            <div className="backdrop-blur-xl bg-gradient-to-r from-brand-coral/10 to-brand-coral/5 border border-brand-coral/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <span className="text-xl sm:text-2xl flex-shrink-0">👑</span>
+                <p className="text-xs sm:text-sm text-white/90 leading-relaxed flex-1">
+                  <strong className="text-brand-coral-light">Host Controls:</strong> You have full control! Use the video player to play, pause, and seek. Everyone syncs to you.
+                </p>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Chat Sidebar */}
-        <div className="w-96 border-l border-white/10 bg-gray-950/50 backdrop-blur-xl flex flex-col">
-          {/* Chat Header */}
-          <div className="border-b border-white/10 p-4">
-            <h2 className="text-lg font-bold text-white">💬 Chat</h2>
+        {/* Chat Sidebar Card - Mobile: Full Width Below Video */}
+        <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-black/20 flex flex-col order-2 h-[500px] lg:h-auto">
+          {/* Chat Header - Mobile Optimized */}
+          <div className="backdrop-blur-xl bg-gradient-to-r from-brand-purple/30 via-brand-magenta/20 to-brand-cyan/20 border-b border-white/10 px-3 sm:px-5 py-3 sm:py-4">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg sm:text-xl">💬</span>
+              <h2 className="text-base sm:text-lg font-bold text-white drop-shadow-lg">Live Chat</h2>
+            </div>
             {chatDisabled ? (
-              <p className="text-xs text-brand-orange-light">Chat is disabled by the host for guests.</p>
+              <p className="text-[10px] sm:text-xs text-brand-coral-light font-semibold">🚫 Chat disabled by host</p>
             ) : (
-              <p className="text-xs text-white/50">Text messages only</p>
+              <p className="text-[10px] sm:text-xs text-white/50">Share your thoughts in real-time</p>
             )}
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          {/* Messages Area - Mobile Optimized Scrolling */}
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 sm:space-y-3">
             {messages.length === 0 ? (
               <div className="flex h-full items-center justify-center">
-                <p className="text-sm text-white/50">No messages yet...</p>
+                <div className="text-center">
+                  <div className="text-4xl sm:text-5xl mb-2 sm:mb-3 opacity-30">💬</div>
+                  <p className="text-xs sm:text-sm text-white/40">No messages yet...</p>
+                  <p className="text-[10px] sm:text-xs text-white/30 mt-1">Be the first to say hi!</p>
+                </div>
               </div>
             ) : (
               messages.map((msg) => (
-                <div key={msg.id} className="rounded-lg bg-white/5 p-3">
-                  <div className="mb-1 flex items-center gap-2">
-                    <span className={`text-sm font-semibold ${msg.user === 'System' ? 'text-yellow-300' : msg.isGuest ? 'text-blue-300' : 'text-purple-300'}`}>
+                <div 
+                  key={msg.id} 
+                  className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-lg sm:rounded-xl p-2.5 sm:p-3 shadow-lg hover:bg-white/10 transition-colors"
+                >
+                  <div className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                    <span className={`text-xs sm:text-sm font-bold drop-shadow-lg ${
+                      msg.user === 'System' ? 'text-yellow-300' : msg.isGuest ? 'text-brand-cyan-light' : 'text-brand-magenta-light'
+                    }`}>
                       {msg.user}
                     </span>
                     {msg.isGuest && msg.user !== 'System' && (
-                      <span className="rounded bg-brand-blue/20 px-1.5 py-0.5 text-[10px] font-bold text-brand-blue-light">
+                      <span className="rounded-lg bg-brand-cyan/20 border border-brand-cyan/30 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-brand-cyan-light">
                         GUEST
                       </span>
                     )}
                     {!msg.isGuest && msg.user !== 'System' && (
-                      <span className="rounded bg-brand-purple/20 px-1.5 py-0.5 text-[10px] font-bold text-purple-300">
+                      <span className="rounded-lg bg-brand-purple/20 border border-brand-purple/30 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-purple-300">
                         MEMBER
                       </span>
                     )}
-                    <span className="ml-auto text-xs text-brand-navy/40">
+                    <span className="ml-auto text-[10px] sm:text-xs text-white/40">
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <p className="text-sm text-brand-navy/90">{msg.text}</p>
+                  <p className="text-xs sm:text-sm text-white/90 leading-relaxed break-words">{msg.text}</p>
                 </div>
               ))
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Message Input */}
-          <form onSubmit={handleSendMessage} className="border-t border-white/10 p-4">
+          {/* Message Input - Mobile Touch Friendly */}
+          <form onSubmit={handleSendMessage} className="backdrop-blur-xl bg-gradient-to-r from-brand-navy/80 to-brand-purple/40 border-t border-white/10 p-3 sm:p-4">
             <div className="flex gap-2">
-                <input
+              <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
+                placeholder="Type your message..."
                 maxLength={500}
                 aria-label="Chat message"
                 disabled={chatDisabled}
-                  className="flex-1 rounded-lg border border-brand-navy/20 bg-white/10 px-4 py-2 text-sm text-brand-navy placeholder-brand-navy/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/20 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1 backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-white placeholder-white/40 focus:border-brand-magenta/50 focus:outline-none focus:ring-2 focus:ring-brand-magenta/20 disabled:cursor-not-allowed disabled:opacity-50 shadow-lg"
               />
               <button
                 type="submit"
                 disabled={chatDisabled || !newMessage.trim()}
-                className="rounded-lg bg-brand-purple px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-purple-dark disabled:cursor-not-allowed disabled:opacity-50"
+                className="backdrop-blur-xl bg-gradient-to-r from-brand-magenta to-brand-purple rounded-lg sm:rounded-xl px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-brand-magenta/30 transition-all hover:shadow-xl hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 active:scale-95"
               >
                 Send
               </button>
             </div>
-            <p className="mt-2 text-xs text-white/40">
-              {chatDisabled ? "Chat is currently disabled." : `${newMessage.length}/500 characters`}
+            <p className="mt-2 text-[10px] sm:text-xs text-white/40">
+              {chatDisabled ? "💬 Chat is currently disabled" : `${newMessage.length}/500 characters`}
             </p>
           </form>
         </div>
