@@ -53,11 +53,11 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://static.cloudflareinsights.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
-              "connect-src 'self' ws: wss: https:",
+              "connect-src 'self' ws: wss: https: https://cloudflareinsights.com",
               "media-src 'self' blob: https:",
               "object-src 'none'",
               "base-uri 'self'",
