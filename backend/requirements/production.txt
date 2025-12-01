@@ -60,7 +60,7 @@ google-resumable-media==2.7.2
 googleapis-common-protos==1.70.0
 grpcio==1.74.0
 grpcio-status==1.74.0
-gevent==24.2.1
+gevent==24.10.3
 gunicorn==23.0.0
 httplib2==0.22.0
 hyperlink==21.0.0
@@ -123,6 +123,7 @@ setuptools==80.9.0
 six==1.17.0
 sqlparse==0.5.3
 stripe==12.3.0
+user-agents==2.2.0
 Twisted==25.5.0
 txaio==25.6.1
 typing_extensions==4.14.1
