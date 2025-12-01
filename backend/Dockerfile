@@ -54,6 +54,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     libmagic1 \
     default-mysql-client \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy Python environment from builder
