@@ -14,12 +14,14 @@ from drf_spectacular.utils import extend_schema
 import asyncio
 import requests
 import re
+from typing import List
 
 from shared.responses import StandardResponse
 from shared.api_documentation import api_response_documentation
 from shared.integrations import integration_manager, IntegrationType
 from apps.authentication.views import GoogleDriveAuthView
 from apps.integrations.services import GoogleDriveService, get_drive_service_for_user
+from .models import UserServiceConnection, ExternalService
 from .serializers import IntegrationStatusResponseSerializer, IntegrationManagementResponseSerializer
 
 
@@ -285,6 +287,107 @@ def _get_or_create_profile(user):
     return profile
 
 
+def _get_or_create_external_service(service_name: str) -> ExternalService:
+    """Return an ExternalService instance for the given name."""
+    service, _ = ExternalService.objects.get_or_create(name=service_name)
+    return service
+
+
+def _sync_google_drive_connection(user, profile, credentials=None) -> UserServiceConnection:
+    """Ensure a UserServiceConnection exists and mirrors the profile state."""
+    service = _get_or_create_external_service('google_drive')
+    defaults = {
+        'is_connected': True,
+        'is_active': True,
+        'external_email': user.email,
+        'external_username': getattr(user, 'full_name', None) or user.email.split('@')[0],
+    }
+    connection, created = UserServiceConnection.objects.get_or_create(
+        user=user,
+        service=service,
+        defaults=defaults,
+    )
+
+    updated_fields: List[str] = []
+
+    if not connection.is_connected:
+        connection.is_connected = True
+        updated_fields.append('is_connected')
+
+    if not connection.is_active:
+        connection.is_active = True
+        updated_fields.append('is_active')
+
+    if connection.external_email != user.email:
+        connection.external_email = user.email
+        updated_fields.append('external_email')
+
+    preferred_username = getattr(user, 'full_name', None) or user.email.split('@')[0]
+    if connection.external_username != preferred_username:
+        connection.external_username = preferred_username
+        updated_fields.append('external_username')
+
+    profile_expiry = getattr(profile, 'google_drive_token_expires_at', None)
+    if profile_expiry and connection.token_expires_at != profile_expiry:
+        connection.token_expires_at = profile_expiry
+        updated_fields.append('token_expires_at')
+
+    if credentials is not None:
+        token = getattr(credentials, 'token', None)
+        if token and connection.access_token != token:
+            connection.access_token = token
+            updated_fields.append('access_token')
+
+        refresh_token = getattr(credentials, 'refresh_token', None)
+        if refresh_token and connection.refresh_token != refresh_token:
+            connection.refresh_token = refresh_token
+            updated_fields.append('refresh_token')
+
+    metadata = (connection.metadata or {}).copy()
+    folder_id = getattr(profile, 'google_drive_folder_id', '') or ''
+    metadata_updates = {
+        **metadata,
+        'folder_id': folder_id,
+        'provider': 'google',
+    }
+    if metadata_updates != connection.metadata:
+        connection.metadata = metadata_updates
+        updated_fields.append('metadata')
+
+    connection.last_sync_at = timezone.now()
+    updated_fields.append('last_sync_at')
+
+    if updated_fields:
+        # Preserve order while de-duplicating fields
+        unique_fields = list(dict.fromkeys(updated_fields))
+        connection.save(update_fields=unique_fields)
+
+    return connection
+
+
+def _serialize_connection(connection: UserServiceConnection) -> dict:
+    """Serialize a UserServiceConnection for API responses."""
+    service = connection.service
+    service_type = service.name.replace('_', '-') if service else 'custom'
+    status = 'connected' if connection.is_connected and connection.is_active else 'disconnected'
+
+    return {
+        'id': str(connection.id),
+        'type': service_type,
+        'name': service.get_name_display() if service else 'Unknown Integration',
+        'status': status,
+        'connected_at': connection.updated_at.isoformat() if connection.updated_at else None,
+        'last_sync': connection.last_sync_at.isoformat() if connection.last_sync_at else None,
+        'account_info': {
+            'email': connection.external_email or getattr(connection.user, 'email', None),
+            'username': connection.external_username,
+        },
+        'settings': connection.metadata or {},
+        'features': (connection.metadata or {}).get('features', []),
+        'icon': (connection.metadata or {}).get('icon'),
+    }
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def google_drive_auth_url(request):
@@ -371,6 +474,7 @@ def google_drive_oauth_callback(request):
         folder_id = drive_service.get_or_create_watch_party_folder()
 
         _persist_profile_credentials(profile, credentials, folder_id=folder_id)
+        _sync_google_drive_connection(request.user, profile, credentials)
 
         if 'google_drive_oauth_state' in request.session:
             del request.session['google_drive_oauth_state']
@@ -658,19 +762,95 @@ def social_oauth_callback(request, provider):
 @permission_classes([IsAuthenticated])
 def list_user_connections(request):
     """List user's integration connections"""
-    # TODO: Implement user connections listing
+    user = request.user
+    profile = _get_or_create_profile(user)
+
+    connections = list(
+        UserServiceConnection.objects.filter(user=user, is_active=True).select_related('service')
+    )
+
+    if getattr(profile, 'google_drive_connected', False):
+        google_connection = _sync_google_drive_connection(user, profile)
+        if not any(conn.id == google_connection.id for conn in connections):
+            connections.append(google_connection)
+
+    serialized_connections = [_serialize_connection(conn) for conn in connections]
+
     return StandardResponse.success({
-        'connections': [],
-        'total': 0
+        'connections': serialized_connections,
+        'total': len(serialized_connections)
     }, "User connections retrieved")
 
 
-@api_view(['DELETE'])
+@api_view(['DELETE', 'POST'])
 @permission_classes([IsAuthenticated])
 def disconnect_service(request, connection_id):
     """Disconnect a service integration"""
-    # TODO: Implement service disconnection
+    try:
+        connection = UserServiceConnection.objects.select_related('service').get(
+            id=connection_id,
+            user=request.user,
+        )
+    except UserServiceConnection.DoesNotExist:
+        return StandardResponse.error(
+            "Integration connection not found",
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    updated_fields: List[str] = []
+
+    if connection.is_connected:
+        connection.is_connected = False
+        updated_fields.append('is_connected')
+
+    if connection.access_token:
+        connection.access_token = ''
+        updated_fields.append('access_token')
+
+    if connection.refresh_token:
+        connection.refresh_token = ''
+        updated_fields.append('refresh_token')
+
+    if connection.token_expires_at is not None:
+        connection.token_expires_at = None
+        updated_fields.append('token_expires_at')
+
+    metadata = (connection.metadata or {}).copy()
+    metadata['disconnected_at'] = timezone.now().isoformat()
+    connection.metadata = metadata
+    updated_fields.append('metadata')
+
+    connection.last_sync_at = timezone.now()
+    updated_fields.append('last_sync_at')
+
+    if updated_fields:
+        connection.save(update_fields=list(dict.fromkeys(updated_fields)))
+
+    profile = _get_or_create_profile(request.user)
+    if connection.service and connection.service.name == 'google_drive':
+        profile_updates = []
+        if profile.google_drive_connected:
+            profile.google_drive_connected = False
+            profile_updates.append('google_drive_connected')
+        if profile.google_drive_token:
+            profile.google_drive_token = ''
+            profile_updates.append('google_drive_token')
+        if profile.google_drive_refresh_token:
+            profile.google_drive_refresh_token = ''
+            profile_updates.append('google_drive_refresh_token')
+        if profile.google_drive_folder_id:
+            profile.google_drive_folder_id = ''
+            profile_updates.append('google_drive_folder_id')
+        if profile.google_drive_token_expires_at is not None:
+            profile.google_drive_token_expires_at = None
+            profile_updates.append('google_drive_token_expires_at')
+
+        if profile_updates:
+            profile.save(update_fields=profile_updates)
+
+    service_name = connection.service.get_name_display() if connection.service else 'Integration'
+
     return StandardResponse.success({
         'disconnected': True,
-        'connection_id': connection_id
-    }, "Service disconnected successfully")
+        'connection_id': str(connection.id)
+    }, f"{service_name} disconnected successfully")
