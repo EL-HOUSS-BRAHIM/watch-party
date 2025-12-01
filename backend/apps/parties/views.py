@@ -303,6 +303,8 @@ class WatchPartyViewSet(ModelViewSet):
     @action(detail=True, methods=['post'])
     def attach_video(self, request, pk=None):
         """Attach a video from library to the party"""
+        from apps.integrations.services.google_drive import get_drive_service_for_user
+        
         party = self.get_object()
         user = request.user
         
@@ -321,6 +323,54 @@ class WatchPartyViewSet(ModelViewSet):
             # Check if user can use this video
             if video.uploader != user and video.visibility == 'private':
                 return Response({'error': "You don't have permission to use this video"}, status=status.HTTP_403_FORBIDDEN)
+            
+            # Additional validation for Google Drive videos
+            if video.source_type == 'gdrive':
+                # Check if video has a Google Drive file ID
+                if not video.gdrive_file_id:
+                    return Response({
+                        'error': 'video_invalid',
+                        'message': 'Video is missing Google Drive file ID'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Check if video is ready (not processing or failed)
+                if video.status == 'processing':
+                    return Response({
+                        'error': 'video_not_ready',
+                        'message': 'Video is still processing. Please wait a moment and try again.'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                if video.status == 'failed':
+                    return Response({
+                        'error': 'video_failed',
+                        'message': 'Video processing failed. Please try importing again.'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Check if uploader has Google Drive connected
+                if not hasattr(video.uploader, 'profile') or not video.uploader.profile.google_drive_connected:
+                    return Response({
+                        'error': 'drive_disconnected',
+                        'message': 'Video owner has disconnected Google Drive'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Verify Drive token is valid
+                try:
+                    drive_service = get_drive_service_for_user(video.uploader)
+                    
+                    # Try to get file info to verify access
+                    file_info = drive_service.get_file_info(video.gdrive_file_id)
+                    
+                    if not file_info:
+                        return Response({
+                            'error': 'file_not_found',
+                            'message': 'Video file not found on Google Drive'
+                        }, status=status.HTTP_404_NOT_FOUND)
+                        
+                except Exception as drive_error:
+                    return Response({
+                        'error': 'drive_access_error',
+                        'message': f'Cannot access Google Drive: {str(drive_error)}'
+                    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
             
             # Attach video and clear old Google Drive data
             party.video = video
