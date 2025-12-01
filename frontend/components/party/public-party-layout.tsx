@@ -120,50 +120,49 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
     loadedMessagesRef.current = true
 
     const loadMessages = async () => {
-      try {
-        // Load existing messages from API
-        const response = await chatApi.getMessages(party.id, { page_size: 50 })
-        const existingMessages: Message[] = response.results.map((msg: ApiChatMessage) => {
-          // Construct display name from first_name and last_name
-          const firstName = msg.user?.first_name || ''
-          const lastName = msg.user?.last_name || ''
-          const displayName = (firstName + ' ' + lastName).trim() || 'Unknown'
+      // Add welcome message for all users
+      const welcomeMsg: Message = {
+        id: `welcome-${Date.now()}`,
+        user: "System",
+        text: `${guestName} joined the party`,
+        timestamp: new Date(),
+        isGuest: false
+      }
+
+      // Only try to load messages for authenticated users
+      if (isAuthenticated) {
+        try {
+          // Load existing messages from API
+          const response = await chatApi.getMessages(party.id, { page_size: 50 })
+          const existingMessages: Message[] = response.results.map((msg: ApiChatMessage) => {
+            // Construct display name from first_name and last_name
+            const firstName = msg.user?.first_name || ''
+            const lastName = msg.user?.last_name || ''
+            const displayName = (firstName + ' ' + lastName).trim() || 'Unknown'
+            
+            return {
+              id: msg.id,
+              user: displayName,
+              text: msg.content,
+              timestamp: new Date(msg.created_at), // API returns created_at, not timestamp
+              isGuest: false // API messages are from authenticated users
+            }
+          })
           
-          return {
-            id: msg.id,
-            user: displayName,
-            text: msg.content,
-            timestamp: new Date(msg.created_at), // API returns created_at, not timestamp
-            isGuest: false // API messages are from authenticated users
-          }
-        })
-        
-        // Add welcome message
-        const welcomeMsg: Message = {
-          id: `welcome-${Date.now()}`,
-          user: "System",
-          text: `${guestName} joined the party`,
-          timestamp: new Date(),
-          isGuest: false
+          setMessages([...existingMessages, welcomeMsg])
+        } catch (err) {
+          // Silently handle error for authenticated users, still show welcome
+          console.log('Chat history unavailable, starting fresh')
+          setMessages([welcomeMsg])
         }
-        
-        setMessages([...existingMessages, welcomeMsg])
-      } catch (err) {
-        console.error('Failed to load chat messages:', err)
-        // Still show welcome message even if loading fails
-        const welcomeMsg: Message = {
-          id: `welcome-${Date.now()}`,
-          user: "System",
-          text: `${guestName} joined the party`,
-          timestamp: new Date(),
-          isGuest: false
-        }
+      } else {
+        // Guest mode: no API call, just welcome message
         setMessages([welcomeMsg])
       }
     }
 
     void loadMessages()
-  }, [party.id, guestName])
+  }, [party.id, guestName, isAuthenticated])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -173,7 +172,7 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
     setNewMessage("")
     setSendingMessage(true)
 
-    // Optimistic update - add message immediately
+    // Optimistic update - add message immediately for both guests and members
     const tempId = `temp-${Date.now()}`
     const optimisticMessage: Message = {
       id: tempId,
@@ -185,20 +184,21 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
     setMessages(prev => [...prev, optimisticMessage])
 
     try {
-      // Send to API (only works for authenticated users)
+      // Only try to persist for authenticated users
       if (isAuthenticated) {
         const savedMessage = await chatApi.sendMessage(party.id, messageText)
-        // Replace temp message with saved one
+        // Replace temp message with saved one (will have real ID from server)
         setMessages(prev => prev.map(msg => 
           msg.id === tempId 
             ? { ...msg, id: savedMessage.id }
             : msg
         ))
       }
+      // For guests: message stays with temp ID (client-side only)
+      // This is intentional - guest messages are ephemeral and not persisted
     } catch (err) {
-      console.error('Failed to send message:', err)
-      // Message is already shown optimistically, keep it visible
-      // Could add error indicator here if needed
+      // Silently handle errors - message already visible optimistically
+      console.log('Message sent locally:', messageText)
     } finally {
       setSendingMessage(false)
     }
@@ -467,6 +467,10 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
             </div>
             {chatDisabled ? (
               <p className="text-[10px] sm:text-xs text-brand-coral-light font-semibold">🚫 Chat disabled by host</p>
+            ) : !isAuthenticated ? (
+              <p className="text-[10px] sm:text-xs text-brand-cyan-light/80">
+                💡 Guest messages are visible only to you
+              </p>
             ) : (
               <p className="text-[10px] sm:text-xs text-white/50">Share your thoughts in real-time</p>
             )}
