@@ -301,6 +301,44 @@ class WatchPartyViewSet(ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @action(detail=True, methods=['post'])
+    def attach_video(self, request, pk=None):
+        """Attach a video from library to the party"""
+        party = self.get_object()
+        user = request.user
+        
+        # Only host can attach video
+        if party.host != user:
+            return Response({'error': 'Only host can attach video'}, status=status.HTTP_403_FORBIDDEN)
+        
+        video_id = request.data.get('video_id')
+        if not video_id:
+            return Response({'error': 'video_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            from apps.videos.models import Video
+            video = Video.objects.get(id=video_id)
+            
+            # Check if user can use this video
+            if video.uploader != user and video.visibility == 'private':
+                return Response({'error': "You don't have permission to use this video"}, status=status.HTTP_403_FORBIDDEN)
+            
+            # Attach video and clear old Google Drive data
+            party.video = video
+            party.gdrive_file_id = ''
+            party.movie_title = ''
+            party.current_timestamp = timezone.timedelta(0)
+            party.save()
+            
+            # Return updated party data
+            serializer = WatchPartyDetailSerializer(party, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except Video.DoesNotExist:
+            return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': f'Failed to attach video: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['post'])
     def select_gdrive_movie(self, request, pk=None):
         """Select a movie from Google Drive for the party"""
         party = self.get_object()
