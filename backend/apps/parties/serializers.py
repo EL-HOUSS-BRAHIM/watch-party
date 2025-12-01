@@ -199,12 +199,38 @@ class WatchPartyCreateSerializer(serializers.ModelSerializer):
 class WatchPartyUpdateSerializer(serializers.ModelSerializer):
     """Watch party update serializer"""
     
+    video_id = serializers.UUIDField(write_only=True, required=False, allow_null=True)
+    
     class Meta:
         model = WatchParty
         fields = [
             'title', 'description', 'visibility', 'max_participants',
-            'require_approval', 'allow_chat', 'allow_reactions', 'scheduled_start'
+            'require_approval', 'allow_chat', 'allow_reactions', 'scheduled_start',
+            'video_id'
         ]
+    
+    def update(self, instance, validated_data):
+        video_id = validated_data.pop('video_id', None)
+        
+        # Handle video attachment if provided
+        if video_id is not None:
+            from apps.videos.models import Video
+            try:
+                video = Video.objects.get(id=video_id)
+                
+                # Check if user can use this video
+                request = self.context.get('request')
+                if request and video.uploader != request.user and video.visibility == 'private':
+                    raise serializers.ValidationError("You don't have permission to use this video")
+                
+                validated_data['video'] = video
+                # Clear old Google Drive movie data when attaching new video
+                validated_data['gdrive_file_id'] = ''
+                validated_data['movie_title'] = ''
+            except Video.DoesNotExist:
+                raise serializers.ValidationError({"video_id": "Video not found"})
+        
+        return super().update(instance, validated_data)
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
