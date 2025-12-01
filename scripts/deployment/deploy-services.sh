@@ -24,14 +24,20 @@ log_info "Services to deploy: $SERVICES"
 # Determine compose file and container names based on environment
 if [ "$ENVIRONMENT" = "staging" ]; then
     COMPOSE_FILE="docker-compose.staging.yml"
-    BACKEND_CONTAINER="backend-staging"
-    FRONTEND_CONTAINER="frontend-staging"
+    BACKEND_SERVICE="backend-staging"
+    FRONTEND_SERVICE="frontend-staging"
+    CELERY_WORKER_SERVICE="celery-worker-staging"
+    CELERY_BEAT_SERVICE="celery-beat-staging"
+    NGINX_SERVICE="nginx-staging"
     BACKEND_PORT="8003"
     FRONTEND_PORT="3001"
 else
     COMPOSE_FILE="docker-compose.yml"
-    BACKEND_CONTAINER="backend"
-    FRONTEND_CONTAINER="frontend"
+    BACKEND_SERVICE="backend"
+    FRONTEND_SERVICE="frontend"
+    CELERY_WORKER_SERVICE="celery-worker"
+    CELERY_BEAT_SERVICE="celery-beat"
+    NGINX_SERVICE="nginx"
     BACKEND_PORT="8000"
     FRONTEND_PORT="3000"
 fi
@@ -56,11 +62,12 @@ log_info "Starting services..."
 if [ "$SERVICES" = "all" ]; then
     docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --remove-orphans
 elif [ "$SERVICES" = "backend" ]; then
-    docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --no-deps "$BACKEND_CONTAINER" celery-worker-${ENVIRONMENT} celery-beat-${ENVIRONMENT}
+    docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --no-deps \
+        "$BACKEND_SERVICE" "$CELERY_WORKER_SERVICE" "$CELERY_BEAT_SERVICE"
 elif [ "$SERVICES" = "frontend" ]; then
-    docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --no-deps "$FRONTEND_CONTAINER"
+    docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --no-deps "$FRONTEND_SERVICE"
 elif [ "$SERVICES" = "nginx" ]; then
-    docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --no-deps nginx-${ENVIRONMENT}
+    docker-compose -f "$COMPOSE_FILE" up -d --force-recreate --no-deps "$NGINX_SERVICE"
 else
     log_error "Invalid SERVICES value: $SERVICES"
     exit 1
@@ -72,24 +79,24 @@ sleep 5
 # Wait for backend health check (if backend was deployed)
 if [ "$SERVICES" = "all" ] || [ "$SERVICES" = "backend" ]; then
     log_info "Waiting for backend..."
-    if ! wait_for_service "$BACKEND_CONTAINER" \
+    if ! wait_for_service "$BACKEND_SERVICE" \
         "curl -f -s http://localhost:${BACKEND_PORT}/health/" \
         12 5; then
         log_error "Backend container logs:"
-        docker-compose -f "$COMPOSE_FILE" logs --tail=50 "$BACKEND_CONTAINER"
+        docker-compose -f "$COMPOSE_FILE" logs --tail=50 "$BACKEND_SERVICE"
         exit_with_error "Backend failed to start"
     fi
     
     # Run migrations if needed
     log_info "Checking for pending migrations..."
-    if docker exec "$BACKEND_CONTAINER" python manage.py showmigrations --plan | grep -q "\[ \]"; then
+    if docker-compose -f "$COMPOSE_FILE" exec -T "$BACKEND_SERVICE" python manage.py showmigrations --plan | grep -q "\[ \]"; then
         log_info "Running migrations..."
-        if ! docker exec "$BACKEND_CONTAINER" python manage.py migrate; then
+        if ! docker-compose -f "$COMPOSE_FILE" exec -T "$BACKEND_SERVICE" python manage.py migrate; then
             log_error "Migration logs:"
-            docker-compose -f "$COMPOSE_FILE" logs "$BACKEND_CONTAINER"
+            docker-compose -f "$COMPOSE_FILE" logs "$BACKEND_SERVICE"
             exit_with_error "Migration failed"
         fi
-        docker exec "$BACKEND_CONTAINER" python manage.py collectstatic --noinput
+        docker-compose -f "$COMPOSE_FILE" exec -T "$BACKEND_SERVICE" python manage.py collectstatic --noinput
         log_success "Migrations completed"
     else
         log_success "No pending migrations"
@@ -99,11 +106,11 @@ fi
 # Quick frontend check (if frontend was deployed)
 if [ "$SERVICES" = "all" ] || [ "$SERVICES" = "frontend" ]; then
     log_info "Waiting for frontend..."
-    if ! wait_for_service "$FRONTEND_CONTAINER" \
+    if ! wait_for_service "$FRONTEND_SERVICE" \
         "curl -f -s http://localhost:${FRONTEND_PORT}" \
         8 5; then
         log_error "Frontend container logs:"
-        docker-compose -f "$COMPOSE_FILE" logs --tail=30 "$FRONTEND_CONTAINER"
+        docker-compose -f "$COMPOSE_FILE" logs --tail=30 "$FRONTEND_SERVICE"
         exit_with_error "Frontend failed to start"
     fi
 fi
