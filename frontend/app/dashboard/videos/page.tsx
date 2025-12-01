@@ -151,7 +151,8 @@ export default function VideosPage() {
 
   const handleUrlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = new FormData(e.currentTarget)
+    const formElement = e.currentTarget
+    const form = new FormData(formElement)
     const url = form.get("url") as string
     const title = form.get("title") as string
     if (!url || !title) return
@@ -162,7 +163,10 @@ export default function VideosPage() {
       const newVideo = await videosApi.create({ title, source_type: "url", source_url: url, visibility: "private" })
       setVideos(prev => [newVideo, ...prev])
       showToast("Video added successfully!", "success")
-      e.currentTarget.reset()
+      // Guard form reset with null check
+      if (formElement) {
+        formElement.reset()
+      }
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Failed to add video", "error")
     } finally {
@@ -269,7 +273,7 @@ export default function VideosPage() {
 
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-[2rem] mb-8 bg-gradient-to-br from-brand-navy via-brand-purple to-brand-blue p-1">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10 pointer-events-none" />
         <div className="relative bg-brand-navy/80 backdrop-blur-xl rounded-[1.8rem] p-8 md:p-12">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             <div className="space-y-4">
