@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
-import api, { integrationsApi, type ApiClientError } from "@/lib/api-client"
+import { integrationsApi, type ApiClientError } from "@/lib/api-client"
 import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
 import { IconButton } from "@/components/ui/icon-button"
 
@@ -170,12 +170,11 @@ export default function IntegrationsPage() {
   const loadIntegrations = async () => {
     setLoading(true)
     try {
-      // Try to load from API, but don't fail if API is unavailable
-      const response = await api.get<{ data?: { connections?: Integration[] } }>('/api/integrations/connections/')
-      setIntegrations(response.data?.connections || [])
+      const response = await integrationsApi.getConnections()
+      const nextConnections = (response.data?.connections as Integration[]) || []
+      setIntegrations(nextConnections)
     } catch (err) {
       console.error("Failed to load integrations:", err)
-      // Don't show error for this - just show empty state
       setIntegrations([])
     } finally {
       setLoading(false)
@@ -236,7 +235,7 @@ export default function IntegrationsPage() {
     
     setConnecting(integrationTypeId)
     try {
-      await api.post(`/api/integrations/connections/${connection.id}/disconnect/`)
+      await integrationsApi.disconnectService(String(connection.id))
       setSuccessMessage(`${connection.name} disconnected successfully.`)
       await loadIntegrations()
     } catch (err) {
@@ -288,7 +287,12 @@ export default function IntegrationsPage() {
     <div className="space-y-8">
       {/* Success Message */}
       {successMessage && (
-        <div className="bg-brand-cyan/10 border border-brand-cyan/30 rounded-2xl p-4 flex items-center gap-3 animate-in slide-in-from-top-2">
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="bg-brand-cyan/10 border border-brand-cyan/30 rounded-2xl p-4 flex items-center gap-3 animate-in slide-in-from-top-2"
+        >
           <div className="text-2xl">✅</div>
           <div className="flex-1">
             <p className="text-brand-cyan-dark font-bold">{successMessage}</p>
@@ -330,13 +334,29 @@ export default function IntegrationsPage() {
             </div>
             <Link
               href="/dashboard/videos"
-              className="px-6 py-3 rounded-xl font-bold bg-white border border-brand-navy/10 text-brand-navy hover:bg-brand-navy/5 transition-all flex items-center gap-2"
+              className="w-full md:w-auto px-6 py-3 rounded-xl font-bold bg-white border border-brand-navy/10 text-brand-navy hover:bg-brand-navy/5 transition-all flex items-center gap-2 justify-center text-center"
             >
               <span>📹</span>
               Go to Media Library
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Stats */}
+      <div className="grid grid-cols-2 gap-3 sm:hidden">
+        {[
+          { label: "Connected", value: connectedCount, icon: "✅" },
+          { label: "Available", value: availableCount, icon: "🌐" }
+        ].map((stat) => (
+          <div key={stat.label} className="glass-card rounded-2xl p-4 flex items-center gap-3">
+            <span className="text-2xl">{stat.icon}</span>
+            <div>
+              <p className="text-sm text-brand-navy/60">{stat.label}</p>
+              <p className="text-xl font-bold text-brand-navy">{stat.value}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Search and Filters */}
@@ -350,16 +370,19 @@ export default function IntegrationsPage() {
             placeholder="Search integrations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search integrations"
             className="w-full pl-12 pr-4 py-4 bg-white/50 border border-brand-navy/10 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all shadow-sm"
           />
         </div>
 
         {/* Category Filter */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex flex-wrap gap-2 sm:gap-3 pb-1" role="tablist" aria-label="Integration categories">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
+              type="button"
+              aria-pressed={selectedCategory === category.id}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold whitespace-nowrap transition-all duration-200 ${
                 selectedCategory === category.id
                   ? "bg-brand-navy text-white shadow-md"
@@ -374,7 +397,7 @@ export default function IntegrationsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white/40 p-1.5 rounded-2xl border border-brand-navy/5 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-white/40 p-1.5 rounded-2xl border border-brand-navy/5 backdrop-blur-sm">
         {[
           { id: "all", label: "All Services", icon: "🔌", count: SUPPORTED_INTEGRATIONS.length },
           { id: "connected", label: "Connected", icon: "✅", count: connectedCount },
@@ -383,7 +406,9 @@ export default function IntegrationsPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold transition-all duration-300 ${
+            type="button"
+            aria-pressed={activeTab === tab.id}
+            className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold transition-all duration-300 ${
               activeTab === tab.id
                 ? "bg-brand-navy text-white shadow-lg"
                 : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
@@ -408,7 +433,7 @@ export default function IntegrationsPage() {
           return (
             <div 
               key={integration.id} 
-              className={`glass-card rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group ${
+              className={`glass-card rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group flex flex-col h-full ${
                 connected ? 'border-brand-cyan/30 bg-brand-cyan/5' : 'hover:border-brand-purple/30'
               } ${!integration.is_available && !connected ? 'opacity-60' : ''}`}
             >
@@ -452,46 +477,48 @@ export default function IntegrationsPage() {
                 </div>
               </div>
 
-              {/* Description */}
-              <p className="text-sm text-brand-navy/70 mb-4 leading-relaxed">{integration.description}</p>
+              <div className="space-y-4 flex-1">
+                {/* Description */}
+                <p className="text-sm text-brand-navy/70 leading-relaxed">{integration.description}</p>
 
-              {/* Connected Account Info */}
-              {connected && connection?.account_info && (
-                <div className="mb-4 p-3 bg-white/60 rounded-xl border border-brand-cyan/20">
-                  <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-1">Connected Account</p>
-                  <p className="text-sm font-medium text-brand-navy truncate">
-                    {connection.account_info.email || connection.account_info.username || "Connected"}
-                  </p>
-                </div>
-              )}
+                {/* Connected Account Info */}
+                {connected && connection?.account_info && (
+                  <div className="p-3 bg-white/60 rounded-xl border border-brand-cyan/20">
+                    <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-1">Connected Account</p>
+                    <p className="text-sm font-medium text-brand-navy truncate">
+                      {connection.account_info.email || connection.account_info.username || "Connected"}
+                    </p>
+                  </div>
+                )}
 
-              {/* Features */}
-              <div className="mb-6">
-                <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-2">Features</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {integration.features.slice(0, 4).map((feature, index) => (
-                    <span 
-                      key={index} 
-                      className={`px-2.5 py-1 text-xs font-bold rounded-lg border ${
-                        connected 
-                          ? 'bg-brand-cyan/10 text-brand-cyan-dark border-brand-cyan/20' 
-                          : 'bg-brand-purple/10 text-brand-purple-dark border-brand-purple/20'
-                      }`}
-                    >
-                      {feature}
-                    </span>
-                  ))}
+                {/* Features */}
+                <div>
+                  <p className="text-xs font-bold text-brand-navy/40 uppercase tracking-wide mb-2">Features</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {integration.features.slice(0, 4).map((feature, index) => (
+                      <span 
+                        key={index} 
+                        className={`px-2.5 py-1 text-xs font-bold rounded-lg border ${
+                          connected 
+                            ? 'bg-brand-cyan/10 text-brand-cyan-dark border-brand-cyan/20' 
+                            : 'bg-brand-purple/10 text-brand-purple-dark border-brand-purple/20'
+                        }`}
+                      >
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 pt-4 border-t border-brand-navy/5">
+              <div className="flex flex-col sm:flex-row gap-2 pt-4 mt-4 border-t border-brand-navy/5">
                 {connected ? (
                   <>
                     {integration.id === 'google-drive' && (
                       <Link
                         href="/dashboard/videos"
-                        className="flex-1 px-4 py-2.5 bg-brand-cyan/10 hover:bg-brand-cyan/20 text-brand-cyan-dark rounded-xl text-sm font-bold transition-colors text-center"
+                        className="flex-1 w-full sm:w-auto px-4 py-2.5 bg-brand-cyan/10 hover:bg-brand-cyan/20 text-brand-cyan-dark rounded-xl text-sm font-bold transition-colors text-center"
                       >
                         📹 Open Library
                       </Link>
@@ -500,7 +527,7 @@ export default function IntegrationsPage() {
                       onClick={() => handleDisconnect(integration.id)}
                       loading={isLoading}
                       variant="danger"
-                      className="px-4 py-2.5"
+                      className="w-full sm:w-auto px-4 py-2.5"
                     >
                       Disconnect
                     </IconButton>
@@ -509,7 +536,7 @@ export default function IntegrationsPage() {
                   <IconButton
                     onClick={() => handleConnect(integration.id)}
                     loading={isLoading}
-                    className="flex-1 btn-gradient shadow-md hover:shadow-brand-purple/20"
+                    className="flex-1 w-full sm:w-auto btn-gradient shadow-md hover:shadow-brand-purple/20"
                   >
                     <span>🔗</span>
                     Connect
