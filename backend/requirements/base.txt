@@ -40,6 +40,9 @@ google-cloud-storage==3.2.0
 Pillow==11.3.0
 python-magic==0.4.27
 
+# Video processing
+ffmpeg-python==0.2.0
+
 # Utilities
 requests==2.32.4
 python-dateutil==2.9.0.post0
