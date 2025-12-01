@@ -60,6 +60,8 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
   const [sendingMessage, setSendingMessage] = useState(false)
   const [streamUrl, setStreamUrl] = useState<string | null>(null)
   const [loadingStream, setLoadingStream] = useState(false)
+  const [streamError, setStreamError] = useState<string | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const loadedMessagesRef = useRef(false)
 
@@ -85,21 +87,53 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
   useEffect(() => {
     if (!party.video?.id) {
       setStreamUrl(null)
+      setStreamError(null)
       return
     }
 
     let isActive = true
     setLoadingStream(true)
+    setStreamError(null)
 
     const fetchStreamUrl = async () => {
+      // Exponential backoff delays: 1s, 2s, 5s
+      const delays = [0, 1000, 2000, 5000]
+      const delay = delays[Math.min(retryCount, delays.length - 1)]
+      
+      if (delay > 0) {
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+
       try {
         const response = await videosApi.getStreamUrl(party.video!.id)
         if (!isActive) return
         setStreamUrl(response.stream_url)
-      } catch (err) {
+        setStreamError(null)
+        setRetryCount(0) // Reset retry count on success
+      } catch (err: any) {
         console.error('Failed to fetch stream URL:', err)
         if (!isActive) return
+        
+        // Parse error type from response
+        const errorData = err?.response?.data
+        const errorType = errorData?.error || 'unknown'
+        
+        let errorMessage = 'Failed to load video'
+        
+        if (errorType === 'drive_token_expired' || errorType === 'drive_disconnected') {
+          errorMessage = 'Google Drive disconnected. Please reconnect in settings.'
+        } else if (errorType === 'video_not_ready') {
+          errorMessage = 'Video is still processing. Try again in a moment.'
+        } else if (errorType === 'file_not_found') {
+          errorMessage = 'Video file not found on Google Drive.'
+        } else if (errorType === 'proxy_error' || errorType === 'stream_failed') {
+          errorMessage = 'Unable to stream video. Please try again.'
+        } else if (err?.message) {
+          errorMessage = err.message
+        }
+        
         setStreamUrl(null)
+        setStreamError(errorMessage)
       } finally {
         if (isActive) {
           setLoadingStream(false)
@@ -112,7 +146,7 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
     return () => {
       isActive = false
     }
-  }, [party.video?.id])
+  }, [party.video?.id, retryCount])
 
   // Load existing messages and add welcome message
   useEffect(() => {
@@ -387,6 +421,38 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                   <div className="mb-4 inline-block h-12 w-12 sm:h-16 sm:w-16 animate-spin rounded-full border-4 border-brand-purple/20 border-t-brand-magenta"></div>
                   <p className="text-lg sm:text-xl font-bold text-white drop-shadow-lg">Loading video...</p>
                   <p className="mt-2 text-xs sm:text-sm text-white/60">Preparing your stream</p>
+                </div>
+              </div>
+            ) : streamError ? (
+              <div className="flex h-full items-center justify-center p-4 sm:p-8">
+                <div className="text-center max-w-md">
+                  <div className="mb-4 sm:mb-6 text-5xl sm:text-7xl drop-shadow-2xl">⚠️</div>
+                  <p className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-white drop-shadow-lg">Video Unavailable</p>
+                  <p className="text-white/70 mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                    {streamError}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button
+                      onClick={() => {
+                        setRetryCount(prev => prev + 1)
+                        setStreamError(null)
+                      }}
+                      className="inline-block rounded-xl bg-gradient-to-r from-brand-magenta to-brand-orange px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-white shadow-xl shadow-brand-magenta/30 transition-all hover:scale-[1.02] hover:shadow-2xl"
+                    >
+                      🔄 Retry
+                    </button>
+                    {isHost && (
+                      <a
+                        href={`/dashboard/parties/${party.id}/edit`}
+                        className="inline-block rounded-xl border-2 border-white/20 bg-white/10 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-white shadow-xl transition-all hover:bg-white/20"
+                      >
+                        ⚙️ Change Video
+                      </a>
+                    )}
+                  </div>
+                  {retryCount > 0 && (
+                    <p className="mt-4 text-xs text-white/40">Retry attempt: {retryCount}</p>
+                  )}
                 </div>
               </div>
             ) : (
