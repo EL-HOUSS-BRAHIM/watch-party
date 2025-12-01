@@ -12,6 +12,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from apps.authentication.models import UserProfile
+from apps.integrations.models import ExternalService, UserServiceConnection
 
 
 @override_settings(GOOGLE_DRIVE_CLIENT_ID='client-id', GOOGLE_DRIVE_CLIENT_SECRET='client-secret')
@@ -245,3 +246,62 @@ class GoogleDriveIntegrationViewsTests(APITestCase):
         response = self.client.get(reverse('integrations:google_drive_streaming_url', args=['file-123']))
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_user_connections_returns_google_drive_connection(self):
+        """Connections endpoint surfaces profile-backed Google Drive link."""
+        self.profile.google_drive_connected = True
+        self.profile.google_drive_token = 'token-123'
+        self.profile.google_drive_refresh_token = 'refresh-123'
+        self.profile.google_drive_folder_id = 'folder-xyz'
+        self.profile.save()
+
+        response = self.client.get(reverse('integrations:list_user_connections'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        payload = response.json()
+        self.assertTrue(payload['success'])
+        self.assertEqual(payload['data']['total'], 1)
+        connection = payload['data']['connections'][0]
+        self.assertEqual(connection['type'], 'google-drive')
+        self.assertEqual(connection['status'], 'connected')
+        self.assertEqual(connection['account_info']['email'], self.user.email)
+        self.assertTrue(
+            UserServiceConnection.objects.filter(user=self.user, service__name='google_drive').exists()
+        )
+
+    def test_disconnect_service_clears_profile_and_tokens(self):
+        """Disconnecting removes profile credentials and toggles the connection off."""
+        service, _ = ExternalService.objects.get_or_create(name='google_drive')
+        connection = UserServiceConnection.objects.create(
+            user=self.user,
+            service=service,
+            is_connected=True,
+            is_active=True,
+            external_email=self.user.email,
+            access_token='token-abc',
+            refresh_token='refresh-abc',
+            metadata={'folder_id': 'folder-xyz'},
+        )
+
+        self.profile.google_drive_connected = True
+        self.profile.google_drive_token = 'token-abc'
+        self.profile.google_drive_refresh_token = 'refresh-abc'
+        self.profile.google_drive_folder_id = 'folder-xyz'
+        self.profile.google_drive_token_expires_at = timezone.now()
+        self.profile.save()
+
+        response = self.client.delete(reverse('integrations:disconnect_service', args=[connection.id]))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        payload = response.json()
+        self.assertTrue(payload['success'])
+
+        connection.refresh_from_db()
+        self.assertFalse(connection.is_connected)
+        self.assertEqual(connection.access_token, '')
+        self.assertEqual(connection.refresh_token, '')
+
+        self.profile.refresh_from_db()
+        self.assertFalse(self.profile.google_drive_connected)
+        self.assertEqual(self.profile.google_drive_token, '')
+        self.assertEqual(self.profile.google_drive_folder_id, '')
