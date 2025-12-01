@@ -19,6 +19,7 @@ from shared.aws import get_boto3_session
 
 from .models import Video
 from apps.analytics.models import AnalyticsEvent
+from apps.integrations.services.google_drive import get_drive_service_for_user
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +87,191 @@ def process_video_upload(video_id):
         except:
             pass
         return f"Error: {str(e)}"
+
+
+@shared_task
+def extract_gdrive_video_metadata(video_id):
+    """Extract metadata from Google Drive video without full download"""
+    try:
+        video = Video.objects.get(id=video_id)
+        
+        if video.source_type != 'gdrive':
+            logger.error(f"Video {video_id} is not a Google Drive video")
+            return f"Error: Video is not a Google Drive video"
+        
+        if not video.gdrive_file_id:
+            logger.error(f"Video {video_id} has no Google Drive file ID")
+            return f"Error: No Google Drive file ID"
+        
+        # Get Drive service for the uploader
+        try:
+            drive_service = get_drive_service_for_user(video.uploader)
+        except Exception as e:
+            logger.error(f"Failed to get Drive service for user {video.uploader.id}: {str(e)}")
+            video.status = 'failed'
+            video.save()
+            return f"Error: Could not access Google Drive"
+        
+        # Get download URL
+        try:
+            download_url = drive_service.get_download_url(video.gdrive_file_id)
+        except Exception as e:
+            logger.error(f"Failed to get download URL for {video.gdrive_file_id}: {str(e)}")
+            video.status = 'failed'
+            video.save()
+            return f"Error: Could not get download URL"
+        
+        # Download first 10MB for metadata extraction
+        temp_file = download_video_partial(download_url, max_bytes=10 * 1024 * 1024)
+        if not temp_file:
+            logger.error(f"Failed to download partial video for {video_id}")
+            video.status = 'failed'
+            video.save()
+            return f"Error: Could not download video sample"
+        
+        try:
+            # Extract metadata using ffprobe
+            metadata = extract_metadata_from_file(temp_file)
+            
+            if metadata:
+                video.duration = metadata.get('duration', 0)
+                video.file_size = metadata.get('file_size', 0)
+                
+                # Update video metadata
+                if 'width' in metadata and 'height' in metadata:
+                    if not video.metadata:
+                        video.metadata = {}
+                    video.metadata.update({
+                        'width': metadata['width'],
+                        'height': metadata['height'],
+                        'codec': metadata.get('codec', ''),
+                        'bitrate': metadata.get('bitrate', 0),
+                        'fps': metadata.get('fps', 0)
+                    })
+                
+                video.status = 'ready'
+                video.processed_at = timezone.now()
+                video.save()
+                
+                logger.info(f"Successfully extracted metadata for Google Drive video {video_id}")
+                return f"Successfully processed Google Drive video {video.title}"
+            else:
+                logger.warning(f"Could not extract metadata from {video_id}, marking as ready anyway")
+                video.status = 'ready'
+                video.save()
+                return f"Video marked as ready (metadata extraction incomplete)"
+                
+        finally:
+            # Clean up temporary file
+            if temp_file and os.path.exists(temp_file):
+                os.unlink(temp_file)
+        
+    except Video.DoesNotExist:
+        logger.error(f"Video {video_id} not found")
+        return f"Error: Video {video_id} not found"
+    except Exception as e:
+        logger.error(f"Error extracting Google Drive metadata for {video_id}: {str(e)}")
+        try:
+            video = Video.objects.get(id=video_id)
+            video.status = 'failed'
+            video.save()
+        except:
+            pass
+        return f"Error: {str(e)}"
+
+
+def download_video_partial(video_url: str, max_bytes: int = 10485760) -> Optional[str]:
+    """Download partial video (first N bytes) for metadata extraction"""
+    try:
+        import requests
+        
+        # Request only the first max_bytes
+        headers = {'Range': f'bytes=0-{max_bytes - 1}'}
+        response = requests.get(video_url, headers=headers, stream=True, timeout=60)
+        
+        # Accept both 200 (full response) and 206 (partial content)
+        if response.status_code not in [200, 206]:
+            logger.error(f"Failed to download partial video: HTTP {response.status_code}")
+            return None
+        
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_file:
+            bytes_downloaded = 0
+            for chunk in response.iter_content(chunk_size=8192):
+                if bytes_downloaded >= max_bytes:
+                    break
+                temp_file.write(chunk)
+                bytes_downloaded += len(chunk)
+            
+            logger.info(f"Downloaded {bytes_downloaded} bytes for metadata extraction")
+            return temp_file.name
+            
+    except Exception as e:
+        logger.error(f"Error downloading partial video {video_url}: {str(e)}")
+        return None
+
+
+def extract_metadata_from_file(file_path: str) -> Optional[Dict[str, Any]]:
+    """Extract metadata from video file using ffprobe"""
+    try:
+        # Use ffprobe to extract metadata
+        cmd = [
+            'ffprobe',
+            '-v', 'quiet',
+            '-print_format', 'json',
+            '-show_format',
+            '-show_streams',
+            file_path
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        
+        if result.returncode != 0:
+            logger.error(f"ffprobe failed: {result.stderr}")
+            return None
+        
+        metadata = json.loads(result.stdout)
+        
+        # Extract relevant information
+        format_info = metadata.get('format', {})
+        video_stream = None
+        
+        for stream in metadata.get('streams', []):
+            if stream.get('codec_type') == 'video':
+                video_stream = stream
+                break
+        
+        if not video_stream:
+            logger.warning(f"No video stream found in file")
+            return None
+        
+        # Parse frame rate
+        fps = 0
+        fps_str = video_stream.get('r_frame_rate', '0/1')
+        try:
+            if '/' in fps_str:
+                num, denom = fps_str.split('/')
+                fps = int(num) / int(denom) if int(denom) != 0 else 0
+        except:
+            pass
+        
+        extracted_metadata = {
+            'duration': int(float(format_info.get('duration', 0))),
+            'file_size': int(format_info.get('size', 0)),
+            'width': video_stream.get('width', 0),
+            'height': video_stream.get('height', 0),
+            'codec': video_stream.get('codec_name', ''),
+            'bitrate': int(video_stream.get('bit_rate', 0)),
+            'fps': round(fps, 2)
+        }
+        
+        return extracted_metadata
+        
+    except subprocess.TimeoutExpired:
+        logger.error(f"ffprobe timeout")
+        return None
+    except Exception as e:
+        logger.error(f"Error extracting metadata: {str(e)}")
+        return None
 
 
 def extract_video_metadata(video_url: str) -> Optional[Dict[str, Any]]:
