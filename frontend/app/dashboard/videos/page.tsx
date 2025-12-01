@@ -441,9 +441,20 @@ export default function VideosPage() {
                         </svg>
                       </div>
                       <h3 className="text-2xl font-bold text-brand-navy mb-3">Connect Google Drive</h3>
-                      <p className="text-brand-navy/60 max-w-md mx-auto mb-8">
+                      <p className="text-brand-navy/60 max-w-md mx-auto mb-6">
                         Link your Google Drive to import and stream videos directly from your cloud storage.
                       </p>
+                      <div className="bg-brand-blue/10 border border-brand-blue/30 rounded-xl p-4 max-w-lg mx-auto mb-8">
+                        <div className="flex items-start gap-3">
+                          <span className="text-2xl flex-shrink-0">💡</span>
+                          <div className="text-left">
+                            <p className="text-brand-navy font-bold mb-2">How it works:</p>
+                            <p className="text-brand-navy/70 text-sm">
+                              After connecting, use your Google Drive app to move movies into the <span className="font-mono bg-brand-navy/10 px-2 py-0.5 rounded">Watch Party</span> folder. Videos in this folder will appear here for import.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                       <Link
                         href="/dashboard/integrations"
                         className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-xl font-bold text-lg hover:shadow-xl transition-all"
@@ -700,12 +711,14 @@ export default function VideosPage() {
                   <Link
                     href={`/dashboard/videos/${video.id}/edit`}
                     className="px-3 py-2 bg-brand-navy/5 text-brand-navy rounded-lg text-sm hover:bg-brand-navy/10 transition-colors"
+                    title="Edit video"
                   >
                     ✏️
                   </Link>
                   <button
                     onClick={() => handleDeleteVideo(video.id)}
                     className="px-3 py-2 bg-red-50 text-red-500 rounded-lg text-sm hover:bg-red-100 transition-colors"
+                    title="Delete video"
                   >
                     🗑️
                   </button>
