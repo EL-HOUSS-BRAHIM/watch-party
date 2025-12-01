@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { ConfirmDialog } from "@/components/ui/feedback"
 import { SyncedVideoPlayer } from "@/components/party/SyncedVideoPlayer"
-import { chatApi, ChatMessage as ApiChatMessage } from "@/lib/api-client"
+import { chatApi, ChatMessage as ApiChatMessage, videosApi } from "@/lib/api-client"
 
 export interface PublicPartyViewModel {
   id: string
@@ -58,6 +58,8 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
   const [newMessage, setNewMessage] = useState("")
   const [showLeaveDialog, setShowLeaveDialog] = useState(false)
   const [sendingMessage, setSendingMessage] = useState(false)
+  const [streamUrl, setStreamUrl] = useState<string | null>(null)
+  const [loadingStream, setLoadingStream] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const loadedMessagesRef = useRef(false)
 
@@ -78,6 +80,39 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
+
+  // Fetch stream URL when video is attached
+  useEffect(() => {
+    if (!party.video?.id) {
+      setStreamUrl(null)
+      return
+    }
+
+    let isActive = true
+    setLoadingStream(true)
+
+    const fetchStreamUrl = async () => {
+      try {
+        const response = await videosApi.getStreamUrl(party.video!.id)
+        if (!isActive) return
+        setStreamUrl(response.stream_url)
+      } catch (err) {
+        console.error('Failed to fetch stream URL:', err)
+        if (!isActive) return
+        setStreamUrl(null)
+      } finally {
+        if (isActive) {
+          setLoadingStream(false)
+        }
+      }
+    }
+
+    void fetchStreamUrl()
+
+    return () => {
+      isActive = false
+    }
+  }, [party.video?.id])
 
   // Load existing messages and add welcome message
   useEffect(() => {
@@ -226,17 +261,41 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
         {/* Video Player Section */}
         <div className="flex flex-1 flex-col p-6">
           <div className="flex-1 rounded-2xl bg-black/40 border border-white/10 overflow-hidden">
-            {party.video ? (
+            {party.video && streamUrl && !loadingStream ? (
               <div className="flex h-full flex-col">
+                {/* Video Info Bar */}
+                <div className="border-b border-white/10 bg-gray-900/80 px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-purple/20 text-xl">🎬</div>
+                      <div>
+                        <h3 className="font-semibold text-white">{party.video.title}</h3>
+                        {party.video.durationLabel && (
+                          <p className="text-xs text-white/50">Duration: {party.video.durationLabel}</p>
+                        )}
+                      </div>
+                    </div>
+                    {isHost && (
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`/dashboard/parties/${party.id}/edit`}
+                          className="rounded-lg bg-brand-purple/20 border border-brand-purple/30 px-3 py-1.5 text-sm font-medium text-purple-300 hover:bg-brand-purple/30 transition-colors"
+                        >
+                          ⚙️ Edit Party
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 {/* Synced Video Player */}
                 <div className="relative flex-1 bg-black">
                   <SyncedVideoPlayer
                     partyId={party.id}
-                    videoUrl={party.video.id} // Will need to construct proper video URL
-                    isHost={isHost || false} // Pass actual host status
-                    currentUserId={userId} // Pass actual user ID
+                    videoUrl={streamUrl}
+                    isHost={isHost || false}
+                    currentUserId={userId}
                     onPlayStateChange={(isPlaying) => {
-                      // Could update local state if needed
                       console.log('Play state changed:', isPlaying);
                     }}
                     onTimeUpdate={(time) => {
@@ -267,13 +326,33 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                   )}
                 </div>
               </div>
-            ) : (
+            ) : loadingStream ? (
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
+                  <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-brand-purple/20 border-t-brand-purple"></div>
+                  <p className="text-lg font-semibold text-white">Loading video...</p>
+                  <p className="mt-2 text-sm text-white/50">Preparing stream</p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center max-w-md px-4">
                   <div className="mb-4 text-6xl">🎬</div>
-                  <p className="mb-2 text-xl font-semibold text-white">No video playing</p>
-                  <p className="text-white/50">Waiting for host to start a video...</p>
-                  <div className="mt-4 flex flex-col items-center gap-1 text-xs text-white/60">
+                  <p className="mb-2 text-xl font-semibold text-white">No video attached</p>
+                  <p className="text-white/50 mb-6">
+                    {isHost 
+                      ? "Attach a video to start watching together!"
+                      : "Waiting for host to attach a video..."}
+                  </p>
+                  {isHost && (
+                    <a
+                      href={`/dashboard/parties/${party.id}/edit`}
+                      className="inline-block rounded-lg bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-3 font-semibold text-white shadow-lg shadow-brand-purple/25 transition-all hover:-translate-y-0.5 hover:shadow-xl"
+                    >
+                      📹 Attach Video
+                    </a>
+                  )}
+                  <div className="mt-6 flex flex-col items-center gap-1 text-xs text-white/60">
                     <span>Status: {party.statusLabel}</span>
                     <span data-testid="playback-status-fallback">Playback: {party.isPlaying ? "Playing" : "Paused"}</span>
                     <span data-testid="playback-position-fallback">Position: {party.playbackPosition}</span>
