@@ -245,14 +245,34 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
 
   if (loading || !authChecked) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent blur-3xl" />
+      <div className="relative flex min-h-screen items-center justify-center px-4 py-16 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/20 rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-cyan/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
         </div>
-        <div className="glass-panel w-full max-w-md rounded-[40px] p-12 text-center relative z-10 flex flex-col items-center justify-center min-h-[400px]">
-          <div className="mb-8 inline-block h-16 w-16 animate-spin rounded-full border-4 border-brand-purple/20 border-t-brand-purple"></div>
-          <h2 className="text-2xl font-bold text-brand-navy">Loading party...</h2>
-          <p className="mt-2 text-brand-navy/60">Getting everything ready for you</p>
+
+        <div className="glass-panel w-full max-w-lg rounded-[2.5rem] p-16 text-center relative z-10 shadow-2xl border-2 border-white/30">
+          {/* Loading Spinner */}
+          <div className="relative inline-flex items-center justify-center mb-8">
+            <div className="absolute w-24 h-24 rounded-full border-4 border-brand-purple/20 animate-ping" />
+            <div className="w-20 h-20 rounded-full border-4 border-transparent border-t-brand-magenta border-r-brand-purple animate-spin" />
+            <div className="absolute w-12 h-12 rounded-full bg-gradient-to-br from-brand-magenta to-brand-cyan opacity-20 animate-pulse" />
+          </div>
+
+          <h2 className="text-3xl font-black text-brand-navy mb-3">Loading Party...</h2>
+          <p className="text-lg text-brand-navy/60">Setting up your watch experience</p>
+          
+          {/* Progress Dots */}
+          <div className="flex justify-center gap-2 mt-8">
+            {[0, 1, 2].map((i) => (
+              <div 
+                key={i}
+                className="w-2 h-2 rounded-full bg-brand-purple/40 animate-pulse"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -260,27 +280,71 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
 
   if (error || !party) {
     const isPrivate = error === "This party is private"
+    const isNotFound = error?.includes("not found")
+    
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-coral/10 via-transparent to-transparent blur-3xl" />
+      <div className="relative flex min-h-screen items-center justify-center px-4 py-16 overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-brand-coral/15 via-transparent to-transparent blur-3xl" />
         </div>
-        <div className="glass-panel w-full max-w-md rounded-[40px] p-12 text-center relative z-10">
-          <div className="mb-6 text-6xl">😕</div>
-          <h1 className="mb-4 text-2xl font-bold text-brand-navy">
-            {error || "Party not found"}
+
+        <div className="glass-panel w-full max-w-xl rounded-[2.5rem] p-12 text-center relative z-10 shadow-2xl border-2 border-white/30">
+          {/* Icon */}
+          <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-br from-brand-coral/20 to-brand-orange/20 mb-8 shadow-xl">
+            <span className="text-7xl">{isPrivate ? "🔒" : isNotFound ? "🔍" : "😕"}</span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-3xl sm:text-4xl font-black text-brand-navy mb-4">
+            {isPrivate ? "Private Party" : isNotFound ? "Party Not Found" : "Oops!"}
           </h1>
-          <p className="mb-8 text-brand-navy/70 leading-relaxed">
-            {isPrivate
-              ? "This party doesn't allow guest access. Please ask the host for an invite."
-              : "The party code might be incorrect, private, or the party may have ended."}
+
+          {/* Message */}
+          <p className="text-lg text-brand-navy/70 leading-relaxed mb-8 max-w-md mx-auto">
+            {isPrivate ? (
+              <>
+                This party is <strong className="text-brand-coral">invitation-only</strong>. 
+                Please ask the host for access or check if you have the correct link.
+              </>
+            ) : isNotFound ? (
+              <>
+                We couldn't find a party with that code. It might have ended, been removed, 
+                or the code could be incorrect.
+              </>
+            ) : (
+              <>
+                Something went wrong loading this party. The party may have ended or 
+                there might be a connection issue.
+              </>
+            )}
           </p>
-          <button
-            onClick={() => (window.location.href = "/")}
-            className="w-full rounded-2xl bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-4 font-bold text-white shadow-lg shadow-brand-purple/25 transition-all hover:-translate-y-0.5 hover:shadow-xl"
-          >
-            Go to Homepage
-          </button>
+
+          {/* Error Badge */}
+          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-brand-coral/10 border border-brand-coral/30 mb-8">
+            <span className="text-sm font-bold text-brand-coral">{error}</span>
+          </div>
+
+          {/* Actions */}
+          <div className="space-y-4">
+            <button
+              onClick={() => (window.location.href = "/")}
+              className="w-full rounded-2xl bg-gradient-to-r from-brand-magenta via-brand-purple to-brand-cyan px-8 py-4 text-lg font-bold text-white shadow-xl shadow-brand-purple/30 transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-brand-magenta/40 active:scale-[0.98]"
+            >
+              <span className="flex items-center justify-center gap-2">
+                🏠 Go to Homepage
+              </span>
+            </button>
+
+            <button
+              onClick={() => (window.location.href = "/join")}
+              className="w-full rounded-2xl bg-white/80 border-2 border-brand-navy/10 px-8 py-4 text-lg font-bold text-brand-navy shadow-lg hover:bg-white hover:border-brand-purple/30 hover:shadow-xl transition-all"
+            >
+              <span className="flex items-center justify-center gap-2">
+                🎟️ Try Another Code
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -288,58 +352,118 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
 
   if (!hasJoined) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent blur-3xl" />
+      <div className="relative flex min-h-screen items-center justify-center px-4 py-16 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-magenta/15 rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-brand-blue/15 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent" />
         </div>
-        <div className="glass-panel w-full max-w-xl rounded-[40px] p-8 text-brand-navy sm:p-12 relative z-10">
-          <div className="mb-8 text-center">
-            <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-purple to-brand-blue text-4xl shadow-lg shadow-brand-purple/30">
-              🎬
-            </div>
-            <h1 className="mb-2 text-3xl font-bold tracking-tight text-brand-navy">{party.title}</h1>
-            <p className="text-brand-navy/60">
-              Hosted by <span className="font-bold text-brand-purple">{party.host.name}</span>
-            </p>
-            
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <div className="rounded-xl bg-brand-navy/5 px-4 py-2 text-sm font-medium text-brand-navy/70">
-                Code: <span className="font-mono font-bold text-brand-navy">{party.roomCode}</span>
-              </div>
-              <div className="rounded-xl bg-brand-navy/5 px-4 py-2 text-sm font-medium text-brand-navy/70">
-                {party.participantCount} {party.participantCount === 1 ? "person" : "people"} watching
+
+        <div className="glass-panel w-full max-w-2xl rounded-[2.5rem] p-8 sm:p-12 lg:p-14 relative z-10 shadow-2xl border-2 border-white/30">
+          {/* Header */}
+          <div className="text-center mb-10">
+            {/* Animated Icon */}
+            <div className="relative inline-flex items-center justify-center mb-8">
+              <div className="absolute w-32 h-32 rounded-full bg-gradient-to-br from-brand-magenta/30 to-brand-cyan/30 blur-2xl animate-pulse" />
+              <div className="relative w-24 h-24 rounded-3xl bg-gradient-to-br from-brand-magenta via-brand-purple to-brand-cyan flex items-center justify-center shadow-2xl shadow-brand-purple/40 animate-float">
+                <span className="text-5xl">🎬</span>
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs font-medium text-brand-navy/50 uppercase tracking-wider">
-              <span>Status: {party.statusLabel}</span>
-              <span>•</span>
-              <span>{party.isPlaying ? "Playing" : "Paused"}</span>
-              <span>•</span>
-              <span>{party.playbackPosition}</span>
+            {/* Status Badge */}
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-brand-cyan/10 to-brand-blue/10 border border-brand-cyan/30 mb-5">
+              <div className="w-2 h-2 rounded-full bg-brand-cyan animate-pulse" />
+              <span className="text-sm font-bold text-brand-cyan-dark uppercase tracking-wide">
+                {party.statusLabel} • {party.isPlaying ? "Now Playing" : "Paused"}
+              </span>
+            </div>
+
+            {/* Party Title */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-navy mb-3 tracking-tight">
+              {party.title}
+            </h1>
+
+            {/* Host Info */}
+            <div className="flex items-center justify-center gap-2 text-brand-navy/70 mb-6">
+              <span className="text-sm">Hosted by</span>
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-purple/10 border border-brand-purple/20">
+                <span className="text-lg">{party.host.isPremium ? "👑" : "🎭"}</span>
+                <span className="font-bold text-brand-purple">{party.host.name}</span>
+              </div>
+            </div>
+
+            {/* Info Pills */}
+            <div className="flex flex-wrap justify-center gap-3 mb-6">
+              <div className="px-5 py-2 rounded-xl bg-white/60 border border-brand-navy/10 shadow-sm">
+                <div className="text-xs text-brand-navy/50 font-medium uppercase tracking-wider mb-0.5">
+                  Room Code
+                </div>
+                <div className="text-sm font-mono font-black text-brand-navy tracking-wider">
+                  {party.roomCode}
+                </div>
+              </div>
+
+              <div className="px-5 py-2 rounded-xl bg-white/60 border border-brand-navy/10 shadow-sm">
+                <div className="text-xs text-brand-navy/50 font-medium uppercase tracking-wider mb-0.5">
+                  Watching
+                </div>
+                <div className="text-sm font-black text-brand-navy">
+                  {party.participantCount} {party.participantCount === 1 ? "Person" : "People"}
+                </div>
+              </div>
+
+              {party.playbackPosition && (
+                <div className="px-5 py-2 rounded-xl bg-white/60 border border-brand-navy/10 shadow-sm">
+                  <div className="text-xs text-brand-navy/50 font-medium uppercase tracking-wider mb-0.5">
+                    Playback
+                  </div>
+                  <div className="text-sm font-mono font-black text-brand-navy">
+                    {party.playbackPosition}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="mb-8 rounded-2xl border border-brand-blue/20 bg-brand-blue/5 p-5">
-            <p className="text-sm leading-relaxed text-brand-blue-dark">
-              <strong className="block mb-1 text-brand-blue">👁️ Guest Mode</strong>
-              You can watch the synced stream and participate in text chat. Sign up for full features like voice chat and reactions!
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {joinError && (
-              <div className="rounded-2xl border border-brand-coral/30 bg-brand-coral/10 p-4">
-                <p className="flex items-center gap-2 text-sm font-medium text-brand-coral">
-                  <span>❌</span>
-                  {joinError}
+          {/* Guest Mode Info */}
+          <div className="rounded-2xl border-2 border-brand-blue/20 bg-gradient-to-br from-brand-blue/5 to-brand-cyan/5 p-6 mb-8">
+            <div className="flex gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-brand-blue/20 flex items-center justify-center">
+                  <span className="text-2xl">👁️</span>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-brand-blue-dark mb-2">Guest Mode</h3>
+                <p className="text-sm text-brand-navy/70 leading-relaxed">
+                  You'll watch the synced stream and can use text chat. 
+                  <strong className="text-brand-blue-dark"> Sign up for premium features</strong> like 
+                  voice chat, reactions, and your own watch parties!
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Join Form */}
+          <div className="space-y-6">
+            {/* Error Message */}
+            {joinError && (
+              <div className="rounded-2xl border-2 border-brand-coral/30 bg-brand-coral/10 p-5">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">⚠️</span>
+                  <p className="text-sm font-bold text-brand-coral">{joinError}</p>
+                </div>
               </div>
             )}
 
-            <div className="space-y-2">
-              <label htmlFor="guestName" className="block text-xs font-bold uppercase tracking-[0.25em] text-brand-navy/50 ml-1">
-                Enter your name
+            {/* Name Input */}
+            <div className="space-y-3">
+              <label 
+                htmlFor="guestName" 
+                className="block text-sm font-bold text-brand-navy/60 uppercase tracking-widest ml-1"
+              >
+                Your Display Name
               </label>
               <input
                 id="guestName"
@@ -349,24 +473,69 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
                   setGuestName(e.target.value)
                   setJoinError(null)
                 }}
-                placeholder="Guest123"
+                placeholder="MovieFan123"
                 maxLength={20}
-                className="w-full rounded-2xl border border-brand-navy/10 bg-white/50 px-5 py-4 text-base text-brand-navy placeholder:text-brand-navy/30 focus:border-brand-purple/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-purple/10 transition-all"
+                className="w-full rounded-2xl border-2 border-brand-purple/20 bg-white/80 px-6 py-5 text-lg font-semibold text-brand-navy placeholder:text-brand-navy/30 focus:border-brand-magenta focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-magenta/20 transition-all shadow-lg shadow-brand-purple/10"
               />
+              <p className="text-xs text-brand-navy/50 ml-1">
+                This is how others will see you in the chat
+              </p>
             </div>
 
+            {/* Join Button */}
             <button
               onClick={handleJoinParty}
-              className="w-full rounded-2xl bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-4 text-lg font-bold text-white shadow-lg shadow-brand-purple/25 transition-all hover:-translate-y-0.5 hover:shadow-brand-purple/40 hover:shadow-xl"
+              className="w-full group relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-magenta via-brand-purple to-brand-cyan px-8 py-5 text-xl font-bold text-white shadow-2xl shadow-brand-purple/40 transition-all hover:scale-[1.02] hover:shadow-3xl hover:shadow-brand-magenta/50 active:scale-[0.98]"
             >
-              Join Party
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                🎉 Join the Party
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-magenta opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </button>
 
+            {/* Feature Highlights */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { icon: "💬", text: "Live Chat", color: "cyan" },
+                { icon: "🎭", text: "Reactions", color: "purple" },
+                { icon: "📺", text: "Synced Video", color: "blue" },
+                { icon: "🔒", text: "Safe & Secure", color: "magenta" },
+              ].map((feature, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/60 border border-brand-navy/10 shadow-sm hover:shadow-md hover:bg-white/80 transition-all"
+                >
+                  <span className="text-xl">{feature.icon}</span>
+                  <span className="text-sm font-semibold text-brand-navy/70">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t-2 border-brand-navy/10" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white/80 px-4 py-1 rounded-full text-xs text-brand-navy/50 font-medium uppercase tracking-wider">
+                or
+              </span>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <p className="text-sm text-brand-navy/70 mb-4">
+              Want the full experience with voice chat and more?
+            </p>
             <a
               href="/auth/register"
-              className="block text-center text-sm font-medium text-brand-purple hover:text-brand-purple-dark hover:underline decoration-brand-purple/30 underline-offset-4 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/80 border-2 border-brand-cyan/30 text-brand-cyan-dark font-bold shadow-lg shadow-brand-cyan/10 hover:bg-brand-cyan/10 hover:border-brand-cyan hover:shadow-xl hover:shadow-brand-cyan/20 hover:-translate-y-0.5 transition-all"
             >
-              Create an account for full features →
+              <span>✨</span>
+              Create Free Account
+              <span>→</span>
             </a>
           </div>
         </div>
