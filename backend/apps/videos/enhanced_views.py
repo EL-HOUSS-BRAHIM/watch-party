@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.core.cache import cache
+from django.urls import reverse
 from drf_spectacular.utils import extend_schema
 from shared.services.video_service import video_storage_service, video_processing_service, video_streaming_service
 from .models import Video
@@ -74,7 +76,36 @@ class VideoStreamingUrlView(APIView):
                     'error': 'Access denied'
                 }, status=status.HTTP_403_FORBIDDEN)
             
-            # Generate streaming URL
+            # For Google Drive videos, return proxy URL with caching
+            if video.source_type == 'gdrive':
+                # Check cache first
+                cache_key = f'video:stream:proxy:{video_id}:{user.id}'
+                cached_url = cache.get(cache_key)
+                
+                if cached_url:
+                    return Response({
+                        'success': True,
+                        'stream_url': cached_url,
+                        'source': 'proxy',
+                        'cached': True
+                    }, status=status.HTTP_200_OK)
+                
+                # Generate proxy URL
+                proxy_url = request.build_absolute_uri(
+                    reverse('videos:video_proxy', kwargs={'video_id': str(video_id)})
+                )
+                
+                # Cache for 5 minutes (300 seconds)
+                cache.set(cache_key, proxy_url, 300)
+                
+                return Response({
+                    'success': True,
+                    'stream_url': proxy_url,
+                    'source': 'proxy',
+                    'cached': False
+                }, status=status.HTTP_200_OK)
+            
+            # For non-Google Drive videos, use existing streaming service
             streaming_url = video_streaming_service.generate_streaming_url(
                 video=video,
                 user=user,
@@ -85,17 +116,19 @@ class VideoStreamingUrlView(APIView):
             
             return Response({
                 'success': True,
-                'streaming_url': streaming_url['url'],
-                'expires_at': streaming_url['expires_at']
+                'stream_url': streaming_url['url'],
+                'expires_at': streaming_url.get('expires_at'),
+                'source': 'direct'
             }, status=status.HTTP_200_OK)
             
         except VideoError as e:
             return Response({
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
-        except Exception:
+        except Exception as e:
             return Response({
-                'error': 'Failed to generate streaming URL'
+                'error': 'Failed to generate streaming URL',
+                'details': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def _can_access_video(self, user, video):
