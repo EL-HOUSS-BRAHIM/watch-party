@@ -49,8 +49,8 @@ export default function EditPartyPage({ params }: EditPartyPageProps) {
         visibility: data.visibility || "public",
         max_participants: data.max_participants || 10,
         scheduled_start: data.scheduled_start ? new Date(data.scheduled_start).toISOString().slice(0, 16) : "",
-        allow_chat: data.allow_chat !== false,
-        allow_reactions: data.allow_reactions !== false,
+        allow_chat: data.settings?.allow_guest_chat !== false,
+        allow_reactions: data.settings?.reactions_enabled !== false,
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load party")
@@ -331,7 +331,7 @@ function PartyVideoPicker({ onSelect, onClose }: { onSelect: (videoId: string) =
   const loadVideos = async () => {
     try {
       setLoading(true)
-      const response = await videosApi.list({ page_size: 50, upload_status: "ready" })
+      const response = await videosApi.list({ page_size: 50 })
       setVideos(Array.isArray(response) ? response : response.results || [])
     } catch (err) {
       console.error("Failed to load videos:", err)
