@@ -298,8 +298,6 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
 
       {/* Main Content Grid - Responsive */}
       <div className="relative max-w-[1800px] mx-auto p-3 sm:p-6 grid lg:grid-cols-[1fr_400px] gap-3 sm:gap-6 min-h-[calc(100vh-120px)]">
-      {/* Main Content Grid - Responsive */}
-      <div className="relative max-w-[1800px] mx-auto p-3 sm:p-6 grid lg:grid-cols-[1fr_400px] gap-3 sm:gap-6 min-h-[calc(100vh-120px)]">
         {/* Video Player Card - Mobile First */}
         <div className="flex flex-col gap-3 sm:gap-4 order-1">
           <div className="flex-1 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-black/20 min-h-[300px] sm:min-h-[400px]">
@@ -320,18 +318,20 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                       </div>
                     </div>
                     {isHost && (
-                      <a
-                        href={`/dashboard/parties/${party.id}/edit`}
-                        className="hidden sm:flex backdrop-blur-xl bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-brand-cyan-light hover:bg-white/20 transition-all shadow-lg"
-                      >
-                        ⚙️ Settings
-                      </a>
-                      <a
-                        href={`/dashboard/parties/${party.id}/edit`}
-                        className="sm:hidden backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg px-2.5 py-1.5 text-xs font-bold text-brand-cyan-light hover:bg-white/20 transition-all shadow-lg"
-                      >
-                        ⚙️
-                      </a>
+                      <>
+                        <a
+                          href={`/dashboard/parties/${party.id}/edit`}
+                          className="hidden sm:flex backdrop-blur-xl bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-brand-cyan-light hover:bg-white/20 transition-all shadow-lg"
+                        >
+                          ⚙️ Settings
+                        </a>
+                        <a
+                          href={`/dashboard/parties/${party.id}/edit`}
+                          className="sm:hidden backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg px-2.5 py-1.5 text-xs font-bold text-brand-cyan-light hover:bg-white/20 transition-all shadow-lg"
+                        >
+                          ⚙️
+                        </a>
+                      </>
                     )}
                   </div>
                 </div>
