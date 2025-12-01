@@ -112,7 +112,7 @@ check_container() {
 check_database() {
     echo "Checking database connectivity..."
     
-    if docker exec -T "$BACKEND_CONTAINER" python -c "
+    if docker exec "$BACKEND_CONTAINER" python -c "
 import os
 import sys
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
@@ -139,7 +139,7 @@ except Exception as e:
 check_redis() {
     echo "Checking Redis connectivity..."
     
-    if docker exec -T "$BACKEND_CONTAINER" python -c "
+    if docker exec "$BACKEND_CONTAINER" python -c "
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
 import django
