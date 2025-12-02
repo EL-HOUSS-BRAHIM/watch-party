@@ -1389,8 +1389,6 @@ def google_login_url(request):
     """Get Google OAuth authorization URL for login"""
     try:
         import redis
-        from django.conf import settings
-        import os
         
         flow, redirect_uri = _build_google_auth_flow(request)
         
@@ -1411,50 +1409,26 @@ def google_login_url(request):
         # Store CSRF token directly in Redis/Valkey for validation
         # TTL: 10 minutes (enough time to complete OAuth flow)
         try:
-            # Get Redis connection from environment
-            redis_url = os.environ.get('REDIS_URL', 'redis://valkey:6379')
+            # Simple Redis connection without password (local Valkey has no auth)
+            redis_client = redis.Redis(
+                host='valkey',
+                port=6379,
+                db=0,
+                decode_responses=True
+            )
             
-            # Build connection - Note: Valkey in local setup has no password
-            redis_kwargs = {'decode_responses': True, 'db': 0}
-                
-            # Parse URL to get host and port
-            if redis_url.startswith('redis://'):
-                # Extract host, port, and optional password from URL
-                url_without_scheme = redis_url.replace('redis://', '')
-                
-                # Check if URL has auth (password)
-                if '@' in url_without_scheme:
-                    auth_part, host_part = url_without_scheme.split('@')
-                    if ':' in auth_part:
-                        _, password = auth_part.split(':', 1)
-                        # Only set password if it exists and is not empty
-                        # Note: Local Valkey has no password despite env var
-                        # redis_kwargs['password'] = password
-                else:
-                    host_part = url_without_scheme
-                
-                # Parse host and port
-                if ':' in host_part:
-                    host, port_and_db = host_part.split(':', 1)
-                    port = int(port_and_db.split('/')[0])
-                else:
-                    host = host_part.split('/')[0]
-                    port = 6379
-                
-                redis_kwargs['host'] = host
-                redis_kwargs['port'] = port
-                
-                redis_client = redis.Redis(**redis_kwargs)
-            else:
-                redis_client = redis.from_url(redis_url, decode_responses=True)
+            # Test connection
+            redis_client.ping()
             
             # Use simple key without Django's prefix/version
             cache_key = f'oauth_csrf:{csrf_token}'
             redis_client.setex(cache_key, 600, state)  # 10 minutes TTL
             redis_client.close()
         except Exception as cache_exc:
-            # Log but don't fail - we'll try session fallback
+            # Log but don't fail
+            import traceback
             print(f"Warning: Could not store CSRF in Redis: {cache_exc}")
+            traceback.print_exc()
         
         data = {
             'authorization_url': authorization_url,
@@ -1486,8 +1460,6 @@ def google_login_callback(request):
     """Handle Google OAuth callback for login"""
     try:
         import redis
-        from django.conf import settings
-        import os
         
         code = request.query_params.get('code')
         state = request.query_params.get('state')
@@ -1515,42 +1487,16 @@ def google_login_callback(request):
         
         # Validate CSRF token from Redis/Valkey
         try:
-            # Get Redis connection from environment
-            redis_url = os.environ.get('REDIS_URL', 'redis://valkey:6379')
+            # Simple Redis connection without password (local Valkey has no auth)
+            redis_client = redis.Redis(
+                host='valkey',
+                port=6379,
+                db=0,
+                decode_responses=True
+            )
             
-            # Build connection - Note: Valkey in local setup has no password
-            redis_kwargs = {'decode_responses': True, 'db': 0}
-                
-            # Parse URL to get host and port
-            if redis_url.startswith('redis://'):
-                # Extract host, port, and optional password from URL
-                url_without_scheme = redis_url.replace('redis://', '')
-                
-                # Check if URL has auth (password)
-                if '@' in url_without_scheme:
-                    auth_part, host_part = url_without_scheme.split('@')
-                    if ':' in auth_part:
-                        _, password = auth_part.split(':', 1)
-                        # Only set password if it exists and is not empty
-                        # Note: Local Valkey has no password despite env var
-                        # redis_kwargs['password'] = password
-                else:
-                    host_part = url_without_scheme
-                
-                # Parse host and port
-                if ':' in host_part:
-                    host, port_and_db = host_part.split(':', 1)
-                    port = int(port_and_db.split('/')[0])
-                else:
-                    host = host_part.split('/')[0]
-                    port = 6379
-                
-                redis_kwargs['host'] = host
-                redis_kwargs['port'] = port
-                
-                redis_client = redis.Redis(**redis_kwargs)
-            else:
-                redis_client = redis.from_url(redis_url, decode_responses=True)
+            # Test connection
+            redis_client.ping()
             
             # Use simple key without Django's prefix/version
             cache_key = f'oauth_csrf:{csrf_token}'
@@ -1568,6 +1514,8 @@ def google_login_callback(request):
             redis_client.close()
             
         except Exception as cache_exc:
+            import traceback
+            traceback.print_exc()
             return Response({
                 'success': False,
                 'message': f'CSRF validation error: {cache_exc}'
