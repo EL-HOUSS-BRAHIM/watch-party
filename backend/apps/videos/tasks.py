@@ -89,6 +89,70 @@ def process_video_upload(video_id):
         return f"Error: {str(e)}"
 
 
+@shared_task(bind=True, max_retries=3, default_retry_delay=60)
+def extract_duration_fallback(self, video_id):
+    """Fallback task to extract duration for videos that failed initial extraction"""
+    try:
+        from datetime import timedelta
+        
+        video = Video.objects.get(id=video_id)
+        
+        # Skip if duration already exists
+        if video.duration and video.duration.total_seconds() > 0:
+            logger.info(f"Video {video_id} already has valid duration, skipping")
+            return f"Video {video.title} already has duration"
+        
+        # Try to extract duration based on source type
+        if video.source_type == 'gdrive':
+            # Get Google Drive metadata
+            drive_service = get_drive_service_for_user(video.uploader)
+            file_info = drive_service.get_file_info(video.gdrive_file_id)
+            
+            video_meta = file_info.get('video_metadata', {})
+            duration_ms = int(video_meta.get('durationMillis', 0))
+            
+            if duration_ms > 0:
+                video.duration = timedelta(milliseconds=duration_ms)
+                video.save(update_fields=['duration'])
+                logger.info(f"Successfully extracted duration for video {video_id}: {duration_ms}ms")
+                return f"Successfully extracted duration for {video.title}"
+        
+        # If we couldn't extract duration, mark with warning on final retry
+        if self.request.retries >= self.max_retries - 1:
+            # Final attempt failed - mark video as ready but with warning
+            video.status = 'ready'
+            if not video.metadata:
+                video.metadata = {}
+            video.metadata['duration_warning'] = True
+            video.metadata['duration_extraction_failed'] = True
+            video.save(update_fields=['status', 'metadata'])
+            logger.warning(f"Failed to extract duration for video {video_id} after {self.max_retries} attempts")
+            return f"Video {video.title} marked ready with duration warning"
+        else:
+            # Retry
+            raise self.retry(exc=Exception(f"Duration extraction failed, retry {self.request.retries + 1}/{self.max_retries}"))
+            
+    except Video.DoesNotExist:
+        logger.error(f"Video {video_id} not found")
+        return f"Error: Video {video_id} not found"
+    except Exception as e:
+        logger.error(f"Error extracting duration for video {video_id}: {str(e)}")
+        if self.request.retries < self.max_retries - 1:
+            raise self.retry(exc=e)
+        else:
+            # Final retry failed, mark with warning
+            try:
+                video = Video.objects.get(id=video_id)
+                video.status = 'ready'
+                if not video.metadata:
+                    video.metadata = {}
+                video.metadata['duration_warning'] = True
+                video.save(update_fields=['status', 'metadata'])
+            except:
+                pass
+            return f"Error: {str(e)}"
+
+
 @shared_task
 def extract_gdrive_video_metadata(video_id):
     """Extract metadata from Google Drive video without full download"""
