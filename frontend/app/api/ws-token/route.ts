@@ -1,64 +1,58 @@
 /**
  * WebSocket Token Generation API Route
- * Generates short-lived tokens for WebSocket authentication
+ * Proxies to backend to generate JWT tokens for WebSocket authentication
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-// Short-lived token TTL (5 minutes)
-const WS_TOKEN_TTL = 5 * 60 * 1000;
-
 export async function GET(request: NextRequest) {
   try {
-    // Get auth token from httpOnly cookie
+    // Get access token from httpOnly cookie
     const cookieStore = await cookies();
-    const authToken = cookieStore.get('auth_token')?.value;
+    const accessToken = cookieStore.get('access_token')?.value;
 
-    if (!authToken) {
+    if (!accessToken) {
       return NextResponse.json(
         { error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    // Validate token by checking with backend
-    // In production, you might want to validate JWT expiry here
+    // Call backend WebSocket token endpoint
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     
     try {
-      const response = await fetch(`${backendUrl}/api/auth/session/`, {
+      const response = await fetch(`${backendUrl}/api/auth/ws-token/`, {
+        method: 'GET',
         headers: {
-          'Cookie': `auth_token=${authToken}`,
+          'Cookie': `access_token=${accessToken}`,
+          'Content-Type': 'application/json',
         },
+        credentials: 'include',
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
         return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
+          { error: errorData.message || 'Failed to generate WebSocket token' },
+          { status: response.status }
         );
       }
 
-      const sessionData = await response.json();
+      const data = await response.json();
 
-      // Generate WebSocket token with embedded user info and expiry
-      const wsToken = Buffer.from(JSON.stringify({
-        authToken,
-        userId: sessionData.user?.id,
-        exp: Date.now() + WS_TOKEN_TTL,
-      })).toString('base64');
-
+      // Return JWT token from backend
       return NextResponse.json({
-        wsToken,
-        expiresIn: WS_TOKEN_TTL,
-        userId: sessionData.user?.id,
+        wsToken: data.token,
+        expiresIn: data.expires_in,
+        success: data.success,
       });
 
     } catch (error) {
-      console.error('[WS Token] Failed to validate session:', error);
+      console.error('[WS Token] Failed to fetch from backend:', error);
       return NextResponse.json(
-        { error: 'Failed to validate session' },
+        { error: 'Failed to generate WebSocket token' },
         { status: 500 }
       );
     }
@@ -71,3 +65,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
