@@ -81,11 +81,12 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
    */
   const initializeClient = useCallback(async () => {
     try {
-      // Fetch fresh token if needed (or if expired soon)
+      // Fetch fresh JWT token if needed (or if expiring within 60 seconds)
       if (!tokenRef.current || Date.now() >= tokenExpiryRef.current - 60000) {
         const token = await fetchWsToken();
         tokenRef.current = token;
-        tokenExpiryRef.current = Date.now() + (5 * 60 * 1000); // 5 minutes
+        // Backend returns JWT with 5-minute expiry
+        tokenExpiryRef.current = Date.now() + (5 * 60 * 1000) - 60000; // Refresh 60s before expiry
       }
 
       const wsUrl = getWebSocketUrl(partyId, tokenRef.current);
