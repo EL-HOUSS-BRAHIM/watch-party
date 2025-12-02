@@ -564,6 +564,12 @@ class GoogleDriveMoviesView(APIView):
                 else:
                     # Celery is available, trigger the task
                     extract_gdrive_video_metadata.delay(str(video.id))
+                    
+                    # If duration is missing or zero, also trigger fallback task
+                    if not video.duration or (hasattr(video.duration, 'total_seconds') and video.duration.total_seconds() == 0):
+                        from .tasks import extract_duration_fallback
+                        # Schedule fallback task after a delay to give metadata extraction time
+                        extract_duration_fallback.apply_async(args=[str(video.id)], countdown=30)
             except Exception as celery_error:
                 # If Celery check fails and we don't have complete metadata, fail the import
                 if not has_complete_metadata:
@@ -688,8 +694,13 @@ class GoogleDriveMovieDeleteView(APIView):
     def delete(self, request, video_id):
         """Delete a movie from Google Drive and our database"""
         try:
+            from django.core.cache import cache
+            
             # Get video
             video = get_object_or_404(Video, id=video_id, uploader=request.user, source_type='gdrive')
+            
+            # Invalidate cache for this video
+            cache.delete(f'video_proxy_{video_id}')
             
             # Get Drive service
             drive_service = get_drive_service(request.user)
@@ -729,6 +740,8 @@ class GoogleDriveMovieStreamView(APIView):
     def get(self, request, video_id):
         """Get streaming URL for a Google Drive movie"""
         try:
+            from django.urls import reverse
+            
             # Get video
             video = get_object_or_404(Video, id=video_id, source_type='gdrive')
             
@@ -755,10 +768,15 @@ class GoogleDriveMovieStreamView(APIView):
             # Get Drive service
             drive_service = get_drive_service(video.uploader)
             
-            # Get streaming URL
+            # Get streaming URL (fallback)
             streaming_payload = drive_service.generate_streaming_url(video.gdrive_file_id)
             streaming_url = streaming_payload.get('streaming_url')
             download_url = streaming_payload.get('download_url')
+            
+            # Generate proxy URL (preferred for browser compatibility)
+            proxy_url = request.build_absolute_uri(
+                reverse('videos:video_proxy', kwargs={'video_id': str(video.id)})
+            )
 
             # Record view
             VideoView.objects.create(
@@ -773,7 +791,8 @@ class GoogleDriveMovieStreamView(APIView):
             
             return Response({
                 'success': True,
-                'streaming_url': streaming_url,
+                'proxy_url': proxy_url,  # Preferred URL for HTML5 video
+                'streaming_url': streaming_url,  # Fallback
                 'download_url': download_url,
                 'drive_file': streaming_payload,
                 'video': VideoDetailSerializer(video, context={'request': request}).data
@@ -799,21 +818,32 @@ class GoogleDriveMovieStreamView(APIView):
 
 
 class VideoProxyView(APIView):
-    """Proxy video requests to avoid CORS issues"""
+    """Proxy video requests to avoid CORS issues with Redis caching"""
     
     permission_classes = [permissions.IsAuthenticated]
     
     @extend_schema(summary="VideoProxyView GET")
     def get(self, request, video_id):
-        """Proxy video stream from Google Drive with token refresh on 401"""
+        """Proxy video stream from Google Drive with token refresh on 401 and Redis caching"""
         try:
             import requests
             from django.http import StreamingHttpResponse
             from google.auth.transport.requests import Request as GoogleRequest
+            from django.core.cache import cache
             import logging
             import time
             
             logger = logging.getLogger(__name__)
+            
+            # Check cache for non-range requests (full video)
+            cache_key = f'video_proxy_{video_id}'
+            is_range_request = 'Range' in request.headers
+            
+            # For range requests, skip cache and stream directly
+            if not is_range_request:
+                cached_url = cache.get(cache_key)
+                if cached_url:
+                    logger.info(f"Using cached download URL for video {video_id}")
             
             # Get video
             video = get_object_or_404(Video, id=video_id, source_type='gdrive')
@@ -841,8 +871,15 @@ class VideoProxyView(APIView):
             max_retries = 2
             for attempt in range(max_retries):
                 try:
-                    # Get download URL
-                    download_url = drive_service.get_download_url(video.gdrive_file_id)
+                    # Get download URL (use cache if available)
+                    if not is_range_request and 'cached_url' in locals():
+                        download_url = cached_url
+                    else:
+                        download_url = drive_service.get_download_url(video.gdrive_file_id)
+                        # Cache the URL for 10 minutes (600 seconds)
+                        if not is_range_request:
+                            cache.set(cache_key, download_url, 600)
+                            logger.info(f"Cached download URL for video {video_id}")
                     
                     # Make request to Google Drive
                     response = requests.get(download_url, headers=headers, stream=True, timeout=30)
