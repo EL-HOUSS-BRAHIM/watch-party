@@ -28,6 +28,7 @@ export interface PublicPartyViewModel {
     id: string
     title: string
     durationLabel?: string
+    source_type?: string
   }
 }
 
@@ -433,7 +434,7 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                   </p>
                   
                   {/* Google Drive specific help */}
-                  {video?.source_type === 'gdrive' && (
+                  {party.video?.source_type === 'gdrive' && (
                     <div className="mb-6 text-white/60 text-xs sm:text-sm bg-brand-cyan/10 border border-brand-cyan/20 rounded-xl p-4">
                       <p className="font-semibold mb-2">💡 This is a Google Drive video</p>
                       <p>Make sure your Google Drive connection is active in Settings → Integrations</p>
