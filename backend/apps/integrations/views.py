@@ -395,15 +395,23 @@ def google_drive_auth_url(request):
     try:
         flow, redirect_uri = _build_drive_flow(request)
 
-        authorization_url, state = flow.authorization_url(
+        # Generate secure random token for CSRF protection
+        import secrets
+        csrf_token = secrets.token_urlsafe(32)
+        
+        # Encode user_id into state parameter (format: watchparty:{user_id}:{csrf_token})
+        # This eliminates session dependency across OAuth redirects
+        state = f"watchparty:{request.user.id}:{csrf_token}"
+        
+        authorization_url, _ = flow.authorization_url(
             access_type='offline',
             include_granted_scopes='true',
-            prompt='consent'
+            prompt='consent',
+            state=state  # Use our custom state parameter
         )
 
-        # Store state and user ID in session for callback validation
-        request.session['google_drive_oauth_state'] = state
-        request.session['google_drive_oauth_user_id'] = str(request.user.id)
+        # Store only the CSRF token in session for validation (not user_id)
+        request.session['google_drive_oauth_csrf'] = csrf_token
 
         connected = False
         folder_id = None
@@ -449,28 +457,37 @@ def google_drive_oauth_callback(request):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        stored_state = request.session.get('google_drive_oauth_state')
-        stored_user_id = request.session.get('google_drive_oauth_user_id')
-        
-        if not stored_state or stored_state != state:
+        # Validate and parse state parameter (format: watchparty:{user_id}:{csrf_token})
+        if not state or not state.startswith('watchparty:'):
             return StandardResponse.error(
-                message='Invalid state parameter',
+                message='Invalid state parameter format',
                 status_code=status.HTTP_400_BAD_REQUEST
             )
         
-        if not stored_user_id:
+        try:
+            _, user_id_str, csrf_token = state.split(':', 2)
+            user_id = user_id_str  # Keep as string for UUID comparison
+        except ValueError:
             return StandardResponse.error(
-                message='Session expired. Please reconnect Google Drive.',
-                status_code=status.HTTP_401_UNAUTHORIZED
+                message='Malformed state parameter',
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate CSRF token from session
+        stored_csrf = request.session.get('google_drive_oauth_csrf')
+        if not stored_csrf or stored_csrf != csrf_token:
+            return StandardResponse.error(
+                message='CSRF validation failed. Please try reconnecting.',
+                status_code=status.HTTP_403_FORBIDDEN
             )
 
-        # Retrieve user from session instead of JWT
+        # Retrieve user from state parameter
         from apps.authentication.models import User
         try:
-            user = User.objects.get(id=stored_user_id)
-        except User.DoesNotExist:
+            user = User.objects.get(id=user_id)
+        except (User.DoesNotExist, ValueError):
             return StandardResponse.error(
-                message='User not found',
+                message='User not found or invalid user ID',
                 status_code=status.HTTP_404_NOT_FOUND
             )
 
@@ -496,11 +513,9 @@ def google_drive_oauth_callback(request):
         _persist_profile_credentials(profile, credentials, folder_id=folder_id)
         _sync_google_drive_connection(user, profile, credentials)
 
-        # Clean up session data
-        if 'google_drive_oauth_state' in request.session:
-            del request.session['google_drive_oauth_state']
-        if 'google_drive_oauth_user_id' in request.session:
-            del request.session['google_drive_oauth_user_id']
+        # Clean up session CSRF token
+        if 'google_drive_oauth_csrf' in request.session:
+            del request.session['google_drive_oauth_csrf']
 
         data = {
             'connected': profile.google_drive_connected,
