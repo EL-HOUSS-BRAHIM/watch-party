@@ -1335,3 +1335,292 @@ class WebSocketTokenView(APIView):
                 'message': 'Failed to generate WebSocket token',
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# Google OAuth Login Endpoints (Server-Side Authorization Code Flow)
+from rest_framework.decorators import api_view, permission_classes as permission_decorator
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+
+
+def _build_google_auth_flow(request):
+    """Build Google OAuth flow for authentication"""
+    from django.conf import settings
+    
+    client_config = {
+        'web': {
+            'client_id': settings.GOOGLE_OAUTH2_CLIENT_ID,
+            'client_secret': settings.GOOGLE_OAUTH2_CLIENT_SECRET,
+            'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+            'token_uri': 'https://oauth2.googleapis.com/token',
+            'redirect_uris': [settings.GOOGLE_OAUTH2_REDIRECT_URI],
+        }
+    }
+    
+    # Include Drive scope for auto-connection
+    scopes = [
+        'openid',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/drive.readonly'
+    ]
+    
+    flow = Flow.from_client_config(
+        client_config,
+        scopes=scopes,
+        redirect_uri=settings.GOOGLE_OAUTH2_REDIRECT_URI
+    )
+    
+    return flow, settings.GOOGLE_OAUTH2_REDIRECT_URI
+
+
+@api_view(['GET'])
+@permission_decorator([AllowAny])
+def google_login_url(request):
+    """Get Google OAuth authorization URL for login"""
+    try:
+        flow, redirect_uri = _build_google_auth_flow(request)
+        
+        # Generate secure random token for CSRF protection
+        csrf_token = secrets.token_urlsafe(32)
+        
+        # State format for guest users: guest:{csrf_token}
+        # No user_id since they're not logged in yet
+        state = f"guest:{csrf_token}"
+        
+        authorization_url, _ = flow.authorization_url(
+            access_type='offline',
+            include_granted_scopes='true',
+            prompt='consent',
+            state=state
+        )
+        
+        # Store CSRF token in session for validation
+        request.session['google_login_oauth_csrf'] = csrf_token
+        
+        data = {
+            'authorization_url': authorization_url,
+            'state': state,
+            'redirect_uri': redirect_uri,
+        }
+        
+        return Response({
+            'success': True,
+            'data': data,
+            'message': 'Google login authorization URL generated'
+        }, status=status.HTTP_200_OK)
+        
+    except ValueError as exc:
+        return Response({
+            'success': False,
+            'message': str(exc)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as exc:
+        return Response({
+            'success': False,
+            'message': f'Failed to generate authorization URL: {exc}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_decorator([AllowAny])
+def google_login_callback(request):
+    """Handle Google OAuth callback for login"""
+    try:
+        code = request.query_params.get('code')
+        state = request.query_params.get('state')
+        
+        if not code:
+            return Response({
+                'success': False,
+                'message': 'Authorization code is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validate state parameter (format: guest:{csrf_token})
+        if not state or not state.startswith('guest:'):
+            return Response({
+                'success': False,
+                'message': 'Invalid state parameter format'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            _, csrf_token = state.split(':', 1)
+        except ValueError:
+            return Response({
+                'success': False,
+                'message': 'Malformed state parameter'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validate CSRF token from session
+        stored_csrf = request.session.get('google_login_oauth_csrf')
+        if not stored_csrf or stored_csrf != csrf_token:
+            return Response({
+                'success': False,
+                'message': 'CSRF validation failed. Please try again.'
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        # Exchange authorization code for tokens
+        flow, _ = _build_google_auth_flow(request)
+        flow.fetch_token(code=code)
+        
+        credentials = flow.credentials
+        
+        # Fetch user info from Google
+        userinfo_response = requests.get(
+            'https://www.googleapis.com/oauth2/v1/userinfo',
+            headers={'Authorization': f'Bearer {credentials.token}'}
+        )
+        
+        if userinfo_response.status_code != 200:
+            return Response({
+                'success': False,
+                'message': 'Failed to fetch user info from Google'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        google_user_info = userinfo_response.json()
+        email = google_user_info.get('email')
+        google_id = google_user_info.get('id')
+        first_name = google_user_info.get('given_name', '')
+        last_name = google_user_info.get('family_name', '')
+        picture_url = google_user_info.get('picture', '')
+        
+        if not email or not google_id:
+            return Response({
+                'success': False,
+                'message': 'Email or Google ID not provided by Google'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if user exists with this email
+        user = None
+        created = False
+        
+        try:
+            user = User.objects.get(email=email)
+            
+            # Link Google account to existing user
+            if not user.google_id:
+                user.google_id = google_id
+            
+            # Update auth provider
+            if hasattr(user, 'profile'):
+                profile = user.profile
+                if profile.auth_provider == 'email':
+                    profile.auth_provider = 'both'
+                elif not profile.auth_provider:
+                    profile.auth_provider = 'google'
+                
+                # Save Google picture URL
+                if picture_url and not profile.google_picture_url:
+                    profile.google_picture_url = picture_url
+                
+                profile.save()
+            
+            user.save()
+            
+        except User.DoesNotExist:
+            # Create new user with Google account
+            username = email.split('@')[0]
+            
+            # Ensure unique username
+            base_username = username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            
+            user = User.objects.create_user(
+                email=email,
+                username=username,
+                first_name=first_name,
+                last_name=last_name,
+                google_id=google_id,
+                is_email_verified=True  # Google emails are verified
+            )
+            created = True
+            
+            # Set profile fields
+            if hasattr(user, 'profile'):
+                profile = user.profile
+                profile.auth_provider = 'google'
+                profile.google_picture_url = picture_url
+                profile.save()
+        
+        # Auto-connect Google Drive if scope was granted
+        if credentials.refresh_token:
+            try:
+                from apps.integrations.models import UserProfile as IntegrationProfile
+                
+                integration_profile, _ = IntegrationProfile.objects.get_or_create(user=user)
+                integration_profile.google_drive_refresh_token = credentials.refresh_token
+                integration_profile.google_drive_access_token = credentials.token
+                integration_profile.google_drive_connected = True
+                integration_profile.save()
+                
+            except Exception as drive_exc:
+                # Don't fail login if Drive connection fails
+                pass
+        
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+        access_token_jwt = refresh.access_token
+        
+        # Add custom claims to access token
+        access_token_jwt['email'] = user.email
+        access_token_jwt['username'] = user.username
+        access_token_jwt['profile_complete'] = user.profile_complete
+        
+        # Create user session
+        ip_address = get_client_ip(request)
+        device_info = extract_device_info(request)
+        
+        UserSession.objects.create(
+            user=user,
+            session_token=hash_token(str(refresh)),
+            ip_address=ip_address,
+            device_info=device_info,
+            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+            expires_at=timezone.now() + timedelta(days=7)
+        )
+        
+        # Create response
+        response = Response({
+            'success': True,
+            'message': 'Login successful',
+            'user': UserProfileSerializer(user).data,
+            'created': created,
+            'profile_complete': user.profile_complete
+        }, status=status.HTTP_200_OK)
+        
+        # Set cookies
+        is_production = not settings.DEBUG
+        domain = '.brahim-elhouss.me' if is_production else None
+        
+        response.set_cookie(
+            key='access_token',
+            value=str(access_token_jwt),
+            max_age=60 * 60,  # 1 hour
+            httponly=True,
+            secure=True,
+            samesite='None',
+            domain=domain,
+            path='/',
+        )
+        
+        response.set_cookie(
+            key='refresh_token',
+            value=str(refresh),
+            max_age=60 * 60 * 24 * 7,  # 7 days
+            httponly=True,
+            secure=True,
+            samesite='None',
+            domain=domain,
+            path='/',
+        )
+        
+        return response
+        
+    except Exception as exc:
+        return Response({
+            'success': False,
+            'message': f'Google login failed: {exc}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

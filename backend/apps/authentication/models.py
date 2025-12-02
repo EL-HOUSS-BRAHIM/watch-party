@@ -123,6 +123,14 @@ class User(AbstractUser):
         return self.subscription_expires > timezone.now()
     
     @property
+    def profile_complete(self):
+        """Check if user has completed their profile (username, first_name, last_name)"""
+        # Check if user has set basic profile information
+        has_username = bool(self.email and '@' in self.email)  # Email acts as username
+        has_names = bool(self.first_name and self.last_name)
+        return has_username and has_names
+    
+    @property
     def friends(self):
         """Get all friends of this user"""
         from apps.users.models import Friendship
@@ -156,6 +164,16 @@ class UserProfile(models.Model):
     notification_preferences = models.JSONField(default=dict, verbose_name='Notification Preferences')
     social_links = models.JSONField(default=dict, verbose_name='Social Media Links')
     privacy_settings = models.JSONField(default=dict, verbose_name='Privacy Settings')
+    
+    # OAuth integration fields
+    google_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='Google Account ID')
+    google_picture_url = models.URLField(max_length=500, blank=True, null=True, verbose_name='Google Profile Picture URL')
+    auth_provider = models.CharField(
+        max_length=20,
+        choices=[('email', 'Email/Password'), ('google', 'Google'), ('both', 'Both')],
+        default='email',
+        verbose_name='Authentication Provider'
+    )
     
     # Drive integration fields
     google_drive_token = models.TextField(blank=True, verbose_name='Google Drive Access Token')

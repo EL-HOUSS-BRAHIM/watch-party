@@ -25,7 +25,9 @@ from .views import (
     GitHubAuthView,
     SocialAuthRedirectView,
     CustomTokenRefreshView,
-    WebSocketTokenView
+    WebSocketTokenView,
+    google_login_url,
+    google_login_callback
 )
 
 app_name = 'authentication'
@@ -45,6 +47,10 @@ urlpatterns = [
     path('social/<str:provider>/', SocialAuthRedirectView.as_view(), name='social_auth_redirect'),
     path('social/google/', GoogleAuthView.as_view(), name='google_auth'),
     path('social/github/', GitHubAuthView.as_view(), name='github_auth'),
+    
+    # Google OAuth Login (Server-Side Flow)
+    path('google/login/', google_login_url, name='google_login_url'),
+    path('google/login/callback/', google_login_callback, name='google_login_callback'),
     
     # Password Management
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
