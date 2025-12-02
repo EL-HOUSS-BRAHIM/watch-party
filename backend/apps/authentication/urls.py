@@ -24,7 +24,8 @@ from .views import (
     GoogleAuthView,
     GitHubAuthView,
     SocialAuthRedirectView,
-    CustomTokenRefreshView
+    CustomTokenRefreshView,
+    WebSocketTokenView
 )
 
 app_name = 'authentication'
@@ -36,6 +37,9 @@ urlpatterns = [
     path('login', LoginView.as_view(), name='login_no_slash'),  # Accept login without trailing slash
     path('logout/', LogoutView.as_view(), name='logout'),
     path('refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    
+    # WebSocket Authentication
+    path('ws-token/', WebSocketTokenView.as_view(), name='ws_token'),
     
     # Social Authentication
     path('social/<str:provider>/', SocialAuthRedirectView.as_view(), name='social_auth_redirect'),
