@@ -885,8 +885,9 @@ class VideoProxyView(APIView):
             for attempt in range(max_retries):
                 try:
                     # Get download URL (use cache if available)
-                    if not is_range_request and 'cached_url' in locals():
+                    if not is_range_request and 'cached_url' in locals() and cached_url:
                         download_url = cached_url
+                        logger.info(f"[DEBUG] Using cached URL: {download_url}")
                     else:
                         if not video.gdrive_file_id:
                             logger.error(f"[DEBUG] GDrive file ID is empty for video {video_id}")
