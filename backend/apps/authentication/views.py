@@ -1347,13 +1347,22 @@ def _build_google_auth_flow(request):
     """Build Google OAuth flow for authentication"""
     from django.conf import settings
     
+    # Use Google Drive credentials (same OAuth app)
+    # Determine redirect URI based on environment
+    is_production = getattr(settings, 'ENV', 'development') == 'production'
+    redirect_uri = (
+        'https://watch-party.brahim-elhouss.me/auth/google/callback'
+        if is_production
+        else 'http://localhost:3000/auth/google/callback'
+    )
+    
     client_config = {
         'web': {
-            'client_id': settings.GOOGLE_OAUTH2_CLIENT_ID,
-            'client_secret': settings.GOOGLE_OAUTH2_CLIENT_SECRET,
+            'client_id': settings.GOOGLE_DRIVE_CLIENT_ID,
+            'client_secret': settings.GOOGLE_DRIVE_CLIENT_SECRET,
             'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
             'token_uri': 'https://oauth2.googleapis.com/token',
-            'redirect_uris': [settings.GOOGLE_OAUTH2_REDIRECT_URI],
+            'redirect_uris': [redirect_uri],
         }
     }
     
@@ -1368,10 +1377,10 @@ def _build_google_auth_flow(request):
     flow = Flow.from_client_config(
         client_config,
         scopes=scopes,
-        redirect_uri=settings.GOOGLE_OAUTH2_REDIRECT_URI
+        redirect_uri=redirect_uri
     )
     
-    return flow, settings.GOOGLE_OAUTH2_REDIRECT_URI
+    return flow, redirect_uri
 
 
 @api_view(['GET'])
