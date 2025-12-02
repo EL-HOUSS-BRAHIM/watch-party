@@ -579,8 +579,10 @@ SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-CSRF_COOKIE_SAMESITE = 'Strict'
+# Changed from 'Strict' to 'None' to allow cross-origin requests between watch-party and be-watch-party subdomains
+# This is required for authentication to work when frontend and backend are on different subdomains
+SESSION_COOKIE_SAMESITE = 'None' if config('SESSION_COOKIE_SECURE', default=False, cast=bool) else 'Lax'
+CSRF_COOKIE_SAMESITE = 'None' if config('CSRF_COOKIE_SECURE', default=False, cast=bool) else 'Lax'
 
 # File Upload Security
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB

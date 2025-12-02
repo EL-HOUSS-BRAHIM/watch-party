@@ -86,7 +86,7 @@ class RegisterView(RateLimitMixin, APIView):
                 max_age=3600 * 24 * 365,  # 1 year
                 httponly=True,
                 secure=True,  # HTTPS only
-                samesite='Lax',
+                samesite='None',  # Allow cross-origin for different subdomains
                 domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
                 path='/'
             )
@@ -98,7 +98,7 @@ class RegisterView(RateLimitMixin, APIView):
                 max_age=3600 * 24 * 365 * 7,  # 7 days
                 httponly=True,
                 secure=True,
-                samesite='Lax',
+                samesite='None',  # Allow cross-origin for different subdomains
                 domain=cookie_domain,
                 path='/'
             )
@@ -168,7 +168,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 max_age=60 * 60,  # 60 minutes
                 httponly=True,
                 secure=True,  # HTTPS only in production
-                samesite='Lax',
+                samesite='None',  # Allow cross-origin for different subdomains
                 domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
                 path='/',
             )
@@ -180,7 +180,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 max_age=60 * 60 * 24 * 7,  # 7 days
                 httponly=True,
                 secure=True,  # HTTPS only in production
-                samesite='Lax',
+                samesite='None',  # Allow cross-origin for different subdomains
                 domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
                 path='/',
             )
@@ -1267,7 +1267,7 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                         max_age=60 * 60,  # 60 minutes
                         httponly=True,
                         secure=True,
-                        samesite='Lax',
+                        samesite='None',  # Allow cross-origin for different subdomains
                         domain='.brahim-elhouss.me',
                         path='/',
                     )
@@ -1280,7 +1280,7 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                         max_age=60 * 60 * 24 * 7,  # 7 days
                         httponly=True,
                         secure=True,
-                        samesite='Lax',
+                        samesite='None',  # Allow cross-origin for different subdomains
                         domain='.brahim-elhouss.me',
                         path='/',
                     )
