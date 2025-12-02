@@ -203,6 +203,11 @@ class GoogleDriveService:
         
         for file_data in results.get('files', []):
             video_meta = file_data.get('videoMediaMetadata', {})
+            
+            # Convert duration from milliseconds to timedelta for consistency
+            duration_ms = int(video_meta.get('durationMillis', 0))
+            duration_seconds = duration_ms // 1000 if duration_ms > 0 else 0
+            
             video = {
                 'id': file_data['id'],
                 'name': file_data['name'],
@@ -211,7 +216,8 @@ class GoogleDriveService:
                 'thumbnail_url': file_data.get('thumbnailLink', ''),
                 'created_time': file_data.get('createdTime', ''),
                 'modified_time': file_data.get('modifiedTime', ''),
-                'duration': int(video_meta.get('durationMillis', 0)) // 1000,  # Convert to seconds
+                'duration': duration_seconds,
+                'duration_timedelta': None if duration_ms == 0 else duration_ms,  # Store raw ms for timedelta conversion
                 'resolution': f"{video_meta.get('width', 0)}x{video_meta.get('height', 0)}" if video_meta.get('width') else '',
             }
             videos.append(video)
