@@ -138,6 +138,7 @@ class VideoDetailSerializer(VideoSerializer):
 class VideoCreateSerializer(serializers.ModelSerializer):
     """Video creation serializer"""
     
+    id = serializers.UUIDField(read_only=True)
     uploader = serializers.SerializerMethodField()
     
     class Meta:
