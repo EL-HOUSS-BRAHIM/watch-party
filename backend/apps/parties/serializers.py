@@ -161,9 +161,10 @@ class WatchPartyCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = WatchParty
         fields = [
-            'title', 'description', 'video_id', 'visibility', 'max_participants',
+            'id', 'room_code', 'title', 'description', 'video_id', 'visibility', 'max_participants',
             'require_approval', 'allow_chat', 'allow_reactions', 'scheduled_start'
         ]
+        read_only_fields = ['id', 'room_code']
         extra_kwargs = {
             'description': {'required': False, 'allow_blank': True},
             'visibility': {'required': False},
