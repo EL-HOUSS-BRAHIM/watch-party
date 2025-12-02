@@ -171,6 +171,16 @@ class VideoViewSet(ModelViewSet):
                 'message': 'Use the proxy URL for Google Drive videos'
             }, status=status.HTTP_200_OK)
         
+        # Check if this is a URL-based video (YouTube, external URL)
+        if video.source_type in ['url', 'youtube']:
+            if not video.source_url:
+                return Response({'error': 'Video URL not available'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                'stream_url': video.source_url,
+                'source_type': video.source_type,
+                'message': 'External video URL'
+            }, status=status.HTTP_200_OK)
+        
         if not video.file:
             return Response({'error': 'Video file not available'}, status=status.HTTP_404_NOT_FOUND)
         
