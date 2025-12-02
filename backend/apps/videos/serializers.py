@@ -162,6 +162,12 @@ class VideoCreateSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         validated_data['uploader'] = self.context['request'].user
+        
+        # Set status to 'ready' for URL-based videos since no processing needed
+        source_type = validated_data.get('source_type', 'upload')
+        if source_type in ['url', 'youtube']:
+            validated_data['status'] = 'ready'
+        
         return super().create(validated_data)
 
 
