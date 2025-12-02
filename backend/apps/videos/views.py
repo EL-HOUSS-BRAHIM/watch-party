@@ -872,6 +872,9 @@ class VideoProxyView(APIView):
             # Get Drive service
             drive_service = get_drive_service(video.uploader)
             
+            # Debug logging
+            logger.info(f"[DEBUG] Video ID: {video_id}, GDrive File ID: {video.gdrive_file_id}")
+            
             # Set up headers for range requests
             headers = {}
             if 'Range' in request.headers:
@@ -886,6 +889,7 @@ class VideoProxyView(APIView):
                         download_url = cached_url
                     else:
                         download_url = drive_service.get_download_url(video.gdrive_file_id)
+                        logger.info(f"[DEBUG] Generated download URL: {download_url}")
                         # Cache the URL for 10 minutes (600 seconds)
                         if not is_range_request:
                             cache.set(cache_key, download_url, 600)
