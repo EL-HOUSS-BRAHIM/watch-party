@@ -873,7 +873,7 @@ class VideoProxyView(APIView):
             drive_service = get_drive_service(video.uploader)
             
             # Debug logging
-            logger.info(f"[DEBUG] Video ID: {video_id}, GDrive File ID: {video.gdrive_file_id}")
+            logger.warning(f"[DEBUG] Video ID: {video_id}, GDrive File ID: {video.gdrive_file_id}")
             
             # Set up headers for range requests
             headers = {}
@@ -887,7 +887,7 @@ class VideoProxyView(APIView):
                     # Get download URL (use cache if available)
                     if not is_range_request and 'cached_url' in locals() and cached_url:
                         download_url = cached_url
-                        logger.info(f"[DEBUG] Using cached URL: {download_url}")
+                        logger.warning(f"[DEBUG] Using cached URL: {download_url}")
                     else:
                         if not video.gdrive_file_id:
                             logger.error(f"[DEBUG] GDrive file ID is empty for video {video_id}")
@@ -897,12 +897,12 @@ class VideoProxyView(APIView):
                             }, status=status.HTTP_400_BAD_REQUEST)
                         
                         download_url = drive_service.get_download_url(video.gdrive_file_id)
-                        logger.info(f"[DEBUG] Generated download URL: {download_url}")
+                        logger.warning(f"[DEBUG] Generated download URL: {download_url}")
                         
                         # Only cache valid URLs
                         if not is_range_request and download_url:
                             cache.set(cache_key, download_url, 600)
-                            logger.info(f"Cached download URL for video {video_id}")
+                            logger.warning(f"[DEBUG] Cached download URL for video {video_id}")
                     
                     # Make request to Google Drive
                     response = requests.get(download_url, headers=headers, stream=True, timeout=30)
