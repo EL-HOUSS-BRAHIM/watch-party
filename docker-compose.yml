@@ -34,6 +34,7 @@ services:
     environment:
       # Use DATABASE_URL from .env file instead of hardcoded value
       - DATABASE_URL=${DATABASE_URL}
+      - ENV=production
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
