@@ -1388,6 +1388,8 @@ def _build_google_auth_flow(request):
 def google_login_url(request):
     """Get Google OAuth authorization URL for login"""
     try:
+        from django.core.cache import cache
+        
         flow, redirect_uri = _build_google_auth_flow(request)
         
         # Generate secure random token for CSRF protection
@@ -1404,8 +1406,10 @@ def google_login_url(request):
             state=state
         )
         
-        # Store CSRF token in session for validation
-        request.session['google_login_oauth_csrf'] = csrf_token
+        # Store CSRF token in cache (Valkey/Redis) with state as key for validation
+        # TTL: 10 minutes (enough time to complete OAuth flow)
+        cache_key = f'google_oauth_csrf:{state}'
+        cache.set(cache_key, csrf_token, timeout=600)
         
         data = {
             'authorization_url': authorization_url,
@@ -1436,6 +1440,8 @@ def google_login_url(request):
 def google_login_callback(request):
     """Handle Google OAuth callback for login"""
     try:
+        from django.core.cache import cache
+        
         code = request.query_params.get('code')
         state = request.query_params.get('state')
         
@@ -1460,13 +1466,18 @@ def google_login_callback(request):
                 'message': 'Malformed state parameter'
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Validate CSRF token from session
-        stored_csrf = request.session.get('google_login_oauth_csrf')
+        # Validate CSRF token from cache (Valkey/Redis)
+        cache_key = f'google_oauth_csrf:{state}'
+        stored_csrf = cache.get(cache_key)
+        
         if not stored_csrf or stored_csrf != csrf_token:
             return Response({
                 'success': False,
                 'message': 'CSRF validation failed. Please try again.'
             }, status=status.HTTP_403_FORBIDDEN)
+        
+        # Delete the CSRF token from cache (one-time use)
+        cache.delete(cache_key)
         
         # Exchange authorization code for tokens
         flow, _ = _build_google_auth_flow(request)
