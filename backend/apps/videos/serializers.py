@@ -169,7 +169,15 @@ class VideoCreateSerializer(serializers.ModelSerializer):
         if source_type in ['url', 'youtube']:
             validated_data['status'] = 'ready'
         
-        return super().create(validated_data)
+        # Create the video instance
+        video = super().create(validated_data)
+        
+        # Ensure status is set for URL videos (in case model default overrides)
+        if source_type in ['url', 'youtube'] and video.status != 'ready':
+            video.status = 'ready'
+            video.save(update_fields=['status'])
+        
+        return video
 
 
 class VideoUpdateSerializer(serializers.ModelSerializer):
