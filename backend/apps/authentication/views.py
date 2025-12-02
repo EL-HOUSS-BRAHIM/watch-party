@@ -1305,3 +1305,33 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                 'message': 'Token refresh failed',
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class WebSocketTokenView(APIView):
+    """Generate JWT token for WebSocket authentication"""
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """Generate a short-lived JWT token for WebSocket connections"""
+        try:
+            from rest_framework_simplejwt.tokens import AccessToken
+            
+            # Create a short-lived access token (5 minutes)
+            token = AccessToken.for_user(request.user)
+            
+            # Set token expiry to 5 minutes
+            token.set_exp(lifetime=timedelta(minutes=5))
+            
+            return Response({
+                'success': True,
+                'token': str(token),
+                'expires_in': 300  # 5 minutes in seconds
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': 'Failed to generate WebSocket token',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
