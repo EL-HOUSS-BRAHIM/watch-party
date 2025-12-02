@@ -1900,6 +1900,20 @@ export const integrationsApi = {
     // Get proxy streaming URL (for CORS-safe streaming)
     getProxyUrl: (fileId: string) =>
       `${process.env.NEXT_PUBLIC_API_URL || ''}/api/integrations/google-drive/proxy/${fileId}/`,
+
+    // Get Google Drive storage quota and usage
+    getQuota: () =>
+      apiFetch<{ 
+        data: { 
+          limit: number; 
+          usage: number; 
+          remaining: number;
+          limit_gb: number;
+          usage_gb: number;
+          usage_percent: number;
+          user_email: string;
+        } 
+      }>('/api/integrations/google-drive/quota/', {}),
   },
 
   // User connections management

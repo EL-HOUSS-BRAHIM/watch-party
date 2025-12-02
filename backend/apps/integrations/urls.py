@@ -11,6 +11,7 @@ google_drive_patterns = [
     path('files/', views.google_drive_list_files, name='google_drive_list_files'),
     path('files/<str:file_id>/streaming-url/', views.google_drive_streaming_url, name='google_drive_streaming_url'),
     path('proxy/<str:file_id>/', views.google_drive_proxy, name='google_drive_proxy'),
+    path('quota/', views.google_drive_quota, name='google_drive_quota'),
 ]
 
 # AWS S3 Integration URLs

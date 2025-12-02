@@ -868,9 +868,16 @@ class VideoProxyView(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             # Get Drive service
-            drive_service = get_drive_service(video.uploader)
+            try:
+                drive_service = get_drive_service(video.uploader)
+            except ValueError as e:
+                logger.error(f"Failed to get Drive service: {str(e)}")
+                return Response({
+                    'error': 'drive_not_connected',
+                    'message': 'Google Drive is not connected. Please reconnect in settings.'
+                }, status=status.HTTP_401_UNAUTHORIZED)
             
-            logger.warning(f"[DEBUG] Video ID: {video_id}, GDrive File ID: {video.gdrive_file_id}")
+            logger.info(f"Proxying GDrive video {video_id}, file: {video.gdrive_file_id}")
             
             # Set up headers for range requests
             headers = {}
@@ -881,11 +888,11 @@ class VideoProxyView(APIView):
             max_retries = 2
             for attempt in range(max_retries):
                 try:
-                    # Always generate fresh download URL
-                    download_url = drive_service.get_download_url(video.gdrive_file_id)
-                    logger.warning(f"[DEBUG] Generated download URL: {download_url}")
+                    # Get authenticated streaming URL with access token
+                    download_url = drive_service.get_authenticated_stream_url(video.gdrive_file_id)
+                    logger.info(f"Generated authenticated stream URL for video {video_id}")
                     
-                    # Make request to Google Drive
+                    # Make request to Google Drive with authentication
                     response = requests.get(download_url, headers=headers, stream=True, timeout=30)
                     
                     # Check for auth errors

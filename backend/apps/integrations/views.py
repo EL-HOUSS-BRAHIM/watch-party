@@ -854,3 +854,24 @@ def disconnect_service(request, connection_id):
         'disconnected': True,
         'connection_id': str(connection.id)
     }, f"{service_name} disconnected successfully")
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def google_drive_quota(request):
+    """Get Google Drive storage quota and API usage information."""
+    try:
+        drive_service = get_drive_service_for_user(request.user)
+        quota_info = drive_service.get_quota_usage()
+        
+        return StandardResponse.success(quota_info, "Google Drive quota retrieved successfully")
+    except ValueError as e:
+        return StandardResponse.error(
+            str(e),
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    except Exception as e:
+        return StandardResponse.error(
+            f"Failed to get quota information: {str(e)}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

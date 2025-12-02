@@ -253,8 +253,62 @@ class GoogleDriveService:
         }
 
     def get_download_url(self, file_id: str) -> str:
-        """Get download URL for a file."""
+        """Get download URL for a file (legacy - not for streaming)."""
         return f"https://drive.google.com/uc?export=download&id={file_id}"
+    
+    def get_authenticated_stream_url(self, file_id: str) -> str:
+        """Get authenticated streaming URL using Drive API with access token.
+        
+        This returns a URL with embedded access token that can be used for
+        video streaming. The URL is valid for the lifetime of the access token.
+        """
+        self._refresh_credentials_if_needed()
+        
+        if not self.credentials or not self.credentials.token:
+            raise GoogleDriveServiceError(
+                "No valid credentials available for streaming",
+                status_code=HTTPStatus.UNAUTHORIZED
+            )
+        
+        # Use Drive API's get_media endpoint with access token
+        # Format: https://www.googleapis.com/drive/v3/files/{fileId}?alt=media&access_token={token}
+        base_url = f"https://www.googleapis.com/drive/v3/files/{file_id}"
+        params = f"alt=media&access_token={self.credentials.token}"
+        return f"{base_url}?{params}"
+    
+    def get_quota_usage(self) -> Dict[str, Any]:
+        """Get current Drive API quota usage information.
+        
+        Returns dictionary with quota details including:
+        - limit: Total quota limit
+        - usage: Current usage
+        - remaining: Remaining quota
+        """
+        try:
+            self._refresh_credentials_if_needed()
+            about = self.drive_service.about().get(fields="storageQuota,user").execute()
+            
+            storage_quota = about.get('storageQuota', {})
+            limit = int(storage_quota.get('limit', 0))
+            usage = int(storage_quota.get('usage', 0))
+            
+            return {
+                'limit': limit,
+                'usage': usage,
+                'remaining': max(0, limit - usage),
+                'limit_gb': round(limit / (1024**3), 2) if limit else 0,
+                'usage_gb': round(usage / (1024**3), 2),
+                'usage_percent': round((usage / limit * 100), 2) if limit else 0,
+                'user_email': about.get('user', {}).get('emailAddress', '')
+            }
+        except Exception as exc:
+            logger.error(f"Failed to get quota usage: {str(exc)}")
+            return {
+                'error': str(exc),
+                'limit': 0,
+                'usage': 0,
+                'remaining': 0
+            }
 
     def upload_file(
         self,

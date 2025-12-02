@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { videosApi, VideoSummary } from "@/lib/api-client"
+import { GoogleDriveQuota } from "@/components/integrations/google-drive-quota"
 
 type GDriveMovie = {
   gdrive_file_id: string
@@ -428,6 +429,13 @@ export default function VideosPage() {
 
               {uploadMode === "gdrive" && (
                 <div className="space-y-6">
+                  {/* Google Drive Quota Widget */}
+                  {gdriveConnected && (
+                    <div className="mb-6">
+                      <GoogleDriveQuota />
+                    </div>
+                  )}
+                  
                   {gdriveLoading ? (
                     <div className="flex flex-col items-center justify-center py-16">
                       <div className="w-16 h-16 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin mb-4" />
