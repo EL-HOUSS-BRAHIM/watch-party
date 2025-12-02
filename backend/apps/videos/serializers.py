@@ -138,12 +138,27 @@ class VideoDetailSerializer(VideoSerializer):
 class VideoCreateSerializer(serializers.ModelSerializer):
     """Video creation serializer"""
     
+    uploader = serializers.SerializerMethodField()
+    
     class Meta:
         model = Video
         fields = [
-            'title', 'description', 'source_type', 'source_url', 'source_id',
-            'visibility', 'allow_download', 'require_premium'
+            'id', 'title', 'description', 'source_type', 'source_url', 'source_id',
+            'visibility', 'allow_download', 'require_premium', 'uploader',
+            'created_at', 'updated_at', 'status', 'thumbnail', 'duration', 
+            'view_count', 'like_count'
         ]
+        read_only_fields = ['id', 'uploader', 'created_at', 'updated_at', 'status', 
+                            'view_count', 'like_count']
+    
+    @extend_schema_field(OpenApiTypes.OBJECT)
+    def get_uploader(self, obj):
+        return {
+            'id': str(obj.uploader.id),
+            'name': obj.uploader.full_name,
+            'avatar': obj.uploader.avatar.url if obj.uploader.avatar else None,
+            'is_premium': obj.uploader.is_premium
+        }
     
     def create(self, validated_data):
         validated_data['uploader'] = self.context['request'].user
