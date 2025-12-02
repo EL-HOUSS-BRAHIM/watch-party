@@ -1366,12 +1366,15 @@ def _build_google_auth_flow(request):
         }
     }
     
-    # Include Drive scope for auto-connection
+    # Include Drive scopes for auto-connection
+    # Note: Request both drive.readonly and drive.file to match Google's response
+    # Google returns all previously granted scopes, so we must request them all
     scopes = [
         'openid',
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/drive.readonly'
+        'https://www.googleapis.com/auth/drive.readonly',
+        'https://www.googleapis.com/auth/drive.file'
     ]
     
     flow = Flow.from_client_config(
