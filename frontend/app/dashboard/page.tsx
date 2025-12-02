@@ -109,7 +109,9 @@ export default function DashboardPage() {
       })
 
       setNewPartyName("")
-      router.push(`/party/${party.id}`)
+      // Use room_code for navigation instead of id
+      const roomCode = (party as any).room_code || party.id
+      router.push(`/party/${roomCode}`)
     } catch (error) {
       console.error("Failed to create party:", error)
     }
