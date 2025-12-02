@@ -888,10 +888,18 @@ class VideoProxyView(APIView):
                     if not is_range_request and 'cached_url' in locals():
                         download_url = cached_url
                     else:
+                        if not video.gdrive_file_id:
+                            logger.error(f"[DEBUG] GDrive file ID is empty for video {video_id}")
+                            return Response({
+                                'error': 'gdrive_file_id_missing',
+                                'message': 'Google Drive file ID not set for this video'
+                            }, status=status.HTTP_400_BAD_REQUEST)
+                        
                         download_url = drive_service.get_download_url(video.gdrive_file_id)
                         logger.info(f"[DEBUG] Generated download URL: {download_url}")
-                        # Cache the URL for 10 minutes (600 seconds)
-                        if not is_range_request:
+                        
+                        # Only cache valid URLs
+                        if not is_range_request and download_url:
                             cache.set(cache_key, download_url, 600)
                             logger.info(f"Cached download URL for video {video_id}")
                     
