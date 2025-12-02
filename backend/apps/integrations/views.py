@@ -401,7 +401,9 @@ def google_drive_auth_url(request):
             prompt='consent'
         )
 
+        # Store state and user ID in session for callback validation
         request.session['google_drive_oauth_state'] = state
+        request.session['google_drive_oauth_user_id'] = str(request.user.id)
 
         connected = False
         folder_id = None
@@ -434,7 +436,7 @@ def google_drive_auth_url(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])  # OAuth callback validates via state parameter, not JWT
 def google_drive_oauth_callback(request):
     """Handle Google Drive OAuth callback"""
     try:
@@ -448,10 +450,28 @@ def google_drive_oauth_callback(request):
             )
 
         stored_state = request.session.get('google_drive_oauth_state')
+        stored_user_id = request.session.get('google_drive_oauth_user_id')
+        
         if not stored_state or stored_state != state:
             return StandardResponse.error(
                 message='Invalid state parameter',
                 status_code=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if not stored_user_id:
+            return StandardResponse.error(
+                message='Session expired. Please reconnect Google Drive.',
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Retrieve user from session instead of JWT
+        from apps.authentication.models import User
+        try:
+            user = User.objects.get(id=stored_user_id)
+        except User.DoesNotExist:
+            return StandardResponse.error(
+                message='User not found',
+                status_code=status.HTTP_404_NOT_FOUND
             )
 
         flow, _ = _build_drive_flow(request)
@@ -459,7 +479,7 @@ def google_drive_oauth_callback(request):
 
         credentials = flow.credentials
 
-        profile = _get_or_create_profile(request.user)
+        profile = _get_or_create_profile(user)
 
         def _update_credentials(updated_credentials):
             _persist_profile_credentials(profile, updated_credentials)
@@ -474,10 +494,13 @@ def google_drive_oauth_callback(request):
         folder_id = drive_service.get_or_create_watch_party_folder()
 
         _persist_profile_credentials(profile, credentials, folder_id=folder_id)
-        _sync_google_drive_connection(request.user, profile, credentials)
+        _sync_google_drive_connection(user, profile, credentials)
 
+        # Clean up session data
         if 'google_drive_oauth_state' in request.session:
             del request.session['google_drive_oauth_state']
+        if 'google_drive_oauth_user_id' in request.session:
+            del request.session['google_drive_oauth_user_id']
 
         data = {
             'connected': profile.google_drive_connected,
