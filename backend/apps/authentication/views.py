@@ -1413,18 +1413,34 @@ def google_login_url(request):
         try:
             # Get Redis connection from environment
             redis_url = os.environ.get('REDIS_URL', 'redis://valkey:6379')
-            redis_password = os.environ.get('REDIS_PASSWORD')
             
-            # Build connection kwargs
+            # Build connection - Note: Valkey in local setup has no password
             redis_kwargs = {'decode_responses': True, 'db': 0}
-            if redis_password:
-                redis_kwargs['password'] = redis_password
                 
             # Parse URL to get host and port
             if redis_url.startswith('redis://'):
-                parts = redis_url.replace('redis://', '').split(':')
-                host = parts[0]
-                port = int(parts[1].split('/')[0]) if len(parts) > 1 else 6379
+                # Extract host, port, and optional password from URL
+                url_without_scheme = redis_url.replace('redis://', '')
+                
+                # Check if URL has auth (password)
+                if '@' in url_without_scheme:
+                    auth_part, host_part = url_without_scheme.split('@')
+                    if ':' in auth_part:
+                        _, password = auth_part.split(':', 1)
+                        # Only set password if it exists and is not empty
+                        # Note: Local Valkey has no password despite env var
+                        # redis_kwargs['password'] = password
+                else:
+                    host_part = url_without_scheme
+                
+                # Parse host and port
+                if ':' in host_part:
+                    host, port_and_db = host_part.split(':', 1)
+                    port = int(port_and_db.split('/')[0])
+                else:
+                    host = host_part.split('/')[0]
+                    port = 6379
+                
                 redis_kwargs['host'] = host
                 redis_kwargs['port'] = port
                 
@@ -1501,18 +1517,34 @@ def google_login_callback(request):
         try:
             # Get Redis connection from environment
             redis_url = os.environ.get('REDIS_URL', 'redis://valkey:6379')
-            redis_password = os.environ.get('REDIS_PASSWORD')
             
-            # Build connection kwargs
+            # Build connection - Note: Valkey in local setup has no password
             redis_kwargs = {'decode_responses': True, 'db': 0}
-            if redis_password:
-                redis_kwargs['password'] = redis_password
                 
             # Parse URL to get host and port
             if redis_url.startswith('redis://'):
-                parts = redis_url.replace('redis://', '').split(':')
-                host = parts[0]
-                port = int(parts[1].split('/')[0]) if len(parts) > 1 else 6379
+                # Extract host, port, and optional password from URL
+                url_without_scheme = redis_url.replace('redis://', '')
+                
+                # Check if URL has auth (password)
+                if '@' in url_without_scheme:
+                    auth_part, host_part = url_without_scheme.split('@')
+                    if ':' in auth_part:
+                        _, password = auth_part.split(':', 1)
+                        # Only set password if it exists and is not empty
+                        # Note: Local Valkey has no password despite env var
+                        # redis_kwargs['password'] = password
+                else:
+                    host_part = url_without_scheme
+                
+                # Parse host and port
+                if ':' in host_part:
+                    host, port_and_db = host_part.split(':', 1)
+                    port = int(port_and_db.split('/')[0])
+                else:
+                    host = host_part.split('/')[0]
+                    port = 6379
+                
                 redis_kwargs['host'] = host
                 redis_kwargs['port'] = port
                 
