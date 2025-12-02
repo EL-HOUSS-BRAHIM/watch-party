@@ -1388,7 +1388,9 @@ def _build_google_auth_flow(request):
 def google_login_url(request):
     """Get Google OAuth authorization URL for login"""
     try:
-        from django.core.cache import cache
+        import redis
+        from django.conf import settings
+        from shared.database_optimization import get_cache_config
         
         flow, redirect_uri = _build_google_auth_flow(request)
         
@@ -1406,10 +1408,20 @@ def google_login_url(request):
             state=state
         )
         
-        # Store CSRF token in cache (Valkey/Redis) with state as key for validation
+        # Store CSRF token directly in Redis/Valkey for validation
         # TTL: 10 minutes (enough time to complete OAuth flow)
-        cache_key = f'google_oauth_csrf:{state}'
-        cache.set(cache_key, csrf_token, timeout=600)
+        try:
+            cache_config = get_cache_config()
+            redis_url = cache_config['default']['LOCATION']
+            redis_client = redis.from_url(redis_url, decode_responses=True)
+            
+            # Use simple key without Django's prefix/version
+            cache_key = f'oauth_csrf:{csrf_token}'
+            redis_client.setex(cache_key, 600, state)  # 10 minutes TTL
+            redis_client.close()
+        except Exception as cache_exc:
+            # Log but don't fail - we'll try session fallback
+            print(f"Warning: Could not store CSRF in Redis: {cache_exc}")
         
         data = {
             'authorization_url': authorization_url,
@@ -1440,7 +1452,9 @@ def google_login_url(request):
 def google_login_callback(request):
     """Handle Google OAuth callback for login"""
     try:
-        from django.core.cache import cache
+        import redis
+        from django.conf import settings
+        from shared.database_optimization import get_cache_config
         
         code = request.query_params.get('code')
         state = request.query_params.get('state')
@@ -1466,18 +1480,32 @@ def google_login_callback(request):
                 'message': 'Malformed state parameter'
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Validate CSRF token from cache (Valkey/Redis)
-        cache_key = f'google_oauth_csrf:{state}'
-        stored_csrf = cache.get(cache_key)
-        
-        if not stored_csrf or stored_csrf != csrf_token:
+        # Validate CSRF token from Redis/Valkey
+        try:
+            cache_config = get_cache_config()
+            redis_url = cache_config['default']['LOCATION']
+            redis_client = redis.from_url(redis_url, decode_responses=True)
+            
+            # Use simple key without Django's prefix/version
+            cache_key = f'oauth_csrf:{csrf_token}'
+            stored_state = redis_client.get(cache_key)
+            
+            if not stored_state or stored_state != state:
+                redis_client.close()
+                return Response({
+                    'success': False,
+                    'message': 'CSRF validation failed. Please try again.'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Delete the CSRF token from cache (one-time use)
+            redis_client.delete(cache_key)
+            redis_client.close()
+            
+        except Exception as cache_exc:
             return Response({
                 'success': False,
-                'message': 'CSRF validation failed. Please try again.'
-            }, status=status.HTTP_403_FORBIDDEN)
-        
-        # Delete the CSRF token from cache (one-time use)
-        cache.delete(cache_key)
+                'message': f'CSRF validation error: {cache_exc}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         # Exchange authorization code for tokens
         flow, _ = _build_google_auth_flow(request)
