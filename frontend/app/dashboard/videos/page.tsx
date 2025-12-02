@@ -494,6 +494,11 @@ export default function VideosPage() {
                                   {formatDuration(movie.duration)}
                                 </span>
                               )}
+                              {!movie.duration && movie.in_database && (
+                                <span className="absolute bottom-2 right-2 px-2 py-1 bg-amber-500/90 text-white text-xs rounded-lg font-bold animate-pulse">
+                                  Processing...
+                                </span>
+                              )}
                               {movie.in_database && (
                                 <span className="absolute top-2 left-2 px-2 py-1 bg-emerald-500 text-white text-xs rounded-lg font-bold">
                                   ✓ Imported
@@ -662,11 +667,13 @@ export default function VideosPage() {
                 )}
                 
                 {/* Duration */}
-                {video.duration && (
-                  <span className="absolute bottom-3 right-3 px-2 py-1 bg-black/70 text-white text-xs rounded font-mono backdrop-blur">
-                    {formatDuration(video.duration)}
-                  </span>
-                )}
+                <span className="absolute bottom-3 right-3 px-2 py-1 bg-black/70 text-white text-xs rounded font-mono backdrop-blur">
+                  {video.is_processing ? (
+                    <span className="text-amber-300 animate-pulse">Processing...</span>
+                  ) : (
+                    video.duration_formatted || video.duration ? formatDuration(video.duration) : '--:--'
+                  )}
+                </span>
                 
                 {/* Play Overlay */}
                 {video.upload_status === "ready" && (

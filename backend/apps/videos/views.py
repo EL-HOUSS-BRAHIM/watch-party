@@ -158,6 +158,19 @@ class VideoViewSet(ModelViewSet):
                 status=status.HTTP_402_PAYMENT_REQUIRED
             )
         
+        # Check if this is a Google Drive video - redirect to proxy endpoint
+        if video.source_type == 'gdrive':
+            from django.urls import reverse
+            proxy_url = request.build_absolute_uri(
+                reverse('videos:video_proxy', kwargs={'video_id': str(video.id)})
+            )
+            return Response({
+                'error': 'Google Drive videos should use proxy endpoint',
+                'proxy_url': proxy_url,
+                'stream_url': proxy_url,
+                'message': 'Use the proxy URL for Google Drive videos'
+            }, status=status.HTTP_200_OK)
+        
         if not video.file:
             return Response({'error': 'Video file not available'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -512,20 +525,54 @@ class GoogleDriveMoviesView(APIView):
             )
             
             # Extract video metadata if available from Drive API
+            has_complete_metadata = False
             if 'video_metadata' in file_info and file_info['video_metadata']:
                 metadata = file_info['video_metadata']
                 if 'durationMillis' in metadata:
                     duration_ms = int(metadata['durationMillis'])
                     video.duration = timedelta(milliseconds=duration_ms)
+                    has_complete_metadata = True
                 
                 if 'width' in metadata and 'height' in metadata:
                     video.resolution = f"{metadata['width']}x{metadata['height']}"
                 
+                # If we have complete metadata from Drive API, mark as ready
+                if has_complete_metadata and video.duration:
+                    video.status = 'ready'
+                
                 video.save()
             
             # Trigger Celery task for metadata extraction using FFmpeg
-            # This will update duration, resolution, codec info
-            extract_gdrive_video_metadata.delay(str(video.id))
+            # This will update duration, resolution, codec info if not already available
+            try:
+                # Check if Celery workers are available
+                from celery import current_app
+                inspector = current_app.control.inspect()
+                active_workers = inspector.active()
+                
+                if not active_workers:
+                    # No Celery workers available
+                    if not has_complete_metadata:
+                        # Delete the video since we can't process it
+                        video.delete()
+                        return Response({
+                            'success': False,
+                            'message': 'Video metadata processing is currently unavailable. Please try again later.',
+                            'error': 'Celery workers are not running'
+                        }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+                    # If we have metadata from Drive API, continue without Celery task
+                else:
+                    # Celery is available, trigger the task
+                    extract_gdrive_video_metadata.delay(str(video.id))
+            except Exception as celery_error:
+                # If Celery check fails and we don't have complete metadata, fail the import
+                if not has_complete_metadata:
+                    video.delete()
+                    return Response({
+                        'success': False,
+                        'message': 'Video metadata processing is currently unavailable. Please try again later.',
+                        'error': str(celery_error)
+                    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
             
             serializer = VideoSerializer(video, context={'request': request})
             

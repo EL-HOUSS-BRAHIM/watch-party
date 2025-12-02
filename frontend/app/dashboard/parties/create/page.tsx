@@ -97,7 +97,15 @@ export default function CreatePartyPage() {
       
       // Redirect to the party page using room_code for the public URL
       // The party API returns room_code which is used for public access
-      const roomCode = (party as any).room_code || party.id
+      const roomCode = (party as any).room_code || (party as any).id
+      
+      // Validate room code before redirect
+      if (!roomCode || roomCode === 'undefined' || roomCode === 'null') {
+        console.error('Party created but no valid room_code received:', party)
+        throw new Error('Failed to get party room code. Party may have been created - check your parties list.')
+      }
+      
+      console.log('Party created successfully, redirecting to:', roomCode)
       router.push(`/party/${roomCode}`)
       
     } catch (error) {

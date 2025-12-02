@@ -19,6 +19,7 @@ class VideoSerializer(serializers.ModelSerializer):
     file_size_formatted = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
     can_edit = serializers.SerializerMethodField()
+    is_processing = serializers.SerializerMethodField()
     
     class Meta:
         model = Video
@@ -26,7 +27,7 @@ class VideoSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'uploader', 'thumbnail', 'duration',
             'duration_formatted', 'file_size', 'file_size_formatted', 'source_type',
             'resolution', 'visibility', 'status', 'view_count', 'like_count',
-            'is_liked', 'can_edit', 'created_at', 'updated_at'
+            'is_liked', 'can_edit', 'is_processing', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'uploader', 'created_at', 'updated_at', 'view_count', 'like_count']
     
@@ -54,7 +55,7 @@ class VideoSerializer(serializers.ModelSerializer):
             if hours > 0:
                 return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
             return f"{minutes:02d}:{seconds:02d}"
-        return None
+        return "--:--"
     
     @extend_schema_field(OpenApiTypes.STR)
 
@@ -85,6 +86,13 @@ class VideoSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.uploader == request.user
         return False
+    
+    @extend_schema_field(OpenApiTypes.BOOL)
+
+    
+    def get_is_processing(self, obj):
+        """Check if video is still being processed"""
+        return obj.status == 'processing' or obj.duration is None
 
 
 class VideoDetailSerializer(VideoSerializer):

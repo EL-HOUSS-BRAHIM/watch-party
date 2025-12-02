@@ -428,9 +428,18 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                 <div className="text-center max-w-md">
                   <div className="mb-4 sm:mb-6 text-5xl sm:text-7xl drop-shadow-2xl">⚠️</div>
                   <p className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-white drop-shadow-lg">Video Unavailable</p>
-                  <p className="text-white/70 mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                  <p className="text-white/70 mb-4 text-sm sm:text-base leading-relaxed bg-red-500/10 border border-red-500/20 rounded-xl p-4">
                     {streamError}
                   </p>
+                  
+                  {/* Google Drive specific help */}
+                  {video?.source_type === 'gdrive' && (
+                    <div className="mb-6 text-white/60 text-xs sm:text-sm bg-brand-cyan/10 border border-brand-cyan/20 rounded-xl p-4">
+                      <p className="font-semibold mb-2">💡 This is a Google Drive video</p>
+                      <p>Make sure your Google Drive connection is active in Settings → Integrations</p>
+                    </div>
+                  )}
+                  
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <button
                       onClick={() => {

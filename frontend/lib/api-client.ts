@@ -128,17 +128,26 @@ export interface VideoSummary {
   duration?: number
   duration_formatted?: string
   file_size?: number
+  file_size_formatted?: string
   thumbnail_url?: string
   thumbnail?: string // Alias for thumbnail_url
   stream_url?: string
+  status?: 'pending' | 'processing' | 'ready' | 'failed'
+  is_processing?: boolean
   upload_status?: 'pending' | 'processing' | 'ready' | 'failed'
   processing_status?: 'pending' | 'processing' | 'completed' | 'failed'
   moderation_status?: 'pending' | 'approved' | 'rejected'
   moderation_reason?: string
   quality_variants?: string[]
   visibility?: 'public' | 'friends' | 'private'
+  resolution?: string
   uploaded_by?: User
+  uploader?: any
   video_file?: string
+  can_edit?: boolean
+  is_liked?: boolean
+  view_count?: number
+  like_count?: number
   created_at: string
   updated_at: string
 }
@@ -895,8 +904,18 @@ export const videosApi = {
       method: 'DELETE',
     }),
 
-  getStreamUrl: (id: string) =>
-    apiFetch<{ stream_url: string }>(`/api/videos/${id}/stream/`, {}),
+  getStreamUrl: async (id: string, video?: VideoSummary) => {
+    // For Google Drive videos, use the stream endpoint which will return proxy URL
+    // The backend will automatically provide the proxy URL in the response
+    return apiFetch<{ stream_url: string; proxy_url?: string }>(`/api/videos/${id}/stream/`, {})
+      .then(response => {
+        // Backend returns proxy_url for Google Drive videos
+        if (response.proxy_url) {
+          return { stream_url: response.proxy_url }
+        }
+        return response
+      })
+  },
 
   download: (id: string) =>
     apiFetch<{ download_url: string }>(`/api/videos/${id}/download/`, {}),
