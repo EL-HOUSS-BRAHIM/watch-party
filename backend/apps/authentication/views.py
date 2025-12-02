@@ -1390,7 +1390,7 @@ def google_login_url(request):
     try:
         import redis
         from django.conf import settings
-        from shared.database_optimization import get_cache_config
+        import os
         
         flow, redirect_uri = _build_google_auth_flow(request)
         
@@ -1411,9 +1411,26 @@ def google_login_url(request):
         # Store CSRF token directly in Redis/Valkey for validation
         # TTL: 10 minutes (enough time to complete OAuth flow)
         try:
-            cache_config = get_cache_config()
-            redis_url = cache_config['default']['LOCATION']
-            redis_client = redis.from_url(redis_url, decode_responses=True)
+            # Get Redis connection from environment
+            redis_url = os.environ.get('REDIS_URL', 'redis://valkey:6379')
+            redis_password = os.environ.get('REDIS_PASSWORD')
+            
+            # Build connection kwargs
+            redis_kwargs = {'decode_responses': True, 'db': 0}
+            if redis_password:
+                redis_kwargs['password'] = redis_password
+                
+            # Parse URL to get host and port
+            if redis_url.startswith('redis://'):
+                parts = redis_url.replace('redis://', '').split(':')
+                host = parts[0]
+                port = int(parts[1].split('/')[0]) if len(parts) > 1 else 6379
+                redis_kwargs['host'] = host
+                redis_kwargs['port'] = port
+                
+                redis_client = redis.Redis(**redis_kwargs)
+            else:
+                redis_client = redis.from_url(redis_url, decode_responses=True)
             
             # Use simple key without Django's prefix/version
             cache_key = f'oauth_csrf:{csrf_token}'
@@ -1454,7 +1471,7 @@ def google_login_callback(request):
     try:
         import redis
         from django.conf import settings
-        from shared.database_optimization import get_cache_config
+        import os
         
         code = request.query_params.get('code')
         state = request.query_params.get('state')
@@ -1482,9 +1499,26 @@ def google_login_callback(request):
         
         # Validate CSRF token from Redis/Valkey
         try:
-            cache_config = get_cache_config()
-            redis_url = cache_config['default']['LOCATION']
-            redis_client = redis.from_url(redis_url, decode_responses=True)
+            # Get Redis connection from environment
+            redis_url = os.environ.get('REDIS_URL', 'redis://valkey:6379')
+            redis_password = os.environ.get('REDIS_PASSWORD')
+            
+            # Build connection kwargs
+            redis_kwargs = {'decode_responses': True, 'db': 0}
+            if redis_password:
+                redis_kwargs['password'] = redis_password
+                
+            # Parse URL to get host and port
+            if redis_url.startswith('redis://'):
+                parts = redis_url.replace('redis://', '').split(':')
+                host = parts[0]
+                port = int(parts[1].split('/')[0]) if len(parts) > 1 else 6379
+                redis_kwargs['host'] = host
+                redis_kwargs['port'] = port
+                
+                redis_client = redis.Redis(**redis_kwargs)
+            else:
+                redis_client = redis.from_url(redis_url, decode_responses=True)
             
             # Use simple key without Django's prefix/version
             cache_key = f'oauth_csrf:{csrf_token}'
