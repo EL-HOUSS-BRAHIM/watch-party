@@ -11,6 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Security
 SECRET_KEY = config('SECRET_KEY', default='your-super-secret-key-here-change-in-production')
 DEBUG = config('DEBUG', default=False, cast=bool)
+ENV = config('ENV', default='development')  # 'development' or 'production'
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # Application definition
