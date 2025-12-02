@@ -92,7 +92,9 @@ class VideoSerializer(serializers.ModelSerializer):
     
     def get_is_processing(self, obj):
         """Check if video is still being processed"""
-        return obj.status == 'processing' or obj.duration is None
+        # Only consider it processing if the status is explicitly 'processing' or 'uploading'
+        # Don't rely on duration alone as URL-based videos may not have duration metadata
+        return obj.status in ['processing', 'uploading']
 
 
 class VideoDetailSerializer(VideoSerializer):
