@@ -44,7 +44,7 @@ export function formatFileSize(bytes?: number | string): string {
  * Format duration in seconds to HH:MM:SS or MM:SS string
  */
 export function formatDuration(seconds?: number): string {
-  if (!seconds) return "Unknown"
+  if (!seconds || isNaN(seconds) || seconds <= 0) return "Unknown"
   
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
