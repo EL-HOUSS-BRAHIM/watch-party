@@ -1640,7 +1640,7 @@ def google_login_callback(request):
         
         UserSession.objects.create(
             user=user,
-            session_token=hash_token(str(refresh)),
+            refresh_token_hash=hash_token(str(refresh)),
             ip_address=ip_address,
             device_info=device_info,
             user_agent=request.META.get('HTTP_USER_AGENT', ''),
@@ -1653,7 +1653,9 @@ def google_login_callback(request):
             'message': 'Login successful',
             'user': UserProfileSerializer(user).data,
             'created': created,
-            'profile_complete': user.profile_complete
+            'profile_complete': user.profile_complete,
+            'access_token': str(access_token_jwt),
+            'refresh_token': str(refresh)
         }, status=status.HTTP_200_OK)
         
         # Set cookies
