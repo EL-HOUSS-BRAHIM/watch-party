@@ -2,10 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { authApi } from "@/lib/api-client"
 import { FormError } from "@/components/ui/feedback"
 
 export default function RegisterPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -33,7 +35,11 @@ export default function RegisterPage() {
       const response = await authApi.register(registrationData)
 
       if (response.success) {
-        setSuccess("Account created! Check your inbox to verify your email.")
+        setSuccess("Account created! Redirecting to email verification...")
+        // Redirect to verify-email page after 1.5 seconds
+        setTimeout(() => {
+          router.push('/verify-email')
+        }, 1500)
       } else {
         setError(response.message || "Registration failed. Please try again.")
       }

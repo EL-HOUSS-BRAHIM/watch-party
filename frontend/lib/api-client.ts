@@ -513,6 +513,19 @@ export const authApi = {
       body: JSON.stringify(data),
     }),
 
+  // OTP Email Verification
+  verifyEmailOTP: (data: { email: string; otp_code: string }) =>
+    apiFetch<{ success: boolean; message: string }>('/api/auth/verify-email-otp/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  resendVerificationOTP: (data: { email: string }) =>
+    apiFetch<{ success: boolean; message: string }>('/api/auth/resend-verification-otp/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   getProfile: () =>
     apiFetch<User>('/api/auth/profile/', {}),
 

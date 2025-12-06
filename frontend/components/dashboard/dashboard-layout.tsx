@@ -7,6 +7,7 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
 import MobileNavigation from "@/components/mobile/MobileNavigation"
+import VerificationBanner from "@/components/auth/VerificationBanner"
 import { NAVIGATION_SECTIONS, getBadgeValue, DynamicBadges } from "@/components/dashboard/navigation"
 import { userApi, analyticsApi, notificationsApi, User, NormalizedRealTimeAnalytics } from "@/lib/api-client"
 
@@ -148,6 +149,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="hidden md:block">
         <DashboardHeader />
       </div>
+
+      {/* Verification Banner - Show to unverified users */}
+      <VerificationBanner />
 
       {/* Background Effects */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
