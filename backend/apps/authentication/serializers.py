@@ -172,14 +172,29 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
     
     profile = serializers.SerializerMethodField()
     full_name = serializers.CharField(source='get_full_name', read_only=True)
+    avatar = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(source='date_joined', read_only=True)
+    updated_at = serializers.DateTimeField(source='last_activity', read_only=True)
+    is_verified = serializers.BooleanField(source='is_email_verified', read_only=True)
     
     class Meta:
         model = User
         fields = [
             'id', 'email', 'first_name', 'last_name', 'full_name', 'avatar',
-            'is_premium', 'subscription_expires', 'date_joined', 'profile'
+            'is_premium', 'is_verified', 'subscription_expires', 'date_joined', 
+            'created_at', 'updated_at', 'profile'
         ]
-        read_only_fields = ['id', 'email', 'full_name', 'date_joined']
+        read_only_fields = ['id', 'email', 'full_name', 'date_joined', 'created_at', 'updated_at', 'is_verified']
+    
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_avatar(self, obj):
+        """Get avatar URL or None"""
+        if obj.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.avatar.url)
+            return obj.avatar.url
+        return None
     
     @extend_schema_field(OpenApiTypes.OBJECT)
     def get_profile(self, obj) -> Optional[Dict[str, Any]]:
