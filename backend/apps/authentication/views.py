@@ -926,10 +926,12 @@ class GoogleAuthView(RateLimitMixin, APIView):
             try:
                 user = User.objects.get(email=email)
                 
-                # Update Google ID if not set
+                # Update Google ID and verification status if not set
                 if not user.google_id:
                     user.google_id = google_id
-                    user.save()
+                if not user.is_email_verified:
+                    user.is_email_verified = True  # Google emails are verified
+                user.save()
                 
             except User.DoesNotExist:
                 # Create new user
@@ -1058,10 +1060,12 @@ class GitHubAuthView(RateLimitMixin, APIView):
             try:
                 user = User.objects.get(email=email)
                 
-                # Update GitHub ID if not set
+                # Update GitHub ID and verification status if not set
                 if not user.github_id:
                     user.github_id = github_id
-                    user.save()
+                if not user.is_email_verified:
+                    user.is_email_verified = True  # OAuth emails are verified
+                user.save()
                 
             except User.DoesNotExist:
                 # Create new user
@@ -1565,6 +1569,10 @@ def google_login_callback(request):
             # Link Google account to existing user
             if not user.google_id:
                 user.google_id = google_id
+            
+            # Verify email for Google OAuth users
+            if not user.is_email_verified:
+                user.is_email_verified = True  # Google emails are verified
             
             # Update auth provider
             if hasattr(user, 'profile'):
