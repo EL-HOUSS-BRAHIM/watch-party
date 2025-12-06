@@ -972,7 +972,7 @@ class GoogleAuthView(RateLimitMixin, APIView):
             return Response({
                 'success': True,
                 'message': 'Authentication successful',
-                'user': UserProfileSerializer(user).data,
+                'user': UserProfileDetailSerializer(user, context={'request': request}).data,
                 'access_token': str(access_token_jwt),
                 'refresh_token': str(refresh)
             }, status=status.HTTP_200_OK)
@@ -1104,7 +1104,7 @@ class GitHubAuthView(RateLimitMixin, APIView):
             return Response({
                 'success': True,
                 'message': 'Authentication successful',
-                'user': UserProfileSerializer(user).data,
+                'user': UserProfileDetailSerializer(user, context={'request': request}).data,
                 'access_token': str(access_token_jwt),
                 'refresh_token': str(refresh)
             }, status=status.HTTP_200_OK)
@@ -1651,7 +1651,7 @@ def google_login_callback(request):
         response = Response({
             'success': True,
             'message': 'Login successful',
-            'user': UserProfileSerializer(user).data,
+            'user': UserProfileDetailSerializer(user, context={'request': request}).data,
             'created': created,
             'profile_complete': user.profile_complete,
             'access_token': str(access_token_jwt),
