@@ -93,7 +93,7 @@ class CredentialRotationService:
         # AWS SES SMTP Credentials
         self._rotate_credential(
             'ses_smtp',
-            'watch-party/ses-smtp',
+            'watch-party-ses-smtp',
             'AWS SES SMTP credentials'
         )
         

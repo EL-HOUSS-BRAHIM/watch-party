@@ -221,6 +221,47 @@ class EmailVerification(models.Model):
         return timezone.now() > self.expires_at
 
 
+class EmailVerificationOTP(models.Model):
+    """OTP-based email verification for new registrations"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otp_verifications')
+    otp_code = models.CharField(max_length=6, db_index=True)
+    is_used = models.BooleanField(default=False)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField(db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    attempts = models.IntegerField(default=0)  # Track verification attempts
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    
+    class Meta:
+        db_table = 'email_verification_otp'
+        verbose_name = 'Email Verification OTP'
+        verbose_name_plural = 'Email Verification OTPs'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', 'is_used', 'expires_at']),
+            models.Index(fields=['otp_code', 'is_used']),
+        ]
+        
+    def __str__(self):
+        return f"OTP for {self.user.email} - {'Used' if self.is_used else 'Active'}"
+    
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+    
+    @property
+    def is_valid(self):
+        """Check if OTP is valid (not expired, not used, attempts < 5)"""
+        return not self.is_used and not self.is_expired and self.attempts < 5
+    
+    def increment_attempts(self):
+        """Increment verification attempts"""
+        self.attempts += 1
+        self.save(update_fields=['attempts'])
+
+
 class PasswordReset(models.Model):
     """Password reset tokens"""
     

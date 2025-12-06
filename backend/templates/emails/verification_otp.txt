@@ -1,0 +1,27 @@
+🎬 WATCH PARTY
+==================================================
+
+Hi {{ user.first_name|default:"there" }}!
+
+Welcome to Watch Party! To complete your registration and start enjoying synchronized watch parties with friends, please verify your email address.
+
+YOUR VERIFICATION CODE
+--------------------------------------
+{{ otp_code }}
+--------------------------------------
+
+⏱️ This code expires in {{ expiration_minutes }} minutes.
+
+Enter this code on the verification page to activate your account.
+
+⚠️ SECURITY NOTICE
+If you didn't create an account with Watch Party, please ignore this email. Never share this code with anyone.
+
+NEED HELP?
+Contact us at {{ support_email }}
+
+---
+Watch Party - Bringing people together, one video at a time
+© {{ "now"|date:"Y" }} Watch Party. All rights reserved.
+
+Visit: {{ frontend_url }}
