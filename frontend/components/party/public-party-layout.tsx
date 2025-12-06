@@ -106,11 +106,14 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
       }
 
       try {
+        console.log('[PartyLayout] Fetching stream URL for video:', party.video!.id)
         const response = await videosApi.getStreamUrl(party.video!.id)
+        console.log('[PartyLayout] Stream URL response:', response)
         if (!isActive) return
         setStreamUrl(response.stream_url)
         setStreamError(null)
         setRetryCount(0) // Reset retry count on success
+        console.log('[PartyLayout] Stream URL set:', response.stream_url)
       } catch (err: any) {
         console.error('Failed to fetch stream URL:', err)
         if (!isActive) return
