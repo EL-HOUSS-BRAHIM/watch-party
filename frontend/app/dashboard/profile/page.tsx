@@ -175,7 +175,11 @@ export default function ProfilePage() {
 
               <div className="pt-3 sm:pt-4 border-t border-brand-navy/5">
                 <p className="text-xs sm:text-sm text-brand-navy/40 font-medium uppercase tracking-wider">
-                  Member since {new Date(user.created_at).toLocaleDateString()}
+                  Member since {user.created_at && !isNaN(new Date(user.created_at).getTime()) 
+                    ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                    : user.date_joined && !isNaN(new Date(user.date_joined).getTime())
+                    ? new Date(user.date_joined).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                    : 'Recently'}
                 </p>
               </div>
             </div>
