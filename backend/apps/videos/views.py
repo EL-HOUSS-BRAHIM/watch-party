@@ -879,80 +879,156 @@ class VideoProxyView(APIView):
             
             logger.info(f"Proxying GDrive video {video_id}, file: {video.gdrive_file_id}")
             
-            # Set up headers for range requests
-            headers = {}
-            if 'Range' in request.headers:
-                headers['Range'] = request.headers['Range']
+            # Parse range header if present
+            range_header = request.headers.get('Range', '')
+            start_byte = 0
+            end_byte = None
+            
+            if range_header:
+                # Parse "bytes=start-end" format
+                import re
+                match = re.match(r'bytes=(\d+)-(\d*)', range_header)
+                if match:
+                    start_byte = int(match.group(1))
+                    if match.group(2):
+                        end_byte = int(match.group(2))
             
             # Retry logic for token refresh
             max_retries = 2
             for attempt in range(max_retries):
                 try:
-                    # Get authenticated streaming URL with access token
-                    download_url = drive_service.get_authenticated_stream_url(video.gdrive_file_id)
-                    logger.info(f"Generated authenticated stream URL for video {video_id}")
+                    # Use Drive API's get_media() method instead of constructing URLs
+                    # This is more reliable and doesn't require embedding tokens in URLs
+                    from googleapiclient.http import MediaIoBaseDownload
+                    from googleapiclient.errors import HttpError as GoogleHttpError
+                    import io
                     
-                    # Make request to Google Drive with authentication
-                    response = requests.get(download_url, headers=headers, stream=True, timeout=30)
+                    # Get file metadata to determine content type and size
+                    file_metadata = drive_service.drive_service.files().get(
+                        fileId=video.gdrive_file_id,
+                        fields='mimeType,size'
+                    ).execute()
                     
-                    # Check for auth errors
-                    if response.status_code in [401, 403] and attempt < max_retries - 1:
-                        logger.warning(f"Google Drive auth error {response.status_code} for video {video_id}, attempt {attempt + 1}")
+                    content_type = file_metadata.get('mimeType', 'video/mp4')
+                    file_size = int(file_metadata.get('size', 0))
+                    
+                    logger.info(f"GDrive file size: {file_size}, content-type: {content_type}, range: {range_header}")
+                    
+                    # Create media request
+                    media_request = drive_service.drive_service.files().get_media(fileId=video.gdrive_file_id)
+                    
+                    # If range request, add range header to the API request
+                    if range_header:
+                        media_request.headers['Range'] = range_header
+                    
+                    # Execute the request and get the streaming response
+                    http_response = media_request.execute(num_retries=0)
+                    
+                    # For range requests, we need to handle this differently
+                    # The googleapiclient doesn't support streaming with range requests well
+                    # So we'll use a direct HTTP request with proper auth headers
+                    if range_header or start_byte > 0:
+                        # Build URL with proper authentication
+                        auth_headers = {}
+                        drive_service.credentials.apply(auth_headers)
                         
-                        # Refresh token
-                        if drive_service.credentials and drive_service.credentials.refresh_token:
-                            try:
-                                logger.info(f"Refreshing Google Drive token for user {video.uploader.id}")
-                                drive_service.credentials.refresh(GoogleRequest())
-                                
-                                # Update user profile with new token
-                                if drive_service.on_credentials_updated:
-                                    drive_service.on_credentials_updated(drive_service.credentials)
-                                
-                                logger.info(f"Token refreshed successfully for user {video.uploader.id}")
-                                
-                                # Wait a bit before retry
-                                time.sleep(0.5)
-                                continue
-                            except Exception as refresh_error:
-                                logger.error(f"Failed to refresh token: {str(refresh_error)}")
+                        # Make direct request to Drive API
+                        api_url = f"https://www.googleapis.com/drive/v3/files/{video.gdrive_file_id}?alt=media"
+                        
+                        request_headers = auth_headers.copy()
+                        if range_header:
+                            request_headers['Range'] = range_header
+                        
+                        response = requests.get(api_url, headers=request_headers, stream=True, timeout=30)
+                        
+                        # Check for auth errors
+                        if response.status_code in [401, 403] and attempt < max_retries - 1:
+                            logger.warning(f"Google Drive auth error {response.status_code} for video {video_id}, attempt {attempt + 1}")
+                            
+                            # Refresh token
+                            if drive_service.credentials and drive_service.credentials.refresh_token:
+                                try:
+                                    logger.info(f"Refreshing Google Drive token for user {video.uploader.id}")
+                                    drive_service.credentials.refresh(GoogleRequest())
+                                    
+                                    # Update user profile with new token
+                                    if drive_service.on_credentials_updated:
+                                        drive_service.on_credentials_updated(drive_service.credentials)
+                                    
+                                    logger.info(f"Token refreshed successfully for user {video.uploader.id}")
+                                    
+                                    # Wait a bit before retry
+                                    time.sleep(0.5)
+                                    continue
+                                except Exception as refresh_error:
+                                    logger.error(f"Failed to refresh token: {str(refresh_error)}")
+                                    return Response({
+                                        'error': 'drive_token_expired',
+                                        'message': 'Google Drive access expired. Please reconnect.'
+                                    }, status=status.HTTP_401_UNAUTHORIZED)
+                            else:
                                 return Response({
-                                    'error': 'drive_token_expired',
-                                    'message': 'Google Drive access expired. Please reconnect.'
+                                    'error': 'drive_disconnected',
+                                    'message': 'Google Drive is disconnected. Please reconnect.'
                                 }, status=status.HTTP_401_UNAUTHORIZED)
-                        else:
+                        
+                        # If we got here, request was successful or it's the last retry
+                        if response.status_code not in [200, 206]:
+                            logger.error(f"Google Drive returned status {response.status_code} for video {video_id}")
                             return Response({
-                                'error': 'drive_disconnected',
-                                'message': 'Google Drive is disconnected. Please reconnect.'
-                            }, status=status.HTTP_401_UNAUTHORIZED)
-                    
-                    # If we got here, request was successful or it's the last retry
-                    if response.status_code not in [200, 206]:
-                        logger.error(f"Google Drive returned status {response.status_code} for video {video_id}")
-                        return Response({
-                            'error': 'video_unavailable',
-                            'message': f'Video unavailable (HTTP {response.status_code})'
-                        }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-                    
-                    # Create streaming response
-                    def generate():
-                        try:
-                            for chunk in response.iter_content(chunk_size=8192):
-                                if chunk:
-                                    yield chunk
-                        except Exception as stream_error:
-                            logger.error(f"Error streaming video {video_id}: {str(stream_error)}")
-                    
-                    streaming_response = StreamingHttpResponse(
-                        generate(),
-                        content_type=response.headers.get('Content-Type', 'video/mp4'),
-                        status=response.status_code
-                    )
-                    
-                    # Copy relevant headers
-                    for header in ['Content-Length', 'Content-Range', 'Accept-Ranges']:
-                        if header in response.headers:
-                            streaming_response[header] = response.headers[header]
+                                'error': 'video_unavailable',
+                                'message': f'Video unavailable (HTTP {response.status_code})'
+                            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+                        
+                        # Create streaming response
+                        def generate():
+                            try:
+                                for chunk in response.iter_content(chunk_size=8192):
+                                    if chunk:
+                                        yield chunk
+                            except Exception as stream_error:
+                                logger.error(f"Error streaming video {video_id}: {str(stream_error)}")
+                        
+                        streaming_response = StreamingHttpResponse(
+                            generate(),
+                            content_type=content_type,
+                            status=response.status_code
+                        )
+                        
+                        # Copy relevant headers
+                        for header in ['Content-Length', 'Content-Range', 'Accept-Ranges']:
+                            if header in response.headers:
+                                streaming_response[header] = response.headers[header]
+                    else:
+                        # For non-range requests, use the simpler approach
+                        # Create streaming response from the full download
+                        def generate():
+                            try:
+                                buffer = io.BytesIO()
+                                downloader = MediaIoBaseDownload(buffer, media_request, chunksize=1024*1024)
+                                done = False
+                                while not done:
+                                    status_obj, done = downloader.next_chunk()
+                                    if buffer.tell() > 0:
+                                        buffer.seek(0)
+                                        chunk = buffer.read()
+                                        if chunk:
+                                            yield chunk
+                                        buffer.seek(0)
+                                        buffer.truncate(0)
+                            except Exception as stream_error:
+                                logger.error(f"Error streaming video {video_id}: {str(stream_error)}")
+                        
+                        streaming_response = StreamingHttpResponse(
+                            generate(),
+                            content_type=content_type,
+                            status=200
+                        )
+                        
+                        # Add content length and accept ranges
+                        if file_size:
+                            streaming_response['Content-Length'] = file_size
+                        streaming_response['Accept-Ranges'] = 'bytes'
                     
                     # Log successful stream
                     logger.info(f"Successfully proxying video {video_id} for user {request.user.id}")
