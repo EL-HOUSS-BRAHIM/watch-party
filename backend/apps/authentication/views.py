@@ -24,6 +24,12 @@ import requests
 from apps.integrations.services.google_drive import GoogleDriveService
 
 from .models import User, EmailVerification, PasswordReset, TwoFactorAuth, UserSession
+from .services.email_verification import (
+    create_otp_for_user,
+    send_verification_email,
+    verify_otp,
+    resend_verification_otp
+)
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
@@ -33,6 +39,8 @@ from .serializers import (
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
     EmailVerificationSerializer,
+    EmailVerificationOTPSerializer,
+    ResendVerificationOTPSerializer,
     TwoFactorSetupRequestSerializer,
     TwoFactorVerifyRequestSerializer,
     TwoFactorDisableRequestSerializer,
@@ -62,16 +70,26 @@ class RegisterView(RateLimitMixin, APIView):
         if serializer.is_valid():
             user = serializer.save()
             
-            # Generate tokens
+            # Generate and send OTP for email verification
+            ip_address = get_client_ip(request)
+            try:
+                otp_instance, otp_code = create_otp_for_user(user, ip_address)
+                email_sent = send_verification_email(user, otp_code)
+            except Exception as e:
+                # Log error but don't fail registration
+                email_sent = False
+            
+            # Generate tokens for auto-login (user can access dashboard but with verification banner)
             refresh = RefreshToken.for_user(user)
             access_token = refresh.access_token
             
-            # Create response with user data only (no tokens in JSON)
+            # Create response
             response = Response({
                 'success': True,
-                'message': 'Registration successful. Please verify your email.',
-                'user': UserProfileSerializer(user).data,
-                'verification_sent': True
+                'message': 'Registration successful. Please check your email for verification code.',
+                'user': UserProfileDetailSerializer(user, context={'request': request}).data,
+                'verification_sent': email_sent,
+                'requires_verification': not user.is_email_verified
             }, status=status.HTTP_201_CREATED)
             
             # Set tokens as HTTP-only cookies (auto-login after registration)
@@ -109,6 +127,69 @@ class RegisterView(RateLimitMixin, APIView):
             'success': False,
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyEmailOTPView(RateLimitMixin, APIView):
+    """Verify email with OTP code"""
+    
+    permission_classes = [IsAuthenticated]
+    rate_limit_key = 'email_verification'
+    serializer_class = EmailVerificationOTPSerializer
+    
+    @extend_schema(summary="Verify Email with OTP")
+    def post(self, request):
+        serializer = EmailVerificationOTPSerializer(data=request.data)
+        
+        if not serializer.is_valid():
+            return Response({
+                'success': False,
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = request.user
+        otp_code = serializer.validated_data['otp_code']
+        ip_address = get_client_ip(request)
+        
+        success, message = verify_otp(user, otp_code, ip_address)
+        
+        if success:
+            # Return updated user data
+            return Response({
+                'success': True,
+                'message': message,
+                'user': UserProfileDetailSerializer(user, context={'request': request}).data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'success': False,
+                'message': message
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResendVerificationOTPView(RateLimitMixin, APIView):
+    """Resend verification OTP to user's email"""
+    
+    permission_classes = [IsAuthenticated]
+    rate_limit_key = 'email_verification'
+    serializer_class = ResendVerificationOTPSerializer
+    
+    @extend_schema(summary="Resend Verification OTP")
+    def post(self, request):
+        user = request.user
+        ip_address = get_client_ip(request)
+        
+        success, message = resend_verification_otp(user, ip_address)
+        
+        if success:
+            return Response({
+                'success': True,
+                'message': message
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'success': False,
+                'message': message
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(RateLimitMixin, TokenObtainPairView):

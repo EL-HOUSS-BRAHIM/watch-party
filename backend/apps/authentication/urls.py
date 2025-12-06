@@ -14,6 +14,8 @@ from .views import (
     ResetPasswordView,
     VerifyEmailView,
     ResendVerificationView,
+    VerifyEmailOTPView,
+    ResendVerificationOTPView,
     GoogleDriveAuthView,
     GoogleDriveDisconnectView,
     GoogleDriveStatusView,
@@ -60,6 +62,10 @@ urlpatterns = [
     # Account Verification
     path('verify-email/', VerifyEmailView.as_view(), name='verify_email'),
     path('resend-verification/', ResendVerificationView.as_view(), name='resend_verification'),
+    
+    # OTP-based email verification
+    path('verify-email-otp/', VerifyEmailOTPView.as_view(), name='verify_email_otp'),
+    path('resend-verification-otp/', ResendVerificationOTPView.as_view(), name='resend_verification_otp'),
     
     # User Profile
     path('profile/', UserProfileView.as_view(), name='user_profile'),
