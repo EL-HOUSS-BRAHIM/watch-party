@@ -138,138 +138,189 @@ export default function CreatePartyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light relative overflow-hidden">
-      {/* Background Effects */}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* Enhanced Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-blue/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-brand-purple/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-brand-blue/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-r from-brand-cyan/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
-        {/* Enhanced Header */}
-        <div className="flex items-center gap-3 sm:gap-6 mb-6 sm:mb-8">
-          <IconButton
-            onClick={() => router.back()}
-            variant="ghost"
-            size="lg"
-          >
-            ←
-          </IconButton>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-navy truncate">
-              ✨ Create Epic Watch Party
-            </h1>
-            <p className="text-brand-navy/70 text-sm sm:text-base lg:text-lg mt-1 sm:mt-2">Build the perfect movie night experience for your community</p>
-          </div>
-          {showPreview && (
-            <IconButton
-              onClick={() => setShowPreview(!showPreview)}
-              variant="secondary"
-              className="hidden sm:flex"
+        {/* Enhanced Header with Better Visual Hierarchy */}
+        <div className="mb-6 sm:mb-10">
+          <div className="flex items-start gap-4 mb-4">
+            <button
+              onClick={() => router.back()}
+              className="mt-1 p-2 sm:p-3 rounded-xl bg-white/80 backdrop-blur-sm hover:bg-white shadow-lg hover:shadow-xl transition-all duration-200 text-brand-navy hover:scale-105"
             >
-              👁️ Preview
-            </IconButton>
-          )}
-        </div>
-
-        {/* Enhanced Progress Indicator */}
-        <div className="flex items-center justify-center mb-8 sm:mb-12 overflow-x-auto pb-2">
-          <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 min-w-min px-2">
-            {[
-              { step: 1, label: "Party Details", icon: "🎬", shortLabel: "Details" },
-              { step: 2, label: "Content Setup", icon: "📱", shortLabel: "Content" },
-              { step: 3, label: "Review & Launch", icon: "🚀", shortLabel: "Review" }
-            ].map((item, index) => (
-              <div key={item.step} className="flex items-center gap-2 sm:gap-4 lg:gap-6">
-                <div className="flex flex-col items-center gap-1 sm:gap-2">
-                  <div className={`relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-base sm:text-lg transition-all duration-300 ${
-                    step >= item.step 
-                      ? "bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-lg scale-110" 
-                      : "bg-white/10 text-white/50 border-2 border-white/20"
-                  }`}>
-                    {step > item.step ? "✓" : item.icon}
-                    {step === item.step && (
-                      <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-brand-purple to-brand-blue animate-pulse opacity-50"></div>
-                    )}
-                  </div>
-                  <div className="text-center">
-                    <div className={`font-medium text-xs sm:text-sm transition-colors ${
-                      step >= item.step ? "text-white" : "text-white/50"
-                    }`}>
-                      <span className="hidden sm:inline">{item.label}</span>
-                      <span className="sm:hidden">{item.shortLabel}</span>
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-white/40">Step {item.step}</div>
-                  </div>
-                </div>
-                {index < 2 && (
-                  <div className={`w-8 sm:w-12 lg:w-16 h-1 rounded-full transition-all duration-300 flex-shrink-0 ${
-                    step > item.step ? "bg-gradient-to-r from-brand-purple to-brand-blue" : "bg-white/20"
-                  }`}></div>
-                )}
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-brand-purple/20 to-brand-blue/20 rounded-full mb-3 backdrop-blur-sm border border-white/50">
+                <span className="text-2xl">🎉</span>
+                <span className="text-sm font-semibold text-brand-navy">Step {step} of 3</span>
               </div>
-            ))}
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-navy mb-2 bg-gradient-to-r from-brand-purple to-brand-blue bg-clip-text text-transparent">
+                Create Epic Watch Party
+              </h1>
+              <p className="text-brand-navy/70 text-base sm:text-lg max-w-2xl">Build an unforgettable movie night experience for your community</p>
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="relative h-2 bg-white/50 rounded-full overflow-hidden backdrop-blur-sm shadow-inner">
+            <div 
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan transition-all duration-500 ease-out rounded-full shadow-lg"
+              style={{ width: `${(step / 3) * 100}%` }}
+            >
+              <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
+            </div>
           </div>
         </div>
 
-        <GradientCard 
-          className="border-brand-navy/10 backdrop-blur-xl"
-        >
+        {/* Enhanced Step Cards */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12 max-w-4xl mx-auto">
+          {[
+            { step: 1, label: "Party Details", icon: "🎬", shortLabel: "Details", description: "Name & settings" },
+            { step: 2, label: "Content Setup", icon: "📱", shortLabel: "Content", description: "Add videos" },
+            { step: 3, label: "Review & Launch", icon: "🚀", shortLabel: "Launch", description: "Final check" }
+          ].map((item) => (
+            <div
+              key={item.step}
+              className={`relative p-4 sm:p-6 rounded-2xl transition-all duration-300 cursor-pointer ${
+                step === item.step
+                  ? "bg-white shadow-2xl ring-2 ring-brand-purple scale-105"
+                  : step > item.step
+                  ? "bg-white/90 shadow-lg"
+                  : "bg-white/60 shadow"
+              }`}
+            >
+              {step > item.step && (
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              )}
+              <div className="text-center">
+                <div className={`text-3xl sm:text-4xl mb-2 transition-transform duration-300 ${
+                  step === item.step ? "scale-110 animate-bounce" : ""
+                }`}>
+                  {item.icon}
+                </div>
+                <div className={`font-bold text-xs sm:text-sm mb-1 ${
+                  step >= item.step ? "text-brand-navy" : "text-brand-navy/50"
+                }`}>
+                  <span className="hidden sm:inline">{item.label}</span>
+                  <span className="sm:hidden">{item.shortLabel}</span>
+                </div>
+                <div className="text-[10px] sm:text-xs text-brand-navy/60">
+                  {item.description}
+                </div>
+              </div>
+              {step === item.step && (
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 animate-pulse pointer-events-none"></div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-6 sm:p-8 lg:p-10">
           {/* Step 1: Party Details */}
           {step === 1 && (
             <div className="space-y-6">
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">🎬</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2">Party Details</h2>
-                <p className="text-brand-navy/70 text-sm sm:text-base">Give your watch party a name and set the basics</p>
+              <div className="text-center mb-8 sm:mb-10">
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-purple to-brand-blue rounded-2xl shadow-xl mb-4 animate-bounce">
+                  <span className="text-3xl sm:text-4xl">🎬</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-3 bg-gradient-to-r from-brand-purple to-brand-blue bg-clip-text text-transparent">Party Details</h2>
+                <p className="text-brand-navy/70 text-sm sm:text-base max-w-lg mx-auto">Give your watch party a memorable name and configure the perfect settings</p>
               </div>
 
               <div className="space-y-6 max-w-2xl mx-auto">
                 {/* Party Name */}
-                <div>
-                  <label className="block text-brand-navy font-medium mb-2 text-sm sm:text-base">Party Name *</label>
-                  <input
-                    type="text"
-                    value={partyData.title}
-                    onChange={(e) => setPartyData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Friday Night Movies, Horror Marathon, etc."
-                    className="w-full px-4 py-3 sm:py-3 text-base bg-white border border-brand-navy/20 rounded-xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
-                  />
+                <div className="group">
+                  <label className="block text-brand-navy font-semibold mb-3 text-sm sm:text-base flex items-center gap-2">
+                    <span className="text-xl">🎭</span>
+                    Party Name *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={partyData.title}
+                      onChange={(e) => setPartyData(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="Friday Night Movies, Horror Marathon, etc."
+                      className="w-full px-5 py-4 text-base bg-white/90 border-2 border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/20 focus:border-brand-purple transition-all duration-200 shadow-sm hover:shadow-md"
+                    />
+                    {partyData.title && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Description */}
-                <div>
-                  <label className="block text-brand-navy font-medium mb-2 text-sm sm:text-base">Description</label>
+                <div className="group">
+                  <label className="block text-brand-navy font-semibold mb-3 text-sm sm:text-base flex items-center gap-2">
+                    <span className="text-xl">📝</span>
+                    Description
+                    <span className="text-xs text-brand-navy/50 font-normal">(Optional)</span>
+                  </label>
                   <textarea
                     value={partyData.description}
                     onChange={(e) => setPartyData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Tell your friends what to expect..."
-                    rows={3}
-                    className="w-full px-4 py-3 text-base bg-white border border-brand-navy/20 rounded-xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 resize-none"
+                    placeholder="Tell your friends what to expect... What movies? What vibe? Snacks required?"
+                    rows={4}
+                    className="w-full px-5 py-4 text-base bg-white/90 border-2 border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/20 focus:border-brand-purple transition-all duration-200 shadow-sm hover:shadow-md resize-none"
                   />
+                  <div className="flex justify-between mt-2 px-1">
+                    <span className="text-xs text-brand-navy/50">💡 Tip: Add emojis to make it fun!</span>
+                    <span className="text-xs text-brand-navy/50">{partyData.description.length} chars</span>
+                  </div>
                 </div>
 
                 {/* Visibility */}
                 <div>
-                  <label className="block text-brand-navy font-medium mb-3 text-sm sm:text-base">Who can join?</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <label className="block text-brand-navy font-semibold mb-4 text-sm sm:text-base flex items-center gap-2">
+                    <span className="text-xl">👀</span>
+                    Who can join?
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
-                      { value: "public", label: "Public", icon: "🌍", description: "Anyone can find and join" },
-                      { value: "friends", label: "Friends", icon: "👥", description: "Only your friends" },
-                      { value: "private", label: "Private", icon: "🔒", description: "Invite only" }
+                      { value: "public", label: "Public", icon: "🌍", description: "Anyone can find and join", color: "from-blue-500 to-cyan-500" },
+                      { value: "friends", label: "Friends", icon: "👥", description: "Only your friends", color: "from-purple-500 to-pink-500" },
+                      { value: "private", label: "Private", icon: "🔒", description: "Invite only", color: "from-gray-600 to-gray-800" }
                     ].map((option) => (
                       <button
                         key={option.value}
                         onClick={() => setPartyData(prev => ({ ...prev, visibility: option.value as any }))}
-                        className={`p-4 rounded-xl border transition-all duration-200 text-center min-h-[44px] ${
+                        className={`group relative p-5 rounded-2xl border-2 transition-all duration-300 text-center overflow-hidden ${
                           partyData.visibility === option.value
-                            ? "border-brand-purple bg-brand-purple/20"
-                            : "border-brand-navy/20 bg-white hover:border-brand-navy/30"
+                            ? "border-transparent shadow-xl scale-105"
+                            : "border-brand-navy/20 bg-white hover:border-brand-navy/40 hover:shadow-lg"
                         }`}
                       >
-                        <div className="text-2xl mb-2">{option.icon}</div>
-                        <div className="text-brand-navy font-medium mb-1 text-sm sm:text-base">{option.label}</div>
-                        <div className="text-xs text-brand-navy/60">{option.description}</div>
+                        {partyData.visibility === option.value && (
+                          <div className={`absolute inset-0 bg-gradient-to-br ${option.color} opacity-10`}></div>
+                        )}
+                        <div className={`relative text-3xl mb-3 transition-transform duration-300 ${
+                          partyData.visibility === option.value ? "scale-125" : "group-hover:scale-110"
+                        }`}>{option.icon}</div>
+                        <div className="relative text-brand-navy font-bold mb-2 text-sm sm:text-base">{option.label}</div>
+                        <div className="relative text-xs text-brand-navy/70">{option.description}</div>
+                        {partyData.visibility === option.value && (
+                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -307,10 +358,12 @@ export default function CreatePartyPage() {
           {/* Step 2: Content Selection */}
           {step === 2 && (
             <div className="space-y-6">
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">📱</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2">Add Content</h2>
-                <p className="text-brand-navy/70 text-sm sm:text-base">Choose what to watch (you can always add more later)</p>
+              <div className="text-center mb-8 sm:mb-10">
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-blue to-brand-cyan rounded-2xl shadow-xl mb-4 animate-bounce">
+                  <span className="text-3xl sm:text-4xl">📱</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-3 bg-gradient-to-r from-brand-blue to-brand-cyan bg-clip-text text-transparent">Add Content</h2>
+                <p className="text-brand-navy/70 text-sm sm:text-base max-w-lg mx-auto">Choose what to watch — don't worry, you can always add more later!</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
@@ -412,16 +465,21 @@ export default function CreatePartyPage() {
           {/* Step 3: Review & Create */}
           {step === 3 && (
             <div className="space-y-6">
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">✨</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2">Review & Create</h2>
-                <p className="text-brand-navy/70 text-sm sm:text-base">Everything looks good? Let's start the party!</p>
+              <div className="text-center mb-8 sm:mb-10">
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-xl mb-4 animate-bounce">
+                  <span className="text-3xl sm:text-4xl">✨</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-3 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">Review & Create</h2>
+                <p className="text-brand-navy/70 text-sm sm:text-base max-w-lg mx-auto">Everything looks good? Let's start the party! 🎉</p>
               </div>
 
               <div className="max-w-2xl mx-auto space-y-6">
                 {/* Party Summary */}
-                <div className="bg-brand-navy/5 rounded-xl p-6 border border-brand-navy/10">
-                  <h3 className="text-lg font-semibold text-brand-navy mb-4">Party Details</h3>
+                <div className="bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-2xl p-6 border-2 border-white/50 shadow-xl backdrop-blur-sm">
+                  <h3 className="text-lg font-bold text-brand-navy mb-5 flex items-center gap-2">
+                    <span className="text-2xl">🎬</span>
+                    Party Details
+                  </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-brand-navy/70">Name:</span>
@@ -451,8 +509,11 @@ export default function CreatePartyPage() {
                 </div>
 
                 {/* Content Summary */}
-                <div className="bg-brand-navy/5 rounded-xl p-6 border border-brand-navy/10">
-                  <h3 className="text-lg font-semibold text-brand-navy mb-4">Content</h3>
+                <div className="bg-gradient-to-br from-brand-blue/10 to-brand-cyan/10 rounded-2xl p-6 border-2 border-white/50 shadow-xl backdrop-blur-sm">
+                  <h3 className="text-lg font-bold text-brand-navy mb-5 flex items-center gap-2">
+                    <span className="text-2xl">📺</span>
+                    Content
+                  </h3>
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">
                       {contentType === "upload" ? "📤" : 
@@ -477,17 +538,21 @@ export default function CreatePartyPage() {
                 <button
                   onClick={handleCreateParty}
                   disabled={loading}
-                  className="w-full py-4 min-h-[48px] bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-brand-purple/25 disabled:cursor-not-allowed text-sm sm:text-base"
+                  className="group relative w-full py-5 min-h-[56px] bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan hover:from-brand-purple-dark hover:via-brand-blue-dark hover:to-brand-cyan-dark disabled:from-gray-600 disabled:to-gray-700 text-white font-bold rounded-2xl transition-all duration-300 shadow-2xl hover:shadow-brand-purple/50 disabled:cursor-not-allowed text-base sm:text-lg overflow-hidden"
                 >
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                   {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-                      Creating Party...
+                    <span className="relative flex items-center justify-center gap-3">
+                      <div className="animate-spin w-6 h-6 border-3 border-white border-t-transparent rounded-full"></div>
+                      <span className="animate-pulse">Creating Your Epic Party...</span>
                     </span>
                   ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      <span>🎉</span>
-                      Create Watch Party
+                    <span className="relative flex items-center justify-center gap-3">
+                      <span className="text-2xl animate-bounce">🎉</span>
+                      <span>Create Watch Party</span>
+                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
                     </span>
                   )}
                 </button>
@@ -496,12 +561,15 @@ export default function CreatePartyPage() {
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
+          <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 mt-8 sm:mt-10">
             <button
               onClick={prevStep}
               disabled={step === 1}
-              className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-white/10 hover:bg-white/20 disabled:bg-white/5 disabled:text-white/30 text-white rounded-lg font-medium transition-colors disabled:cursor-not-allowed text-sm sm:text-base"
+              className="group w-full sm:w-auto px-8 py-4 min-h-[52px] bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 text-brand-navy rounded-xl font-semibold transition-all duration-200 disabled:cursor-not-allowed text-sm sm:text-base shadow-lg hover:shadow-xl disabled:shadow-none flex items-center justify-center gap-2"
             >
+              <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
               Previous
             </button>
             
@@ -509,13 +577,16 @@ export default function CreatePartyPage() {
               <button
                 onClick={nextStep}
                 disabled={!isStepValid()}
-                className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-brand-purple hover:bg-brand-purple-dark disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors text-sm sm:text-base"
+                className="group w-full sm:w-auto px-8 py-4 min-h-[52px] bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-200 text-sm sm:text-base shadow-lg hover:shadow-xl disabled:shadow-none flex items-center justify-center gap-2"
               >
-                Next
+                Next Step
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
               </button>
             )}
           </div>
-        </GradientCard>
+        </div>
       </div>
     </div>
   )
