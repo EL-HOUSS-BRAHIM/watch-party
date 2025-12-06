@@ -9,7 +9,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0008_alter_user_groups_alter_user_user_permissions'),
+        ('authentication', '0008_userprofile_google_drive_token_expires_at'),
     ]
 
     operations = [

@@ -297,3 +297,29 @@ class SocialAccountSerializer(serializers.ModelSerializer):
         model = SocialAccount
         fields = ['id', 'provider', 'provider_email', 'created_at']
         read_only_fields = ['id', 'created_at']
+
+class EmailVerificationOTPSerializer(serializers.Serializer):
+    """Serializer for verifying email with OTP"""
+    
+    otp_code = serializers.CharField(max_length=6, min_length=6)
+    
+    def validate_otp_code(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("OTP must be 6 digits")
+        return value
+
+
+class ResendVerificationOTPSerializer(serializers.Serializer):
+    """Serializer for resending verification OTP"""
+    
+    email = serializers.EmailField(required=False)
+    
+    def validate_email(self, value):
+        if value:
+            try:
+                user = User.objects.get(email=value)
+                if user.is_email_verified:
+                    raise serializers.ValidationError("Email is already verified")
+            except User.DoesNotExist:
+                raise serializers.ValidationError("User not found")
+        return value
