@@ -153,7 +153,7 @@ export function DashboardHeader() {
                   )}
                 </div>
                 <div className="py-2">
-                  <Link href="/profile" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-neutral/60">
+                  <Link href="/dashboard/profile" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-neutral/60">
                     <span>👤</span>
                     <span>Profile</span>
                   </Link>
