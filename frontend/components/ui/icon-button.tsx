@@ -13,6 +13,7 @@ interface IconButtonProps {
   loading?: boolean
   gradient?: string
   type?: "button" | "submit" | "reset"
+  title?: string
 }
 
 export function IconButton({ 
@@ -24,7 +25,8 @@ export function IconButton({
   disabled = false,
   loading = false,
   gradient,
-  type = "button"
+  type = "button",
+  title
 }: IconButtonProps) {
   const baseClasses = "rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
   
@@ -48,6 +50,7 @@ export function IconButton({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
+      title={title}
       className={cn(
         baseClasses,
         variants[variant],
