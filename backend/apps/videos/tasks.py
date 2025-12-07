@@ -217,6 +217,16 @@ def extract_gdrive_video_metadata(video_id):
                 video.processed_at = timezone.now()
                 video.save()
                 
+                # Generate thumbnail from the downloaded sample
+                try:
+                    thumbnail_url = generate_thumbnail_from_file(temp_file, video.gdrive_file_id)
+                    if thumbnail_url:
+                        video.thumbnail = thumbnail_url
+                        video.save(update_fields=['thumbnail'])
+                        logger.info(f"Successfully generated thumbnail for Google Drive video {video_id}")
+                except Exception as thumb_error:
+                    logger.warning(f"Failed to generate thumbnail for {video_id}: {str(thumb_error)}")
+                
                 logger.info(f"Successfully extracted metadata for Google Drive video {video_id}")
                 return f"Successfully processed Google Drive video {video.title}"
             else:
@@ -474,6 +484,51 @@ def download_video_temp(video_url: str) -> Optional[str]:
             
     except Exception as e:
         logger.error(f"Error downloading video {video_url}: {str(e)}")
+        return None
+
+
+def generate_thumbnail_from_file(video_file_path: str, video_identifier: str) -> Optional[str]:
+    """Generate thumbnail from a local video file"""
+    try:
+        # Create temporary thumbnail file
+        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as thumb_file:
+            thumbnail_path = thumb_file.name
+        
+        # Use ffmpeg to generate thumbnail at 10 second mark
+        cmd = [
+            'ffmpeg',
+            '-i', video_file_path,
+            '-ss', '00:00:10',
+            '-vframes', '1',
+            '-vf', 'scale=640:480',
+            '-y',
+            thumbnail_path
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        
+        if result.returncode != 0:
+            logger.error(f"ffmpeg thumbnail generation failed for {video_identifier}: {result.stderr}")
+            # Try again at 1 second mark if 10 seconds fails (video might be shorter)
+            cmd[4] = '00:00:01'
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+            if result.returncode != 0:
+                return None
+        
+        # Upload thumbnail to storage
+        thumbnail_url = upload_thumbnail_to_storage(thumbnail_path)
+        
+        # Clean up temporary thumbnail file
+        if os.path.exists(thumbnail_path):
+            os.unlink(thumbnail_path)
+        
+        return thumbnail_url
+        
+    except subprocess.TimeoutExpired:
+        logger.error(f"ffmpeg timeout for {video_identifier}")
+        return None
+    except Exception as e:
+        logger.error(f"Error generating thumbnail from file for {video_identifier}: {str(e)}")
         return None
 
 
