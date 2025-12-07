@@ -234,7 +234,11 @@ def integration_types(request):
 
 
 # Google Drive Integration Views
+# Include profile scopes so we can use the same OAuth session as the main login
 GOOGLE_DRIVE_SCOPES = [
+    'openid',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/drive.readonly',
     'https://www.googleapis.com/auth/drive.file'
 ]
