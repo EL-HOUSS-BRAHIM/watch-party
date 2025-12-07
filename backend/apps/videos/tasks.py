@@ -869,9 +869,9 @@ def generate_gdrive_thumbnail(video_id):
         # Download partial file from Google Drive
         temp_file = None
         try:
-            drive_service = get_drive_service_for_user(video.uploaded_by)
+            drive_service = get_drive_service_for_user(video.uploader)
             if not drive_service:
-                return f"Could not authenticate with Google Drive for user {video.uploaded_by}"
+                return f"Could not authenticate with Google Drive for user {video.uploader}"
             
             # Download first ~10MB for thumbnail generation
             request = drive_service.files().get_media(fileId=video.gdrive_file_id)
