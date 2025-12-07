@@ -880,11 +880,11 @@ def generate_gdrive_thumbnail(video_id):
             logger.error(f"Failed to get download URL for {video.gdrive_file_id}: {str(e)}")
             return f"Error: Could not get download URL"
         
-        # Download partial file for thumbnail generation
-        temp_file = download_video_partial(download_url, max_bytes=10 * 1024 * 1024)
+        # Download complete file (for Google Drive videos, we need a complete valid video file)
+        temp_file = download_video_temp(download_url)
         if not temp_file:
-            logger.error(f"Failed to download partial video for {video_id}")
-            return f"Error: Could not download video sample"
+            logger.error(f"Failed to download video for {video_id}")
+            return f"Error: Could not download video"
         
         try:
             # Generate thumbnail
