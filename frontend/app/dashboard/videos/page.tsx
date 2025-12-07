@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { videosApi, VideoSummary } from "@/lib/api-client"
@@ -40,7 +40,7 @@ export default function VideosPage() {
   // Google Drive state
   const [gdriveFiles, setGdriveFiles] = useState<GDriveMovie[]>([])
   const [gdriveLoading, setGdriveLoading] = useState(false)
-  const [gdriveError, setGdriveError] = useState("")
+  const [_gdriveError, setGdriveError] = useState("")
   const [gdriveConnected, setGdriveConnected] = useState<boolean | null>(null)
   const [importingIds, setImportingIds] = useState<string[]>([])
   const [streamingIds, setStreamingIds] = useState<string[]>([])
@@ -93,7 +93,7 @@ export default function VideosPage() {
     }
   }
 
-  const loadGdriveVideos = async (force = false) => {
+  const loadGdriveVideos = async (_force = false) => {
     if (gdriveLoading) return
     setGdriveLoading(true)
     setGdriveError("")
@@ -186,7 +186,7 @@ export default function VideosPage() {
         setGdriveFiles(prev => prev.map(f => f.gdrive_file_id === movie.gdrive_file_id ? { ...f, in_database: true, video_id: imported.id } : f))
         showToast("Imported successfully!", "success")
       }
-    } catch (err) {
+    } catch (_err) {
       showToast("Import failed", "error")
     } finally {
       setImportingIds(prev => prev.filter(id => id !== movie.gdrive_file_id))
@@ -200,7 +200,7 @@ export default function VideosPage() {
       const response = await videosApi.getGDriveStream(videoId)
       const url = (response as any)?.stream_url ?? (response as any)?.url
       if (url) window.open(url, "_blank")
-    } catch (err) {
+    } catch (_err) {
       showToast("Failed to stream", "error")
     } finally {
       setStreamingIds(prev => prev.filter(id => id !== videoId))
@@ -215,7 +215,7 @@ export default function VideosPage() {
       setVideos(prev => prev.filter(v => v.id !== videoId))
       setGdriveFiles(prev => prev.map(f => f.gdrive_file_id === movie.gdrive_file_id ? { ...f, in_database: false, video_id: null } : f))
       showToast("Deleted successfully", "success")
-    } catch (err) {
+    } catch (_err) {
       showToast("Delete failed", "error")
     } finally {
       setDeletingIds(prev => prev.filter(id => id !== videoId))
@@ -228,7 +228,7 @@ export default function VideosPage() {
       await videosApi.delete(id)
       setVideos(prev => prev.filter(v => v.id !== id))
       showToast("Video deleted", "success")
-    } catch (err) {
+    } catch (_err) {
       showToast("Delete failed", "error")
     }
   }

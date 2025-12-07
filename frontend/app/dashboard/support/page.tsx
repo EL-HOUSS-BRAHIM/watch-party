@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/api-client";
-import { GradientCard } from "@/components/ui/gradient-card";
-import { IconButton } from "@/components/ui/icon-button";
 import { LiveIndicator } from "@/components/ui/live-indicator";
 
 interface SupportTicket {

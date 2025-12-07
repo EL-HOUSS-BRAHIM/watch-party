@@ -13,10 +13,6 @@ import {
   TypingMessage,
   UserJoinedMessage,
   UserLeftMessage,
-  isChatMessage,
-  isTyping,
-  isUserJoined,
-  isUserLeft,
 } from "@/types/websocket"
 
 interface ChatMessage {
@@ -40,7 +36,7 @@ interface WebSocketChatProps {
   isHost?: boolean
 }
 
-export default function WebSocketChat({ partyId, currentUser, isHost = false }: WebSocketChatProps) {
+export default function WebSocketChat({ partyId, currentUser, isHost: _isHost = false }: WebSocketChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())

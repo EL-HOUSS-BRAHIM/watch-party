@@ -16,8 +16,6 @@ import {
   VideoControlMessage,
   SyncStateMessage,
   SyncRequestMessage,
-  isVideoControl,
-  isSyncState,
 } from '@/types/websocket';
 
 interface SyncedVideoPlayerProps {
@@ -38,7 +36,7 @@ export function SyncedVideoPlayer({
   videoUrl,
   videoPoster,
   isHost,
-  currentUserId,
+  currentUserId: _currentUserId,
   onPlayStateChange,
   onTimeUpdate,
 }: SyncedVideoPlayerProps) {

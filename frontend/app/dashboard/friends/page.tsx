@@ -27,7 +27,6 @@ export default function FriendsPage() {
     loadFriends()
     loadFriendRequests()
     loadSuggestions()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Debounced search
@@ -42,7 +41,6 @@ export default function FriendsPage() {
     }, 300)
 
     return () => clearTimeout(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery])
 
   const loadFriends = async () => {

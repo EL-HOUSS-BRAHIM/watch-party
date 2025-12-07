@@ -10,7 +10,6 @@ import {
   MessageHandler,
   ConnectionHandler,
   isHeartbeat,
-  isPong,
 } from '@/types/websocket';
 
 interface EventHandlers {

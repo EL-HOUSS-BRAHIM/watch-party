@@ -16,7 +16,7 @@ const getBackendUrl = () => {
 const BACKEND_URL = getBackendUrl()
 
 // Detect VS Code Simple Browser
-const isVSCodeBrowser = typeof navigator !== 'undefined' && 
+const _isVSCodeBrowser = typeof navigator !== 'undefined' && 
   (navigator.userAgent.includes('vscode') || navigator.userAgent.includes('VSCode'))
 
 const buildUrl = (endpoint: string) => {
@@ -917,7 +917,7 @@ export const videosApi = {
       method: 'DELETE',
     }),
 
-  getStreamUrl: async (id: string, video?: VideoSummary) => {
+  getStreamUrl: async (id: string, _video?: VideoSummary) => {
     // For Google Drive videos, use the stream endpoint which will return proxy URL
     // The backend will automatically provide the proxy URL in the response
     return apiFetch<{ stream_url: string; proxy_url?: string }>(`/api/videos/${id}/stream/`, {})
