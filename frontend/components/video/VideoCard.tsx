@@ -20,9 +20,9 @@ export function VideoCard({ video, onDelete }: VideoCardProps) {
     <article className="glass-card group rounded-3xl overflow-hidden hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5">
       {/* Thumbnail */}
       <div className="aspect-video bg-brand-navy/5 flex items-center justify-center relative overflow-hidden">
-        {video.thumbnail_url ? (
+        {(video.thumbnail_url ?? video.thumbnail) ? (
           <img
-            src={video.thumbnail_url}
+            src={video.thumbnail_url ?? video.thumbnail}
             alt={video.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
