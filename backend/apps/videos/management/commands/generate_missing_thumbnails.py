@@ -28,16 +28,17 @@ class Command(BaseCommand):
         source_type = options.get('source_type')
         dry_run = options.get('dry_run', False)
 
-        # Query videos without thumbnails
+        # Query videos without thumbnails (null or empty)
+        from django.db.models import Q
         query = Video.objects.filter(
-            thumbnail__isnull=True,
+            Q(thumbnail__isnull=True) | Q(thumbnail=''),
             status='ready'
         ).exclude(status='deleted')
 
         if source_type:
             query = query.filter(source_type=source_type)
 
-        videos = query.all()
+        videos = list(query.all())
 
         if not videos:
             self.stdout.write(self.style.SUCCESS('No videos found without thumbnails'))
@@ -45,7 +46,7 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.WARNING(
-                f'Found {videos.count()} videos without thumbnails'
+                f'Found {len(videos)} videos without thumbnails'
             )
         )
 
