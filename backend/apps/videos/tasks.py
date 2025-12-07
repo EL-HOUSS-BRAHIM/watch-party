@@ -908,7 +908,9 @@ def generate_gdrive_thumbnail(video_id):
                 return f"Failed to upload thumbnail"
                 
         except Exception as e:
+            import traceback
             logger.error(f"Failed to get/download thumbnail for {video.gdrive_file_id}: {str(e)}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return f"Error: Could not get thumbnail - {str(e)}"
         
     except Video.DoesNotExist:
