@@ -3,6 +3,7 @@ Management command to generate thumbnails for videos that don't have them
 """
 
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 from apps.videos.models import Video
 from apps.videos.tasks import extract_gdrive_video_metadata
 from celery import group
@@ -29,7 +30,6 @@ class Command(BaseCommand):
         dry_run = options.get('dry_run', False)
 
         # Query videos without thumbnails (null or empty)
-        from django.db.models import Q
         query = Video.objects.filter(
             Q(thumbnail__isnull=True) | Q(thumbnail=''),
             status='ready'
