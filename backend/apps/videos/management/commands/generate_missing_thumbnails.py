@@ -39,6 +39,11 @@ class Command(BaseCommand):
             query = query.filter(source_type=source_type)
 
         videos = list(query.all())
+        
+        # Debug output
+        all_videos = Video.objects.filter(source_type=source_type) if source_type else Video.objects.all()
+        self.stdout.write(f'DEBUG: Total videos with source_type={source_type}: {all_videos.count()}')
+        self.stdout.write(f'DEBUG: Videos without thumbnails: {len(videos)}')
 
         if not videos:
             self.stdout.write(self.style.SUCCESS('No videos found without thumbnails'))
