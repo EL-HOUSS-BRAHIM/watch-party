@@ -866,42 +866,27 @@ def generate_gdrive_thumbnail(video_id):
         if not video.gdrive_file_id:
             return f"Video {video_id} has no Google Drive file ID"
         
-        # Download partial file from Google Drive
-        temp_file = None
+        # Get Drive service for the uploader
         try:
             drive_service = get_drive_service_for_user(video.uploader)
-            if not drive_service:
-                return f"Could not authenticate with Google Drive for user {video.uploader}"
-            
-            # Download first ~10MB for thumbnail generation
-            request = drive_service.files().get_media(fileId=video.gdrive_file_id)
-            
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_file_handle:
-                temp_file = temp_file_handle.name
-                
-                # Download partial content (enough for thumbnail)
-                downloaded = 0
-                max_download = 10 * 1024 * 1024  # 10MB
-                
-                downloader = request.execute()
-                if isinstance(downloader, bytes):
-                    temp_file_handle.write(downloader[:max_download])
-                else:
-                    # If it's a MediaIoBaseDownload, use chunked download
-                    from googleapiclient.http import MediaIoBaseDownload
-                    import io
-                    
-                    file_handle = io.BytesIO()
-                    downloader = MediaIoBaseDownload(file_handle, request)
-                    done = False
-                    while not done and downloaded < max_download:
-                        status, done = downloader.next_chunk()
-                        downloaded = status.resumable_progress
-                    
-                    temp_file_handle.write(file_handle.getvalue()[:max_download])
-            
-            logger.info(f"Downloaded partial file for thumbnail generation: {video.title}")
-            
+        except Exception as e:
+            logger.error(f"Failed to get Drive service for user {video.uploader.id}: {str(e)}")
+            return f"Error: Could not access Google Drive"
+        
+        # Get download URL
+        try:
+            download_url = drive_service.get_download_url(video.gdrive_file_id)
+        except Exception as e:
+            logger.error(f"Failed to get download URL for {video.gdrive_file_id}: {str(e)}")
+            return f"Error: Could not get download URL"
+        
+        # Download partial file for thumbnail generation
+        temp_file = download_video_partial(download_url, max_bytes=10 * 1024 * 1024)
+        if not temp_file:
+            logger.error(f"Failed to download partial video for {video_id}")
+            return f"Error: Could not download video sample"
+        
+        try:
             # Generate thumbnail
             thumbnail_url = generate_thumbnail_from_file(temp_file, video.gdrive_file_id)
             
