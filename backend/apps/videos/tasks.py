@@ -873,40 +873,27 @@ def generate_gdrive_thumbnail(video_id):
             logger.error(f"Failed to get Drive service for user {video.uploader.id}: {str(e)}")
             return f"Error: Could not access Google Drive"
         
-        # Get download URL
+        # Get file info including thumbnail link from Google Drive
         try:
-            download_url = drive_service.get_download_url(video.gdrive_file_id)
-        except Exception as e:
-            logger.error(f"Failed to get download URL for {video.gdrive_file_id}: {str(e)}")
-            return f"Error: Could not get download URL"
-        
-        # Download complete file (for Google Drive videos, we need a complete valid video file)
-        temp_file = download_video_temp(download_url)
-        if not temp_file:
-            logger.error(f"Failed to download video for {video_id}")
-            return f"Error: Could not download video"
-        
-        try:
-            # Generate thumbnail
-            thumbnail_url = generate_thumbnail_from_file(temp_file, video.gdrive_file_id)
+            file_info = drive_service.get_file_info(video.gdrive_file_id)
+            thumbnail_url = file_info.get('thumbnail_url')
             
             if thumbnail_url:
                 video.thumbnail = thumbnail_url
                 video.save(update_fields=['thumbnail'])
-                logger.info(f"Successfully generated thumbnail for {video.title}")
-                return f"Successfully generated thumbnail for {video.title}"
+                logger.info(f"Successfully set Google Drive thumbnail for {video.title}")
+                return f"Successfully set thumbnail for {video.title}"
             else:
-                logger.warning(f"Failed to generate thumbnail for {video.title}")
-                return f"Failed to generate thumbnail"
+                logger.warning(f"No thumbnail available from Google Drive for {video.title}")
+                return f"No thumbnail available from Google Drive"
                 
-        finally:
-            # Clean up temporary file
-            if temp_file and os.path.exists(temp_file):
-                os.unlink(temp_file)
+        except Exception as e:
+            logger.error(f"Failed to get file info for {video.gdrive_file_id}: {str(e)}")
+            return f"Error: Could not get file info"
         
     except Video.DoesNotExist:
         logger.error(f"Video {video_id} not found")
         return f"Error: Video {video_id} not found"
     except Exception as e:
-        logger.error(f"Error generating thumbnail for {video_id}: {str(e)}")
+        logger.error(f"Error setting thumbnail for {video_id}: {str(e)}")
         return f"Error: {str(e)}"
