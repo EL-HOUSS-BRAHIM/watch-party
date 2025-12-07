@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { videosApi, VideoSummary } from "@/lib/api-client"
+import { formatDuration, formatFileSize } from '@/components/video/video-utils'
 import { GoogleDriveQuota } from "@/components/integrations/google-drive-quota"
 
 type GDriveMovie = {
@@ -233,21 +234,7 @@ export default function VideosPage() {
     }
   }
 
-  const formatSize = (bytes?: number) => {
-    if (!bytes) return ""
-    const units = ["B", "KB", "MB", "GB"]
-    let i = 0
-    while (bytes >= 1024 && i < units.length - 1) { bytes /= 1024; i++ }
-    return `${bytes.toFixed(1)} ${units[i]}`
-  }
-
-  const formatDuration = (secs?: number) => {
-    if (!secs) return ""
-    const h = Math.floor(secs / 3600)
-    const m = Math.floor((secs % 3600) / 60)
-    const s = Math.floor(secs % 60)
-    return h > 0 ? `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}` : `${m}:${s.toString().padStart(2, "0")}`
-  }
+  // Use shared formatting utilities which validate input robustly
 
   const counts = {
     all: videos.length,
@@ -492,8 +479,8 @@ export default function VideosPage() {
                         {gdriveFiles.map(movie => (
                           <div key={movie.gdrive_file_id} className="group bg-brand-navy/5 rounded-2xl overflow-hidden hover:bg-brand-navy/10 transition-all">
                             <div className="aspect-video bg-brand-navy/10 relative">
-                              {movie.thumbnail_url ? (
-                                <img src={movie.thumbnail_url} alt="" className="w-full h-full object-cover" />
+                              {(movie.thumbnail_url ?? movie.thumbnail) ? (
+                                <img src={movie.thumbnail_url ?? movie.thumbnail} alt="" className="w-full h-full object-cover" />
                               ) : (
                                 <div className="absolute inset-0 flex items-center justify-center text-4xl">🎬</div>
                               )}
@@ -654,8 +641,8 @@ export default function VideosPage() {
             <div key={video.id} className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all ${viewMode === "list" ? "flex" : ""}`}>
               {/* Thumbnail */}
               <div className={`relative bg-brand-navy/5 ${viewMode === "list" ? "w-48 flex-shrink-0" : "aspect-video"}`}>
-                {video.thumbnail_url ? (
-                  <img src={video.thumbnail_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                {(video.thumbnail_url ?? video.thumbnail) ? (
+                  <img src={video.thumbnail_url ?? video.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-5xl opacity-30">🎬</span>
@@ -709,7 +696,7 @@ export default function VideosPage() {
                 )}
                 
                 <div className="text-xs text-brand-navy/40 space-y-1 mt-auto">
-                  {video.file_size && <div>📁 {formatSize(video.file_size)}</div>}
+                  {video.file_size && <div>📁 {formatFileSize(video.file_size)}</div>}
                   <div>📅 {new Date(video.created_at).toLocaleDateString()}</div>
                 </div>
                 
