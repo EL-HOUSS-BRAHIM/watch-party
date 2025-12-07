@@ -876,20 +876,40 @@ def generate_gdrive_thumbnail(video_id):
         # Get file info including thumbnail link from Google Drive
         try:
             file_info = drive_service.get_file_info(video.gdrive_file_id)
-            thumbnail_url = file_info.get('thumbnail_url')
+            google_thumbnail_url = file_info.get('thumbnail_url')
+            
+            if not google_thumbnail_url:
+                logger.warning(f"No thumbnail available from Google Drive for {video.title}")
+                return f"No thumbnail available from Google Drive"
+            
+            # Download the thumbnail image from Google Drive
+            import requests
+            response = requests.get(google_thumbnail_url, timeout=30)
+            response.raise_for_status()
+            
+            # Save the thumbnail image  
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as thumb_file:
+                thumb_file.write(response.content)
+                thumb_path = thumb_file.name
+            
+            # Upload to our storage
+            thumbnail_url = upload_thumbnail_to_storage(thumb_path)
+            
+            # Clean up temp file
+            if os.path.exists(thumb_path):
+                os.unlink(thumb_path)
             
             if thumbnail_url:
                 video.thumbnail = thumbnail_url
                 video.save(update_fields=['thumbnail'])
-                logger.info(f"Successfully set Google Drive thumbnail for {video.title}")
+                logger.info(f"Successfully downloaded and saved Google Drive thumbnail for {video.title}")
                 return f"Successfully set thumbnail for {video.title}"
             else:
-                logger.warning(f"No thumbnail available from Google Drive for {video.title}")
-                return f"No thumbnail available from Google Drive"
+                return f"Failed to upload thumbnail"
                 
         except Exception as e:
-            logger.error(f"Failed to get file info for {video.gdrive_file_id}: {str(e)}")
-            return f"Error: Could not get file info"
+            logger.error(f"Failed to get/download thumbnail for {video.gdrive_file_id}: {str(e)}")
+            return f"Error: Could not get thumbnail - {str(e)}"
         
     except Video.DoesNotExist:
         logger.error(f"Video {video_id} not found")
