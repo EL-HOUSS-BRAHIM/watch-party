@@ -97,7 +97,7 @@ const SUPPORTED_INTEGRATIONS: IntegrationType[] = [
 ]
 
 export default function IntegrationsPage() {
-  const router = useRouter()
+  const _router = useRouter()
   const searchParams = useSearchParams()
   const [integrations, setIntegrations] = useState<Integration[]>([])
   const [loading, setLoading] = useState(true)

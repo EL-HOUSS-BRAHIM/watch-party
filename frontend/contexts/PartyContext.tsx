@@ -6,7 +6,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { WatchParty, User } from '@/lib/api-client';
 import {
@@ -14,9 +14,6 @@ import {
   SyncStateMessage,
   UserJoinedMessage,
   UserLeftMessage,
-  isSyncState,
-  isUserJoined,
-  isUserLeft,
 } from '@/types/websocket';
 
 interface VideoState {

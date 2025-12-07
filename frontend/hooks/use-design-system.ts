@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { analyticsApi, userApi, User as ApiUser, NormalizedRealTimeAnalytics } from '@/lib/api-client'
+import { analyticsApi, userApi } from '@/lib/api-client'
 
 export interface User {
   id: string

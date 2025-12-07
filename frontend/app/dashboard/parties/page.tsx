@@ -17,7 +17,7 @@ export default function PartiesPage() {
   
   // State management
   const [parties, setParties] = useState<WatchParty[]>([])
-  const [recommendedParties, setRecommendedParties] = useState<WatchParty[]>([])
+  const [_recommendedParties, setRecommendedParties] = useState<WatchParty[]>([])
   const [myHostedParties, setMyHostedParties] = useState<WatchParty[]>([])
   const [myJoinedParties, setMyJoinedParties] = useState<WatchParty[]>([])
   const [loading, setLoading] = useState(true)

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react"
 import { PublicPartyLayout, type PublicPartyViewModel } from "@/components/party/public-party-layout"
-import { partiesApi, authApi } from "@/lib/api-client"
+import { authApi } from "@/lib/api-client"
 
 interface PublicPartyPageProps {
   params: Promise<{
@@ -141,7 +141,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
           const displayName = profile.full_name || constructedName || "User"
           setGuestName(displayName)
         }
-      } catch (err) {
+      } catch (_err) {
         // User is not authenticated, that's fine - they'll use guest mode
         console.log("Not authenticated, using guest mode")
       } finally {

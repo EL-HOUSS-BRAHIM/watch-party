@@ -188,7 +188,7 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
           })
           
           setMessages([...existingMessages, welcomeMsg])
-        } catch (err) {
+        } catch (_err) {
           // Silently handle error for authenticated users, still show welcome
           console.log('Chat history unavailable, starting fresh')
           setMessages([welcomeMsg])
@@ -234,7 +234,7 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
       }
       // For guests: message stays with temp ID (client-side only)
       // This is intentional - guest messages are ephemeral and not persisted
-    } catch (err) {
+    } catch (_err) {
       // Silently handle errors - message already visible optimistically
       console.log('Message sent locally:', messageText)
     } finally {
@@ -384,7 +384,7 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
                     onPlayStateChange={(isPlaying) => {
                       console.log('Play state changed:', isPlaying);
                     }}
-                    onTimeUpdate={(time) => {
+                    onTimeUpdate={(_time) => {
                       // Could update progress display if needed
                     }}
                   />

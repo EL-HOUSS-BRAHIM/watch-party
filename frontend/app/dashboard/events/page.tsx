@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api-client"
-import { GradientCard } from "@/components/ui/gradient-card"
-import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
 import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
 import { useDesignSystem } from "@/hooks/use-design-system"
@@ -81,7 +79,7 @@ export default function EventsPage() {
     }
   }
 
-  const getStatusBadge = (status: string) => {
+  const _getStatusBadge = (status: string) => {
     switch (status) {
       case "upcoming": return "bg-brand-blue/20 text-brand-blue-light"
       case "live": return "bg-brand-cyan/20 text-brand-cyan-light"

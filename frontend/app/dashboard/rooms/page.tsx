@@ -73,7 +73,7 @@ export default function RoomsPage() {
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const _getStatusColor = (status: string) => {
     switch (status) {
       case "live": return "bg-gradient-to-r from-brand-cyan to-brand-blue text-white"
       case "scheduled": return "bg-gradient-to-r from-brand-blue to-brand-cyan text-white"

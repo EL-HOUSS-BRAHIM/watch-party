@@ -30,7 +30,7 @@ export default function VerificationBanner() {
       } else {
         setMessage('Failed to send code. Please try again.');
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage('Failed to send code. Please try again.');
     } finally {
       setIsResending(false);
