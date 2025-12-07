@@ -9,7 +9,7 @@ import { useDesignSystem } from "@/hooks/use-design-system"
 
 type ViewMode = "grid" | "list" | "calendar"
 type TabMode = "discover" | "my-parties" | "joined" | "scheduled" | "recommended"
-type FilterType = "all" | "live" | "scheduled" | "public" | "friends-only" | "trending"
+type FilterType = "all" | "live" | "scheduled" | "public" | "friends-only" | "trending" | "recent"
 
 export default function PartiesPage() {
   const router = useRouter()

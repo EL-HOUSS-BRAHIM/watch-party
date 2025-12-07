@@ -479,8 +479,8 @@ export default function VideosPage() {
                         {gdriveFiles.map(movie => (
                           <div key={movie.gdrive_file_id} className="group bg-brand-navy/5 rounded-2xl overflow-hidden hover:bg-brand-navy/10 transition-all">
                             <div className="aspect-video bg-brand-navy/10 relative">
-                              {(movie.thumbnail_url ?? movie.thumbnail) ? (
-                                <img src={movie.thumbnail_url ?? movie.thumbnail} alt="" className="w-full h-full object-cover" />
+                              {movie.thumbnail_url ? (
+                                <img src={movie.thumbnail_url} alt="" className="w-full h-full object-cover" />
                               ) : (
                                 <div className="absolute inset-0 flex items-center justify-center text-4xl">🎬</div>
                               )}
