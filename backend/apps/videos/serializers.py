@@ -15,6 +15,7 @@ class VideoSerializer(serializers.ModelSerializer):
     """Basic video serializer"""
     
     uploader = serializers.SerializerMethodField()
+    duration = serializers.SerializerMethodField()  # Override to return seconds as integer
     duration_formatted = serializers.SerializerMethodField()
     file_size_formatted = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
@@ -31,9 +32,14 @@ class VideoSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'uploader', 'created_at', 'updated_at', 'view_count', 'like_count']
     
-    @extend_schema_field(OpenApiTypes.STR)
-
+    @extend_schema_field(OpenApiTypes.INT)
+    def get_duration(self, obj):
+        """Return duration in seconds as an integer for frontend consumption"""
+        if obj.duration:
+            return int(obj.duration.total_seconds())
+        return None
     
+    @extend_schema_field(OpenApiTypes.STR)
     def get_uploader(self, obj):
         return {
             'id': str(obj.uploader.id),
