@@ -13,6 +13,7 @@ interface IconButtonProps {
   loading?: boolean
   gradient?: string
   type?: "button" | "submit" | "reset"
+  /** Tooltip text displayed on hover for accessibility */
   title?: string
 }
 
