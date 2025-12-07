@@ -852,3 +852,76 @@ def cleanup_temporary_files():
     except Exception as e:
         logger.error(f"Error cleaning up temporary files: {str(e)}")
         return f"Error: {str(e)}"
+
+
+@shared_task
+def generate_gdrive_thumbnail(video_id):
+    """Generate thumbnail for an existing Google Drive video"""
+    try:
+        video = Video.objects.get(id=video_id)
+        
+        if video.source_type != 'gdrive':
+            return f"Video {video_id} is not a Google Drive video"
+        
+        if not video.gdrive_file_id:
+            return f"Video {video_id} has no Google Drive file ID"
+        
+        # Download partial file from Google Drive
+        temp_file = None
+        try:
+            drive_service = get_drive_service_for_user(video.uploaded_by)
+            if not drive_service:
+                return f"Could not authenticate with Google Drive for user {video.uploaded_by}"
+            
+            # Download first ~10MB for thumbnail generation
+            request = drive_service.files().get_media(fileId=video.gdrive_file_id)
+            
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_file_handle:
+                temp_file = temp_file_handle.name
+                
+                # Download partial content (enough for thumbnail)
+                downloaded = 0
+                max_download = 10 * 1024 * 1024  # 10MB
+                
+                downloader = request.execute()
+                if isinstance(downloader, bytes):
+                    temp_file_handle.write(downloader[:max_download])
+                else:
+                    # If it's a MediaIoBaseDownload, use chunked download
+                    from googleapiclient.http import MediaIoBaseDownload
+                    import io
+                    
+                    file_handle = io.BytesIO()
+                    downloader = MediaIoBaseDownload(file_handle, request)
+                    done = False
+                    while not done and downloaded < max_download:
+                        status, done = downloader.next_chunk()
+                        downloaded = status.resumable_progress
+                    
+                    temp_file_handle.write(file_handle.getvalue()[:max_download])
+            
+            logger.info(f"Downloaded partial file for thumbnail generation: {video.title}")
+            
+            # Generate thumbnail
+            thumbnail_url = generate_thumbnail_from_file(temp_file, video.gdrive_file_id)
+            
+            if thumbnail_url:
+                video.thumbnail = thumbnail_url
+                video.save(update_fields=['thumbnail'])
+                logger.info(f"Successfully generated thumbnail for {video.title}")
+                return f"Successfully generated thumbnail for {video.title}"
+            else:
+                logger.warning(f"Failed to generate thumbnail for {video.title}")
+                return f"Failed to generate thumbnail"
+                
+        finally:
+            # Clean up temporary file
+            if temp_file and os.path.exists(temp_file):
+                os.unlink(temp_file)
+        
+    except Video.DoesNotExist:
+        logger.error(f"Video {video_id} not found")
+        return f"Error: Video {video_id} not found"
+    except Exception as e:
+        logger.error(f"Error generating thumbnail for {video_id}: {str(e)}")
+        return f"Error: {str(e)}"
