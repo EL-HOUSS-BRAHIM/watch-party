@@ -90,9 +90,10 @@ export default function PartiesPage() {
   }
 
   const loadMyHostedParties = async () => {
-    const response = await partiesApi.list({ is_host: true })
-    setMyHostedParties(applySorting(response.results))
-    setParties(applySorting(response.results))
+    const response = await partiesApi.list({})
+    const hosted = response.results.filter(p => p.is_host === true)
+    setMyHostedParties(applySorting(hosted))
+    setParties(applySorting(hosted))
   }
 
   const loadMyJoinedParties = async () => {
