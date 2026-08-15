@@ -1,4 +1,102 @@
-# 🎬 Watch Party
+# Watch Party
+
+Monorepo for Watch Party with:
+- Frontend: Next.js (deploy on Vercel)
+- Backend: Django + Celery (deploy on Render)
+- Email: Resend SMTP
+- Database: managed PostgreSQL (Render PostgreSQL, Neon, Supabase, or other compatible provider)
+
+## Repository Structure
+
+```text
+watch-party/
+|- frontend/                  # Next.js app
+|- backend/                   # Django API + workers
+|- scripts/                   # local dev and utility scripts
+|- docs/                      # docs and archives
+|- render.yaml                # Render blueprint (backend + workers)
+```
+
+## Quick Start (Local)
+
+Prerequisites:
+- Node.js 18+
+- Python 3.12+
+- PostgreSQL 13+
+- Redis 6+
+
+Backend:
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements/development.txt
+cp .env.example .env
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+## Deployment (Recommended)
+
+### Frontend on Vercel
+
+1. Import repository in Vercel.
+2. Set project root directory to `frontend/`.
+3. Add environment variables from `frontend/.env.example`.
+4. Deploy.
+
+### Backend on Render
+
+1. Create services using `render.yaml`.
+2. Set backend env vars from `backend/.env.example`.
+3. Ensure `DATABASE_URL` points to managed PostgreSQL.
+4. Set `REDIS_URL` for Celery + Channels.
+
+### Email via Resend
+
+Use SMTP configuration:
+
+```env
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.resend.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=resend
+EMAIL_HOST_PASSWORD=re_xxxxxxxxxxxxxxxxx
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=Watch Party <noreply@yourdomain.com>
+```
+
+## Notes
+
+- MongoDB Atlas is not a drop-in replacement for this backend because the Django ORM in this project is PostgreSQL-based.
+- If you prefer Atlas for another service, keep this backend on PostgreSQL and connect Atlas only for additional non-relational workloads.
+- Legacy AWS/Lightsail deployment files are retained for reference but are no longer the recommended path.
+
+## Testing
+
+Backend:
+
+```bash
+cd backend
+pytest
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm test
+```# 🎬 Watch Party
 
 A unified repository containing both frontend and backend for the Watch Party application - a next-generation platform for synchronized video watching with friends.
 

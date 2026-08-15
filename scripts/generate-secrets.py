@@ -1,5 +1,71 @@
 #!/usr/bin/env python3
 """
+Generate secure secrets for Watch Party environment variables.
+Run this script to generate new secrets for backend/.env.
+"""
+
+import secrets
+import string
+
+
+def generate_secret(length=64):
+    """Generate a URL-safe secret token."""
+    return secrets.token_urlsafe(length)
+
+
+def generate_django_secret(length=50):
+    """Generate a Django-style secret key with special characters."""
+    characters = string.ascii_letters + string.digits + "!@#$%^&*(-_=+)"
+    return "".join(secrets.choice(characters) for _ in range(length))
+
+
+def main():
+    print("=" * 80)
+    print("WATCH PARTY - SECRET KEY GENERATOR")
+    print("=" * 80)
+    print("\nIMPORTANT: Keep these secrets secure and never commit them to git.\n")
+
+    print("Copy these values to backend/.env:\n")
+    print("-" * 80)
+    print(f"SECRET_KEY={generate_django_secret()}")
+    print(f"JWT_SECRET_KEY={generate_secret()}")
+    print(f"JWT_REFRESH_SECRET_KEY={generate_secret()}")
+
+    print("\n# Stripe")
+    print("STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET_HERE")
+
+    print("\n# Resend SMTP")
+    print("EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend")
+    print("EMAIL_HOST=smtp.resend.com")
+    print("EMAIL_PORT=587")
+    print("EMAIL_HOST_USER=resend")
+    print("EMAIL_HOST_PASSWORD=re_xxxxxxxxxxxxxxxxx")
+
+    print("\n# Managed services")
+    print("DATABASE_URL=postgresql://username:password@host:5432/watchparty?sslmode=require")
+    print("REDIS_URL=redis://host:6379/0")
+    print("CELERY_BROKER_URL=redis://host:6379/2")
+    print("CELERY_RESULT_BACKEND=redis://host:6379/3")
+
+    print("\n" + "-" * 80)
+    print("\nNEXT STEPS:\n")
+    print("1. Update backend/.env with these values.")
+    print("2. Set CORS_ALLOWED_ORIGINS to your Vercel domain.")
+    print("3. Set CSRF_TRUSTED_ORIGINS to your Vercel domain.")
+    print("4. Verify configuration:")
+    print("   cd backend")
+    print("   python manage.py check")
+    print('   python manage.py shell -c "from django.conf import settings; print(\"OK\")"')
+
+    print("\n" + "=" * 80)
+    print("\nNOTE: This backend expects PostgreSQL. MongoDB Atlas is not a drop-in replacement.")
+    print("Use Atlas only for additional services if needed.")
+    print("\n" + "=" * 80)
+
+
+if __name__ == "__main__":
+    main()#!/usr/bin/env python3
+"""
 Generate secure secrets for Watch Party environment variables
 Run this script to generate new secrets for your .env file
 """

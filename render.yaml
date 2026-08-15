@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: watch-party-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: ./start.sh
+    healthCheckPath: /health/
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: DEBUG
+        value: "False"
+      - key: ENABLE_AWS_SECRETS_MANAGER
+        value: "False"
+      - key: DISABLE_CREDENTIAL_ROTATION
+        value: "1"
+
+  - type: worker
+    name: watch-party-celery-worker
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: celery -A config worker --loglevel=info --concurrency=2
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: DEBUG
+        value: "False"
+      - key: ENABLE_AWS_SECRETS_MANAGER
+        value: "False"
+      - key: DISABLE_CREDENTIAL_ROTATION
+        value: "1"
+
+  - type: worker
+    name: watch-party-celery-beat
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: DEBUG
+        value: "False"
+      - key: ENABLE_AWS_SECRETS_MANAGER
+        value: "False"
+      - key: DISABLE_CREDENTIAL_ROTATION
+        value: "1"

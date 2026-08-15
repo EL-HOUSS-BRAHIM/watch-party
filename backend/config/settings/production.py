@@ -8,18 +8,24 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
-from shared.aws import get_optional_secret
-from shared.aws_credential_rotation import get_credential_service
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Start AWS credential rotation service (rotates every 30 minutes)
-try:
-    credential_service = get_credential_service()
-    logger.info("AWS credential rotation service initialized")
-except Exception as e:
-    logger.warning(f"Could not initialize credential rotation service: {e}")
+ENABLE_AWS_SECRETS_MANAGER = config('ENABLE_AWS_SECRETS_MANAGER', default=False, cast=bool)
+credential_service = None
+get_optional_secret = None
+
+if ENABLE_AWS_SECRETS_MANAGER:
+    try:
+        from shared.aws import get_optional_secret as _get_optional_secret
+        from shared.aws_credential_rotation import get_credential_service
+
+        get_optional_secret = _get_optional_secret
+        credential_service = get_credential_service()
+        logger.info("AWS credential rotation service initialized")
+    except Exception as e:
+        logger.warning(f"Could not initialize AWS secrets manager integration: {e}")
 
 # Security
 DEBUG = False
@@ -42,12 +48,21 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Dynamic Database Configuration from AWS Secrets Manager with Rotation
 def get_database_config():
     """Get RDS database configuration from AWS Secrets Manager with automatic rotation."""
+    if not ENABLE_AWS_SECRETS_MANAGER:
+        return {
+            'default': dj_database_url.config(
+                conn_max_age=0,
+                conn_health_checks=True,
+                ssl_require=True,
+            )
+        }
+
     try:
         # Get credentials from rotation service (automatically refreshed every 30 minutes)
-        rds_secret = credential_service.get_rds_credentials() if 'credential_service' in globals() else None
+        rds_secret = credential_service.get_rds_credentials() if credential_service else None
         
         # Fallback to direct fetch if service not available
-        if not rds_secret:
+        if not rds_secret and get_optional_secret:
             rds_secret = get_optional_secret('rds!db-44fd826c-d576-4afd-8bf3-38f59d5cd4ae')
         if rds_secret:
             username = rds_secret.get('username')
@@ -93,12 +108,15 @@ DATABASES = get_database_config()
 # Dynamic Redis/Valkey Configuration from AWS Secrets Manager with Rotation with Rotation
 def get_valkey_config():
     """Get Valkey configuration from AWS Secrets Manager with automatic rotation."""
+    if not ENABLE_AWS_SECRETS_MANAGER:
+        return config('REDIS_URL', default='redis://127.0.0.1:6379/0')
+
     try:
         # Get credentials from rotation service (automatically refreshed every 30 minutes)
-        valkey_secret = credential_service.get_valkey_credentials() if 'credential_service' in globals() else None
+        valkey_secret = credential_service.get_valkey_credentials() if credential_service else None
         
         # Fallback to direct fetch if service not available
-        if not valkey_secret:
+        if not valkey_secret and get_optional_secret:
             valkey_secret = get_optional_secret('watch-party-valkey-001-auth-token')
         if valkey_secret and 'auth_token' in valkey_secret:
             auth_token = valkey_secret['auth_token']
@@ -266,13 +284,21 @@ if USE_S3 and AWS_STORAGE_BUCKET_NAME:
 # Dynamic Email Configuration from AWS Secrets Manager with Rotation
 def get_email_config():
     """Get AWS SES SMTP configuration from AWS Secrets Manager with automatic rotation."""
+    if not ENABLE_AWS_SECRETS_MANAGER:
+        return {
+            'host': config('EMAIL_HOST', default='smtp.resend.com'),
+            'port': config('EMAIL_PORT', default=587, cast=int),
+            'username': config('EMAIL_HOST_USER', default='resend'),
+            'password': config('EMAIL_HOST_PASSWORD', default=''),
+            'from_email': config('DEFAULT_FROM_EMAIL', default='Watch Party <noreply@watchparty.app>'),
+        }
+
     try:
         # Get credentials from rotation service (automatically refreshed every 30 minutes)
-        ses_secret = credential_service.get_ses_smtp_credentials() if 'credential_service' in globals() else None
+        ses_secret = credential_service.get_ses_smtp_credentials() if credential_service else None
         
         # Fallback to direct fetch if service not available
-        if not ses_secret:
-            from shared.aws import get_optional_secret
+        if not ses_secret and get_optional_secret:
             ses_secret = get_optional_secret('watch-party-ses-smtp')
         
         if ses_secret:
@@ -290,11 +316,11 @@ def get_email_config():
     
     # Fallback to environment variables
     return {
-        'host': config('EMAIL_HOST', default='email-smtp.eu-west-3.amazonaws.com'),
+        'host': config('EMAIL_HOST', default='smtp.resend.com'),
         'port': config('EMAIL_PORT', default=587, cast=int),
-        'username': config('EMAIL_HOST_USER', default=''),
+        'username': config('EMAIL_HOST_USER', default='resend'),
         'password': config('EMAIL_HOST_PASSWORD', default=''),
-        'from_email': config('DEFAULT_FROM_EMAIL', default='noreply@brahim-elhouss.me'),
+        'from_email': config('DEFAULT_FROM_EMAIL', default='Watch Party <noreply@watchparty.app>'),
     }
 
 # Email - Production SMTP with enhanced configuration and auto-rotation
@@ -308,7 +334,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = email_config['from_email']
 SERVER_EMAIL = email_config['from_email']
 
-logger.info(f"Using AWS SES SMTP (auto-rotating): {EMAIL_HOST_USER[:10] if EMAIL_HOST_USER else 'Not configured'}...")
+logger.info(f"Using SMTP provider: {EMAIL_HOST} ({EMAIL_HOST_USER[:10] if EMAIL_HOST_USER else 'Not configured'}...)")
 
 # Phase 2 Email Features
 EMAIL_TRACK_OPENS = True
